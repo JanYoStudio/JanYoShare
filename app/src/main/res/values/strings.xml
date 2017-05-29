@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">JanYo Share</string>
+    <string name="clear_all">清除已复制的包</string>
+    <string name="about">关于</string>
+</resources>
