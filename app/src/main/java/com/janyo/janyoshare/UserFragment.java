@@ -17,8 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.janyo.janyoshare.util.FileOperation;
+import com.janyo.janyoshare.util.FileUtil;
 import com.janyo.janyoshare.util.PM;
-import com.janyo.janyoshare.util.Share;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,11 +27,8 @@ import java.util.Map;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 
-import com.janyo.janyoshare.util.FileToSD;
-
 public class UserFragment extends Fragment
 {
-	private static final String TAG = "UserFragment";
 	private View mView;
 	private ListView appListV;
 	private TextView appPath, appName, versionName;
@@ -88,53 +85,25 @@ public class UserFragment extends Fragment
 				appPath = (TextView) p2.findViewById(R.id.tv_app_package_name);
 				appName = (TextView) p2.findViewById(R.id.tv_app_name);
 				versionName = (TextView) p2.findViewById(R.id.tv_app_version_name);
-				doShare(appPath.getText().toString(), appName.getText().toString(), versionName.getText().toString());
+				FileUtil.doShare(getActivity(), appPath.getText().toString(), appName.getText().toString(), versionName.getText().toString());
 			}
 		});
 
-		appListV.setOnItemLongClickListener(new OnItemLongClickListener()
-		{
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4)
-			{
-				// TODO: Implement this method
-				//Toast.makeText(getActivity(),"LongClick",Toast.LENGTH_SHORT).show();
-				appPath = (TextView) p2.findViewById(R.id.tv_app_package_name);
-				appName = (TextView) p2.findViewById(R.id.tv_app_name);
-				versionName = (TextView) p2.findViewById(R.id.tv_app_version_name);
-				try
-				{
-					new FileToSD(getActivity(), appPath.getText().toString(), appName.getText().toString(), versionName.getText().toString());
-					Toast.makeText(getActivity(), "已提取到手机储存/JYShare/" + appName.getText() + "_" + versionName.getText() + ".apk", Toast.LENGTH_SHORT).show();
-				} catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-				return true;
-			}
-
-		});
-
+//		appListV.setOnItemLongClickListener(new OnItemLongClickListener()
+//		{
+//
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4)
+//			{
+//				appPath = (TextView) p2.findViewById(R.id.tv_app_package_name);
+//				appName = (TextView) p2.findViewById(R.id.tv_app_name);
+//				versionName = (TextView) p2.findViewById(R.id.tv_app_version_name);
+//				FileUtil.fileToSD(appPath.getText().toString(), appName.getText().toString(), versionName.getText().toString());
+//				Toast.makeText(getActivity(), "已提取到手机储存/JYShare/" + appName.getText() + "_" + versionName.getText() + ".apk", Toast.LENGTH_SHORT).show();
+//				return true;
+//			}
+//
+//		});
 		return mView;
-	}
-
-	private void doShare(String path, String name, String versionName)
-	{
-		Log.i(TAG, "doShare: " + path);
-		Log.i(TAG, "doShare: " + name);
-		Log.i(TAG, "doShare: " + versionName);
-		try
-		{
-			if (new FileOperation(getActivity(), path, name, versionName).getOperationResult())
-				Toast.makeText(getActivity(), "拷贝" + name + "_" + versionName + "成功", Toast.LENGTH_SHORT).show();
-			else
-				Toast.makeText(getActivity(), "拷贝" + name + "_" + versionName + "失败", Toast.LENGTH_SHORT).show();
-		} catch (IOException e)
-		{
-			Toast.makeText(getActivity(), "Stream Operation Error", Toast.LENGTH_LONG).show();
-		}
-		new Share(getActivity(), getActivity().getFilesDir().getPath() + "/" + name + "_" + versionName + ".apk");
-		Log.i(TAG, "doShare: " + getActivity().getFilesDir().getPath() + "/" + name + "_" + versionName + ".apk");
 	}
 }
