@@ -14,8 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.janyo.janyoshare.util.CleanFileDir;
-import com.janyo.janyoshare.util.DirExist;
+import com.janyo.janyoshare.util.FileUtil;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initView();
-		new DirExist("JYShare");
+		FileUtil.DirExist("JanYoShare");
 	}
 
 	private void initView()
@@ -70,8 +69,8 @@ public class MainActivity extends AppCompatActivity
 			oneClickTime = doubleClickTime;
 		} else
 		{
-			CleanFileDir.cleanFiles(getApplicationContext());
-			CleanFileDir.cleanCaches(getApplicationContext());
+			FileUtil.cleanFiles(getApplicationContext());
+			FileUtil.cleanCaches(getApplicationContext());
 			System.exit(0);
 		}
 	}
@@ -90,24 +89,20 @@ public class MainActivity extends AppCompatActivity
 		switch (item.getItemId())
 		{
 			case R.id.clear:
-				CleanFileDir.cleanFiles(getApplicationContext());
-				CleanFileDir.cleanCaches(getApplicationContext());
+				FileUtil.cleanFiles(getApplicationContext());
+				FileUtil.cleanCaches(getApplicationContext());
 				break;
 			case R.id.about:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle(" ");
 				builder.setView(LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_about, null));
-//				builder.setMessage("JanYo Studio\nDickLight\nZH_LYH\nCieyGet\nMystery0\nGsoy\nCopyright @2016-2017 JanYo Studio,All Right Reserved");
 				builder.setPositiveButton("关闭", new DialogInterface.OnClickListener()
 				{
-
 					@Override
 					public void onClick(DialogInterface p1, int p2)
 					{
 						p1.dismiss();
 					}
-
-
 				});
 				builder.create().show();
 				return true;
