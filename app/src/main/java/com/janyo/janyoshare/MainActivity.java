@@ -1,62 +1,65 @@
 package com.janyo.janyoshare;
 
-import android.content.DialogInterface;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.janyo.janyoshare.util.AppManager;
 import com.janyo.janyoshare.util.FileUtil;
 
 public class MainActivity extends AppCompatActivity
 {
-	private Toolbar mToolbar;
-	private TabLayout mTabLayout;
-	private ViewPager mViewPager;
-
+	private static final int PERMISSION_CODE = 233;
 	private long oneClickTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		checkPermission();
+		initialization();
+	}
+
+	private void initialization()
+	{
 		setContentView(R.layout.activity_main);
-		initView();
-		FileUtil.DirExist("JanYoShare");
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		TabLayout title_tabs = (TabLayout) findViewById(R.id.title_tabs);
+		ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+		ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.AppType.USER), "User Apps");
+		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.AppType.SYSTEM), "System Apps");
+		viewPager.setAdapter(viewPagerAdapter);
+		title_tabs.setupWithViewPager(viewPager);
+		title_tabs.setTabMode(TabLayout.MODE_FIXED);
+
+		setSupportActionBar(toolbar);
 	}
 
-	private void initView()
+	private void checkPermission()
 	{
-		mToolbar = (Toolbar) findViewById(R.id.activity_toolbar);
-		mTabLayout = (TabLayout) findViewById(R.id.tl_main_tabs);
-		mViewPager = (ViewPager) findViewById(R.id.vp_main_content);
-		initToolBar();
-		initMainContent();
-	}
-
-	private void initToolBar()
-	{
-		setSupportActionBar(mToolbar);
-		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	}
-
-	private void initMainContent()
-	{
-		ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-		Fragment userFragment = new UserFragment();
-		Fragment systemFragment = new SystemFragment();
-		adapter.addFragment(userFragment, "User Apps");
-		adapter.addFragment(systemFragment, "System Apps");
-		mViewPager.setAdapter(adapter);
-		mTabLayout.setupWithViewPager(mViewPager);
+		if (ContextCompat.checkSelfPermission(MainActivity.this,
+				Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				!= PackageManager.PERMISSION_GRANTED)
+		{
+			ActivityCompat.requestPermissions(MainActivity.this,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					PERMISSION_CODE);
+		}
 	}
 
 	@Override
@@ -69,8 +72,6 @@ public class MainActivity extends AppCompatActivity
 			oneClickTime = doubleClickTime;
 		} else
 		{
-			FileUtil.cleanFiles(getApplicationContext());
-			FileUtil.cleanCaches(getApplicationContext());
 			System.exit(0);
 		}
 	}
@@ -78,36 +79,44 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_main, menu);
+		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId())
 		{
-			case R.id.clear:
-				FileUtil.cleanFiles(getApplicationContext());
-				FileUtil.cleanCaches(getApplicationContext());
+			case R.id.action_clear:
+				Toast.makeText(MainActivity.this, "文件清除" + (FileUtil.cleanFileDir("JanYoShare") ? "成功" : "失败") + "！", Toast.LENGTH_SHORT)
+						.show();
 				break;
-			case R.id.about:
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle(" ");
-				builder.setView(LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_about, null));
-				builder.setPositiveButton("关闭", new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(DialogInterface p1, int p2)
-					{
-						p1.dismiss();
-					}
-				});
-				builder.create().show();
-				return true;
+			case R.id.action_about:
+				new AlertDialog.Builder(MainActivity.this)
+						.setTitle(" ")
+						.setView(LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_about, null))
+						.setPositiveButton("关闭", null)
+						.show();
+				break;
 		}
-
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+	{
+		switch (requestCode)
+		{
+			case PERMISSION_CODE:
+				if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
+				{
+					Toast.makeText(MainActivity.this, "请授予存储权限来拷贝apk文件到SD卡", Toast.LENGTH_LONG)
+							.show();
+					finish();
+				}
+				break;
+		}
 	}
 }

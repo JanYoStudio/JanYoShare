@@ -11,18 +11,19 @@
     tools:showIn="@layout/activity_main">
 
     <android.support.design.widget.TabLayout
-        android:id="@+id/tl_main_tabs"
+        android:id="@+id/title_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:tabIndicatorColor="@color/colorPrimaryDark"
-        app:tabSelectedTextColor="#FFFFFF"
-        app:tabTextColor="#FFFFFF"/>
+        app:tabSelectedTextColor="@color/textColorWhite"
+        app:tabTextColor="@color/textColorWhite"/>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/vp_main_content"
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </LinearLayout>
