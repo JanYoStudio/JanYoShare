@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_use_snack_bar">key_use_snack_bar</string>
+    <string name="title_use_snack_bar">使用SnackBar进行提示</string>
+
+    <string name="key_auto_clean">key_auto_clean</string>
+    <string name="title_auto_clean">自动清理</string>
+    <string name="summary_auto_clean">当运行的时候自动清理上一次拷贝的apk文件</string>
+
+    <string name="key_set_dir">key_set_dir</string>
+    <string name="title_set_dir">设置存储文件夹名称</string>
+    <string name="summary_set_dir">将拷贝出来的apk文件放到此目录中，此目录存放于SD卡根目录</string>
+</resources>

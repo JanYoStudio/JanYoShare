@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.widget.Toast;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +14,8 @@ import java.io.InputStream;
 
 public class FileUtil
 {
+	private static final String TAG = "FileUtil";
+
 	public static boolean cleanFileDir(String dir)
 	{
 		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + dir + File.separator);
@@ -21,16 +23,17 @@ public class FileUtil
 		{
 			for (File item : file.listFiles())
 			{
-				item.deleteOnExit();
+				//noinspection ResultOfMethodCallIgnored
+				item.delete();
 			}
 			return true;
 		}
 		return false;
 	}
 
-	private static int fileToSD(String inputPath, String fileName, String version)
+	public static int fileToSD(String inputPath, String fileName, String version, String dir)
 	{
-		File outFile = new File(Environment.getExternalStoragePublicDirectory("JanYoShare"), fileName);
+		File outFile = new File(Environment.getExternalStoragePublicDirectory(dir), fileName);
 		return fileCopy(inputPath, outFile + "_" + version + ".apk");
 	}
 
@@ -63,26 +66,17 @@ public class FileUtil
 		return file.exists() || file.mkdir();
 	}
 
-	private static void Share(Context context, String uri)
+	private static void Share(Context context, File file)
 	{
 		Intent share = new Intent(Intent.ACTION_SEND);
 		share.setType("*/*");
-		share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(uri)));
+		share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 		context.startActivity(Intent.createChooser(share, "分享"));
 	}
 
-	public static void doShare(Context context, String path, String name, String versionName)
+	public static void doShare(Context context, String name, String versionName, String dir)
 	{
-		if (fileToSD(path, name, versionName) == 1)
-		{
-			Toast.makeText(context, "已提取到手机储存/JanYoShare/" + name + "_" + versionName + ".apk", Toast.LENGTH_SHORT)
-					.show();
-			File file = new File(Environment.getExternalStoragePublicDirectory("JanYoShare"), name + "_" + versionName + ".apk");
-			Share(context, file.getPath());
-		} else
-		{
-			Toast.makeText(context, "导出到SD卡出错！", Toast.LENGTH_SHORT)
-					.show();
-		}
+		File file = new File(Environment.getExternalStoragePublicDirectory(dir), name + "_" + versionName + ".apk");
+		Share(context, file);
 	}
 }
