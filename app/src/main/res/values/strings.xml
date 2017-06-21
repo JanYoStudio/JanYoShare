@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">JanYo Share</string>
+    <string name="app_name">JY Share</string>
     <string name="clear_all">清除已复制的包</string>
     <string name="about">关于</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="settings">设置</string>
+    <string name="how_to_use">如何使用</string>
 </resources>

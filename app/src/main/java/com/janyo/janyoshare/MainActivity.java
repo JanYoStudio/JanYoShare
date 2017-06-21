@@ -2,9 +2,11 @@ package com.janyo.janyoshare;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -15,13 +17,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.janyo.janyoshare.util.AppManager;
 import com.janyo.janyoshare.util.FileUtil;
+import com.janyo.janyoshare.util.Settings;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
 {
+	private View coordinatorLayout;
+	private Settings settings;
 	private static final int PERMISSION_CODE = 233;
 	private long oneClickTime;
 
@@ -29,6 +38,7 @@ public class MainActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		settings = new Settings(MainActivity.this);
 		checkPermission();
 		initialization();
 	}
@@ -39,6 +49,7 @@ public class MainActivity extends AppCompatActivity
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		TabLayout title_tabs = (TabLayout) findViewById(R.id.title_tabs);
 		ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+		coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
 		ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.AppType.USER), "User Apps");
@@ -46,6 +57,22 @@ public class MainActivity extends AppCompatActivity
 		viewPager.setAdapter(viewPagerAdapter);
 		title_tabs.setupWithViewPager(viewPager);
 		title_tabs.setTabMode(TabLayout.MODE_FIXED);
+
+		FileUtil.isDirExist(settings.getDir());
+		if (ContextCompat.checkSelfPermission(MainActivity.this,
+				Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				== PackageManager.PERMISSION_GRANTED && settings.isAutoClean())
+		{
+			if (settings.isUseSnackBar())
+			{
+				Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+						.show();
+			} else
+			{
+				Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+						.show();
+			}
+		}
 
 		setSupportActionBar(toolbar);
 	}
@@ -68,11 +95,19 @@ public class MainActivity extends AppCompatActivity
 		long doubleClickTime = System.currentTimeMillis();
 		if (doubleClickTime - oneClickTime > 2000)
 		{
-			Toast.makeText(MainActivity.this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
+			if (settings.isUseSnackBar())
+			{
+				Snackbar.make(coordinatorLayout, "再按一次返回键退出", Snackbar.LENGTH_SHORT)
+						.show();
+			} else
+			{
+				Toast.makeText(MainActivity.this, "再按一次返回键退出", Toast.LENGTH_SHORT)
+						.show();
+			}
 			oneClickTime = doubleClickTime;
 		} else
 		{
-			System.exit(0);
+			finish();
 		}
 	}
 
@@ -90,14 +125,31 @@ public class MainActivity extends AppCompatActivity
 		switch (item.getItemId())
 		{
 			case R.id.action_clear:
-				Toast.makeText(MainActivity.this, "文件清除" + (FileUtil.cleanFileDir("JanYoShare") ? "成功" : "失败") + "！", Toast.LENGTH_SHORT)
-						.show();
+				if (settings.isUseSnackBar())
+				{
+					Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+							.show();
+				} else
+				{
+					Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+							.show();
+				}
 				break;
 			case R.id.action_about:
 				new AlertDialog.Builder(MainActivity.this)
 						.setTitle(" ")
 						.setView(LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_about, null))
 						.setPositiveButton("关闭", null)
+						.show();
+				break;
+			case R.id.action_settings:
+				startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+				break;
+			case R.id.action_help:
+				new AlertDialog.Builder(MainActivity.this)
+						.setTitle(" ")
+						.setView(LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_help, null))
+						.setPositiveButton("确定", null)
 						.show();
 				break;
 		}
@@ -112,9 +164,56 @@ public class MainActivity extends AppCompatActivity
 			case PERMISSION_CODE:
 				if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
 				{
-					Toast.makeText(MainActivity.this, "请授予存储权限来拷贝apk文件到SD卡", Toast.LENGTH_LONG)
-							.show();
-					finish();
+					if (settings.isUseSnackBar())
+					{
+						Snackbar.make(coordinatorLayout, "请授予存储权限来拷贝apk文件到SD卡", Snackbar.LENGTH_LONG)
+								.setAction("确定", new View.OnClickListener()
+								{
+									@Override
+									public void onClick(View view)
+									{
+										checkPermission();
+									}
+								})
+								.addCallback(new Snackbar.Callback()
+								{
+									@Override
+									public void onDismissed(Snackbar transientBottomBar, int event)
+									{
+										if (event != DISMISS_EVENT_ACTION)
+										{
+											finish();
+										}
+									}
+								})
+								.show();
+					} else
+					{
+						Toast.makeText(MainActivity.this, "请授予存储权限来拷贝apk文件到SD卡", Toast.LENGTH_LONG)
+								.show();
+						new Timer().schedule(new TimerTask()
+						{
+							@Override
+							public void run()
+							{
+								finish();
+							}
+						}, 2000);
+					}
+				} else
+				{
+					if (settings.isAutoClean())
+					{
+						if (settings.isUseSnackBar())
+						{
+							Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+									.show();
+						} else
+						{
+							Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+									.show();
+						}
+					}
 				}
 				break;
 		}
