@@ -94,6 +94,7 @@ public class SettingsActivity extends PreferenceActivity
 							.show();
 				}else
 				{
+					settings.setAutoClean(false);
 					auto_clean.setSummary("已关闭自动清理");
 				}
 				return true;
