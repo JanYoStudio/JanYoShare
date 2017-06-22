@@ -18,14 +18,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.janyo.janyoshare.util.AppManager;
 import com.janyo.janyoshare.util.FileUtil;
 import com.janyo.janyoshare.util.Settings;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -58,20 +54,13 @@ public class MainActivity extends AppCompatActivity
 		title_tabs.setupWithViewPager(viewPager);
 		title_tabs.setTabMode(TabLayout.MODE_FIXED);
 
-		FileUtil.isDirExist(settings.getDir());
+		FileUtil.isDirExist(getString(R.string.app_name));
 		if (ContextCompat.checkSelfPermission(MainActivity.this,
 				Manifest.permission.WRITE_EXTERNAL_STORAGE)
 				== PackageManager.PERMISSION_GRANTED && settings.isAutoClean())
 		{
-			if (settings.isUseSnackBar())
-			{
-				Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
-						.show();
-			} else
-			{
-				Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
-						.show();
-			}
+			Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(getString(R.string.app_name)) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+					.show();
 		}
 
 		setSupportActionBar(toolbar);
@@ -95,15 +84,8 @@ public class MainActivity extends AppCompatActivity
 		long doubleClickTime = System.currentTimeMillis();
 		if (doubleClickTime - oneClickTime > 2000)
 		{
-			if (settings.isUseSnackBar())
-			{
-				Snackbar.make(coordinatorLayout, "再按一次返回键退出", Snackbar.LENGTH_SHORT)
-						.show();
-			} else
-			{
-				Toast.makeText(MainActivity.this, "再按一次返回键退出", Toast.LENGTH_SHORT)
-						.show();
-			}
+			Snackbar.make(coordinatorLayout, "再按一次返回键退出", Snackbar.LENGTH_SHORT)
+					.show();
 			oneClickTime = doubleClickTime;
 		} else
 		{
@@ -125,15 +107,8 @@ public class MainActivity extends AppCompatActivity
 		switch (item.getItemId())
 		{
 			case R.id.action_clear:
-				if (settings.isUseSnackBar())
-				{
-					Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
-							.show();
-				} else
-				{
-					Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
-							.show();
-				}
+				Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(getString(R.string.app_name)) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+						.show();
 				break;
 			case R.id.action_about:
 				new AlertDialog.Builder(MainActivity.this)
@@ -164,55 +139,33 @@ public class MainActivity extends AppCompatActivity
 			case PERMISSION_CODE:
 				if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
 				{
-					if (settings.isUseSnackBar())
-					{
-						Snackbar.make(coordinatorLayout, "请授予存储权限来拷贝apk文件到SD卡", Snackbar.LENGTH_LONG)
-								.setAction("确定", new View.OnClickListener()
-								{
-									@Override
-									public void onClick(View view)
-									{
-										checkPermission();
-									}
-								})
-								.addCallback(new Snackbar.Callback()
-								{
-									@Override
-									public void onDismissed(Snackbar transientBottomBar, int event)
-									{
-										if (event != DISMISS_EVENT_ACTION)
-										{
-											finish();
-										}
-									}
-								})
-								.show();
-					} else
-					{
-						Toast.makeText(MainActivity.this, "请授予存储权限来拷贝apk文件到SD卡", Toast.LENGTH_LONG)
-								.show();
-						new Timer().schedule(new TimerTask()
-						{
-							@Override
-							public void run()
+					Snackbar.make(coordinatorLayout, "请授予存储权限来拷贝apk文件到SD卡", Snackbar.LENGTH_LONG)
+							.setAction("确定", new View.OnClickListener()
 							{
-								finish();
-							}
-						}, 2000);
-					}
+								@Override
+								public void onClick(View view)
+								{
+									checkPermission();
+								}
+							})
+							.addCallback(new Snackbar.Callback()
+							{
+								@Override
+								public void onDismissed(Snackbar transientBottomBar, int event)
+								{
+									if (event != DISMISS_EVENT_ACTION)
+									{
+										finish();
+									}
+								}
+							})
+							.show();
 				} else
 				{
 					if (settings.isAutoClean())
 					{
-						if (settings.isUseSnackBar())
-						{
-							Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
-									.show();
-						} else
-						{
-							Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(settings.getDir()) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
-									.show();
-						}
+						Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(getString(R.string.app_name)) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
+								.show();
 					}
 				}
 				break;

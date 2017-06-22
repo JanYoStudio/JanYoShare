@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,8 +13,6 @@ import java.io.InputStream;
 
 public class FileUtil
 {
-	private static final String TAG = "FileUtil";
-
 	public static boolean cleanFileDir(String dir)
 	{
 		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + dir + File.separator);
