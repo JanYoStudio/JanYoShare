@@ -23,6 +23,6 @@ public class Settings
 
 	public boolean isAutoClean()
 	{
-		return sharedPreferences.getBoolean(context.getString(R.string.key_auto_clean), false);
+		return sharedPreferences.getBoolean(context.getString(R.string.key_auto_clean), true);
 	}
 }

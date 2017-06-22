@@ -2,5 +2,4 @@
 <resources>
     <string name="key_auto_clean">key_auto_clean</string>
     <string name="title_auto_clean">自动清理</string>
-    <string name="summary_auto_clean">当运行的时候自动清理上一次拷贝的apk文件</string>
 </resources>
