@@ -22,12 +22,13 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 	private Context context;
 	private List<InstallApp> installAppList;
 	private View coordinatorLayout;
+	private Settings settings;
 
 	public AppRecyclerViewAdapter(Context context, List<InstallApp> installAppList)
 	{
 		this.context = context;
 		this.installAppList = installAppList;
-		Settings settings = new Settings(context);
+		settings = new Settings(context);
 		coordinatorLayout = ((Activity) context).findViewById(R.id.coordinatorLayout);
 	}
 
@@ -72,8 +73,11 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 									{
 										if (event != DISMISS_EVENT_ACTION)
 										{
-											Snackbar.make(coordinatorLayout, "如果没有额外操作，建议您开启自动清理功能。", Snackbar.LENGTH_SHORT)
-													.show();
+											if (!settings.isAutoClean())
+											{
+												Snackbar.make(coordinatorLayout, "如果没有额外操作，建议您开启自动清理功能。", Snackbar.LENGTH_SHORT)
+														.show();
+											}
 										}
 									}
 								})

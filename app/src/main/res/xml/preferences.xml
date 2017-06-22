@@ -3,16 +3,6 @@
 
     <SwitchPreference
         android:key="@string/key_auto_clean"
-        android:summary="@string/summary_auto_clean"
         android:title="@string/title_auto_clean"/>
-
-    <EditTextPreference
-        android:key="@string/key_set_dir"
-        android:summary="@string/summary_set_dir"
-        android:title="@string/title_set_dir"/>
-
-    <SwitchPreference
-        android:key="@string/key_use_snack_bar"
-        android:title="@string/title_use_snack_bar"/>
 
 </PreferenceScreen>

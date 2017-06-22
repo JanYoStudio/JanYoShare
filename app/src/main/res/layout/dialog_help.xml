@@ -13,7 +13,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:gravity="center_horizontal"
-        android:text="如何使用"
+        android:text="@string/how_to_use"
         android:textSize="24sp"
         android:textStyle="bold"/>
 
@@ -25,7 +25,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="长按和单击可以将对应APP的apk安装包导出到SD卡指定目录下，单击导出apk之后会询问是否进行分享操作。"/>
+        android:text="@string/help_text_1"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -35,6 +35,18 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:text="设置中的自动清理指的是在JY Share每一次启动的时候自动清理存放导出apk的文件夹中的文件，避免多余的apk安装包占用SD卡存储空间。"/>
+        android:text="@string/help_text_2"/>
+
+    <TextView
+        android:id="@+id/autoCleanWarn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/autoCleanWarn"
+        android:visibility="gone"/>
 
 </LinearLayout>

@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.janyo.janyoshare.util.AppManager;
 import com.janyo.janyoshare.util.FileUtil;
@@ -121,9 +123,15 @@ public class MainActivity extends AppCompatActivity
 				startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 				break;
 			case R.id.action_help:
+				View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_help, new LinearLayout(MainActivity.this), false);
+				TextView textView = view.findViewById(R.id.autoCleanWarn);
+				if (settings.isAutoClean())
+				{
+					textView.setVisibility(View.VISIBLE);
+				}
 				new AlertDialog.Builder(MainActivity.this)
 						.setTitle(" ")
-						.setView(LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_help, null))
+						.setView(view)
 						.setPositiveButton("确定", null)
 						.show();
 				break;

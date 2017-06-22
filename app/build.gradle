@@ -1,4 +1,11 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.nillith.autoversion'
+
+autoVersion {
+    major 2
+    minor 1
+    patch 1
+}
 
 android {
     compileSdkVersion 26
@@ -7,8 +14,8 @@ android {
         applicationId "com.janyo.janyoshare"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 9
-        versionName "2.1"
+        versionCode autoVersion.code
+        versionName autoVersion.name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
