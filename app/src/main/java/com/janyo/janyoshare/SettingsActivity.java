@@ -1,6 +1,8 @@
 package com.janyo.janyoshare;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -40,10 +42,10 @@ public class SettingsActivity extends PreferenceActivity
 	private void initialization()
 	{
 		auto_clean = (SwitchPreference) findPreference(getString(R.string.key_auto_clean));
-		about=findPreference(getString(R.string.key_about));
-		howToUse=findPreference(getString(R.string.key_how_to_use));
-		openSourceAddress=findPreference(getString(R.string.key_open_source_address));
-		checkUpdate=findPreference(getString(R.string.key_check_update));
+		about = findPreference(getString(R.string.key_about));
+		howToUse = findPreference(getString(R.string.key_how_to_use));
+		openSourceAddress = findPreference(getString(R.string.key_open_source_address));
+		checkUpdate = findPreference(getString(R.string.key_check_update));
 
 		auto_clean.setChecked(settings.isAutoClean());
 		if (settings.isAutoClean())
@@ -101,7 +103,7 @@ public class SettingsActivity extends PreferenceActivity
 								}
 							})
 							.show();
-				}else
+				} else
 				{
 					settings.setAutoClean(false);
 					auto_clean.setSummary("已关闭自动清理");
@@ -116,7 +118,7 @@ public class SettingsActivity extends PreferenceActivity
 			{
 				new AlertDialog.Builder(SettingsActivity.this)
 						.setTitle(" ")
-						.setView(LayoutInflater.from(SettingsActivity.this).inflate(R.layout.dialog_about, null))
+						.setView(LayoutInflater.from(SettingsActivity.this).inflate(R.layout.dialog_about, new LinearLayout(SettingsActivity.this), false))
 						.setPositiveButton("关闭", null)
 						.show();
 				return false;
@@ -146,6 +148,11 @@ public class SettingsActivity extends PreferenceActivity
 			@Override
 			public boolean onPreferenceClick(Preference preference)
 			{
+				Intent intent = new Intent();
+				intent.setAction("android.intent.action.VIEW");
+				Uri content_url = Uri.parse(getString(R.string.address_open_source));
+				intent.setData(content_url);
+				startActivity(intent);
 				return false;
 			}
 		});
@@ -154,6 +161,11 @@ public class SettingsActivity extends PreferenceActivity
 			@Override
 			public boolean onPreferenceClick(Preference preference)
 			{
+				Intent intent = new Intent();
+				intent.setAction("android.intent.action.VIEW");
+				Uri content_url = Uri.parse(getString(R.string.address_check_update));
+				intent.setData(content_url);
+				startActivity(intent);
 				return false;
 			}
 		});
