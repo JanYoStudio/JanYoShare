@@ -10,6 +10,7 @@ public class Settings
 	private Context context;
 	private SharedPreferences sharedPreferences;
 
+
 	public Settings(Context context)
 	{
 		this.context = context;
