@@ -1,8 +1,6 @@
 package com.janyo.janyoshare;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,15 +9,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.janyo.janyoshare.util.AppManager;
 import com.janyo.janyoshare.util.FileUtil;
@@ -93,50 +85,6 @@ public class MainActivity extends AppCompatActivity
 		{
 			finish();
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		getMenuInflater().inflate(R.menu.menu_main, menu);
-		return true;
-	}
-
-	@SuppressLint("InflateParams")
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.action_clear:
-				Snackbar.make(coordinatorLayout, "文件清除" + (FileUtil.cleanFileDir(getString(R.string.app_name)) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
-						.show();
-				break;
-			case R.id.action_about:
-				new AlertDialog.Builder(MainActivity.this)
-						.setTitle(" ")
-						.setView(LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_about, null))
-						.setPositiveButton("关闭", null)
-						.show();
-				break;
-			case R.id.action_settings:
-				startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-				break;
-			case R.id.action_help:
-				View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_help, new LinearLayout(MainActivity.this), false);
-				TextView textView = view.findViewById(R.id.autoCleanWarn);
-				if (settings.isAutoClean())
-				{
-					textView.setVisibility(View.VISIBLE);
-				}
-				new AlertDialog.Builder(MainActivity.this)
-						.setTitle(" ")
-						.setView(view)
-						.setPositiveButton("确定", null)
-						.show();
-				break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
