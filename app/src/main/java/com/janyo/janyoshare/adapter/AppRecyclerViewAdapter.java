@@ -1,6 +1,7 @@
 package com.janyo.janyoshare.adapter;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -52,39 +53,56 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 			@Override
 			public void onClick(View view)
 			{
+				final ProgressDialog progressDialog = new ProgressDialog(context);
+				progressDialog.setCancelable(false);
+				progressDialog.setMessage("提取中……");
+				progressDialog.show();
 				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
 				{
-					int code = FileUtil.fileToSD(installApp.getSourceDir(), installApp.getName(), installApp.getVersionName(), context.getString(R.string.app_name));
-					if (code == 1)
+					new Thread(new Runnable()
 					{
-						Snackbar.make(coordinatorLayout, "文件提取成功，是否进行分享操作？", Snackbar.LENGTH_LONG)
-								.setAction("分享", new View.OnClickListener()
-								{
-									@Override
-									public void onClick(View view)
-									{
-										FileUtil.doShare(context, installApp.getName(), installApp.getVersionName(), context.getString(R.string.app_name));
-									}
-								})
-								.addCallback(new Snackbar.Callback()
-								{
-									@Override
-									public void onDismissed(Snackbar transientBottomBar, int event)
-									{
-										if (event != DISMISS_EVENT_ACTION)
+						@Override
+						public void run()
+						{
+							int code = FileUtil.fileToSD(installApp.getSourceDir(), installApp.getName(), installApp.getVersionName(), context.getString(R.string.app_name));
+							progressDialog.dismiss();
+							if (code == 1)
+							{
+								Snackbar.make(coordinatorLayout, "文件提取成功，是否进行分享操作？", Snackbar.LENGTH_LONG)
+										.setAction("分享", new View.OnClickListener()
 										{
-											if (!settings.isAutoClean())
+											@Override
+											public void onClick(View view)
 											{
-												Snackbar.make(coordinatorLayout, "如果没有额外操作，建议您开启自动清理功能。", Snackbar.LENGTH_SHORT)
-														.show();
+												FileUtil.doShare(context, installApp.getName(), installApp.getVersionName(), context.getString(R.string.app_name));
 											}
-										}
-									}
-								})
-								.show();
-					}
+										})
+										.addCallback(new Snackbar.Callback()
+										{
+											@Override
+											public void onDismissed(Snackbar transientBottomBar, int event)
+											{
+												if (event != DISMISS_EVENT_ACTION)
+												{
+													if (!settings.isAutoClean())
+													{
+														Snackbar.make(coordinatorLayout, "如果没有额外操作，建议您开启自动清理功能。", Snackbar.LENGTH_SHORT)
+																.show();
+													}
+												}
+											}
+										})
+										.show();
+							}else
+							{
+								Snackbar.make(coordinatorLayout,"文件提取失败",Snackbar.LENGTH_SHORT)
+										.show();
+							}
+						}
+					}).start();
 				} else
 				{
+					progressDialog.dismiss();
 					Snackbar.make(coordinatorLayout, "文件夹不存在！", Snackbar.LENGTH_SHORT)
 							.show();
 				}
@@ -95,16 +113,33 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 			@Override
 			public boolean onLongClick(View view)
 			{
+				final ProgressDialog progressDialog = new ProgressDialog(context);
+				progressDialog.setCancelable(false);
+				progressDialog.setMessage("提取中……");
+				progressDialog.show();
 				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
 				{
-					int code = FileUtil.fileToSD(installApp.getSourceDir(), installApp.getName(), installApp.getVersionName(), context.getString(R.string.app_name));
-					if (code == 1)
+					new Thread(new Runnable()
 					{
-						Snackbar.make(coordinatorLayout, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
-								.show();
-					}
+						@Override
+						public void run()
+						{
+							int code = FileUtil.fileToSD(installApp.getSourceDir(), installApp.getName(), installApp.getVersionName(), context.getString(R.string.app_name));
+							progressDialog.dismiss();
+							if (code == 1)
+							{
+								Snackbar.make(coordinatorLayout, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
+										.show();
+							}else
+							{
+								Snackbar.make(coordinatorLayout,"文件提取失败",Snackbar.LENGTH_SHORT)
+										.show();
+							}
+						}
+					}).start();
 				} else
 				{
+					progressDialog.dismiss();
 					Snackbar.make(coordinatorLayout, "文件夹不存在！", Snackbar.LENGTH_SHORT)
 							.show();
 				}
