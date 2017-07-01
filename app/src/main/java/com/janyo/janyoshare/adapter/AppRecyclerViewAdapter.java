@@ -43,6 +43,9 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, int position)
 	{
+		final ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog.setCancelable(false);
+		progressDialog.setMessage("提取中……");
 		final InstallApp installApp = installAppList.get(position);
 		holder.textView_name.setText(installApp.getName());
 		holder.textView_packageName.setText(installApp.getPackageName());
@@ -53,9 +56,6 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 			@Override
 			public void onClick(View view)
 			{
-				final ProgressDialog progressDialog = new ProgressDialog(context);
-				progressDialog.setCancelable(false);
-				progressDialog.setMessage("提取中……");
 				progressDialog.show();
 				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
 				{
@@ -113,9 +113,6 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 			@Override
 			public boolean onLongClick(View view)
 			{
-				final ProgressDialog progressDialog = new ProgressDialog(context);
-				progressDialog.setCancelable(false);
-				progressDialog.setMessage("提取中……");
 				progressDialog.show();
 				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
 				{
