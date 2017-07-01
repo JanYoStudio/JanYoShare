@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.janyo.janyoshare.util.Settings;
 
@@ -20,6 +21,10 @@ public class SettingsActivity extends PreferenceActivity
 	private Settings settings;
 	private Toolbar toolbar;
 	private SwitchPreference auto_clean;
+	private Preference about;
+	private Preference howToUse;
+	private Preference openSourceAddress;
+	private Preference checkUpdate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -35,6 +40,10 @@ public class SettingsActivity extends PreferenceActivity
 	private void initialization()
 	{
 		auto_clean = (SwitchPreference) findPreference(getString(R.string.key_auto_clean));
+		about=findPreference(getString(R.string.key_about));
+		howToUse=findPreference(getString(R.string.key_how_to_use));
+		openSourceAddress=findPreference(getString(R.string.key_open_source_address));
+		checkUpdate=findPreference(getString(R.string.key_check_update));
 
 		auto_clean.setChecked(settings.isAutoClean());
 		if (settings.isAutoClean())
@@ -98,6 +107,54 @@ public class SettingsActivity extends PreferenceActivity
 					auto_clean.setSummary("已关闭自动清理");
 				}
 				return true;
+			}
+		});
+		about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
+				new AlertDialog.Builder(SettingsActivity.this)
+						.setTitle(" ")
+						.setView(LayoutInflater.from(SettingsActivity.this).inflate(R.layout.dialog_about, null))
+						.setPositiveButton("关闭", null)
+						.show();
+				return false;
+			}
+		});
+		howToUse.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
+				View view = LayoutInflater.from(SettingsActivity.this).inflate(R.layout.dialog_help, new LinearLayout(SettingsActivity.this), false);
+				TextView textView = view.findViewById(R.id.autoCleanWarn);
+				if (settings.isAutoClean())
+				{
+					textView.setVisibility(View.VISIBLE);
+				}
+				new AlertDialog.Builder(SettingsActivity.this)
+						.setTitle(" ")
+						.setView(view)
+						.setPositiveButton("确定", null)
+						.show();
+				return false;
+			}
+		});
+		openSourceAddress.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
+				return false;
+			}
+		});
+		checkUpdate.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
+				return false;
 			}
 		});
 	}

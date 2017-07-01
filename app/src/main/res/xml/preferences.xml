@@ -10,13 +10,20 @@
         android:title="@string/about">
 
         <Preference
-            android:title="开源地址"
-            android:key=""/>
+            android:key="@string/key_about"
+            android:title="@string/title_about"/>
 
         <Preference
-            android:title="Google Play商店地址"
-            android:summary="请在Google Play中下载方便开发者查错并且更好的统计"
-            android:key=""/>
+            android:key="@string/key_how_to_use"
+            android:title="@string/title_how_to_use"/>
+
+        <Preference
+            android:key="@string/key_open_source_address"
+            android:title="@string/title_open_source_address"/>
+
+        <Preference
+            android:key="@string/key_check_update"
+            android:title="@string/title_check_update"/>
 
     </PreferenceCategory>
 

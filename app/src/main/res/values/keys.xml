@@ -2,4 +2,17 @@
 <resources>
     <string name="key_auto_clean">key_auto_clean</string>
     <string name="title_auto_clean">自动清理</string>
+
+    <string name="key_about">key_about</string>
+    <string name="title_about">关于</string>
+
+    <string name="key_how_to_use">key_how_to_use</string>
+    <string name="title_how_to_use">如何使用</string>
+
+    <string name="key_open_source_address">key_open_source_address</string>
+    <string name="title_open_source_address">开源地址</string>
+
+    <string name="key_check_update">key_check_update</string>
+    <string name="title_check_update">检查更新</string>
+
 </resources>

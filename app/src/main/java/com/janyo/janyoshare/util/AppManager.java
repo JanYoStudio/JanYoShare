@@ -28,7 +28,7 @@ public class AppManager
 	{
 		PackageManager packageManager = context.getPackageManager();
 		List<PackageInfo> packageInfoList = packageManager.getInstalledPackages(0);
-		List<InstallApp> installAppList=new ArrayList<>();
+		List<InstallApp> installAppList = new ArrayList<>();
 		switch (appType)
 		{
 			case SYSTEM:
@@ -65,5 +65,18 @@ public class AppManager
 				break;
 		}
 		return installAppList;
+	}
+
+	public List<InstallApp> searchApps(List<InstallApp> sourceList, String message)
+	{
+		List<InstallApp> list = new ArrayList<>();
+		for (InstallApp installApp : sourceList)
+		{
+			if (installApp.getName().toLowerCase().contains(message.toLowerCase()))
+			{
+				list.add(installApp);
+			}
+		}
+		return list;
 	}
 }
