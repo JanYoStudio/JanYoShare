@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
         android:key="@string/key_auto_clean"
         android:title="@string/title_auto_clean"/>
+
+    <PreferenceCategory
+        android:title="@string/about">
+
+        <Preference
+            android:title="开源地址"
+            android:key=""/>
+
+        <Preference
+            android:title="Google Play商店地址"
+            android:summary="请在Google Play中下载方便开发者查错并且更好的统计"
+            android:key=""/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
