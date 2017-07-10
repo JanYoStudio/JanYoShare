@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity
 	private void initialization()
 	{
 		setContentView(R.layout.activity_main);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		TabLayout title_tabs = (TabLayout) findViewById(R.id.title_tabs);
-		ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+		Toolbar toolbar = findViewById(R.id.toolbar);
+		TabLayout title_tabs = findViewById(R.id.title_tabs);
+		ViewPager viewPager = findViewById(R.id.viewpager);
 		coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
 		ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
