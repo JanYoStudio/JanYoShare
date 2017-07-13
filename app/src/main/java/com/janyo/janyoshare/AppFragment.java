@@ -83,11 +83,29 @@ public class AppFragment extends Fragment
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.menu_main, menu);
 		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 		final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+		searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener()
+		{
+			@Override
+			public void onFocusChange(View view, boolean b)
+			{
+				MenuItem action_clear = menu.findItem(R.id.action_clear);
+				MenuItem action_settings = menu.findItem(R.id.action_settings);
+				if (b)
+				{
+					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+					action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+				} else
+				{
+					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				}
+			}
+		});
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
 		{
