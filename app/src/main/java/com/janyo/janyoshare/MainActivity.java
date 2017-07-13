@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.view.View;
 import com.janyo.janyoshare.util.AppManager;
 import com.janyo.janyoshare.util.FileUtil;
 import com.janyo.janyoshare.util.Settings;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -47,6 +50,26 @@ public class MainActivity extends AppCompatActivity
 		viewPager.setAdapter(viewPagerAdapter);
 		title_tabs.setupWithViewPager(viewPager);
 		title_tabs.setTabMode(TabLayout.MODE_FIXED);
+
+		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+		{
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+			{
+			}
+
+			@Override
+			public void onPageSelected(int position)
+			{
+				List<Fragment> list = getSupportFragmentManager().getFragments();
+				list.get(position).onResume();
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state)
+			{
+			}
+		});
 
 		FileUtil.isDirExist(getString(R.string.app_name));
 		if (ContextCompat.checkSelfPermission(MainActivity.this,
