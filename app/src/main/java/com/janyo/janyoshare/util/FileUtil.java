@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 
 public class FileUtil
 {
@@ -75,5 +76,25 @@ public class FileUtil
 	{
 		File file = new File(Environment.getExternalStoragePublicDirectory(dir), name + "_" + versionName + ".apk");
 		Share(context, file);
+	}
+
+	public static String FormatFileSize(long fileSize)
+	{
+		DecimalFormat df = new DecimalFormat("#.00");
+		String fileSizeString;
+		if (fileSize < 1024)
+		{
+			fileSizeString = df.format((double) fileSize) + "B";
+		} else if (fileSize < 1048576)
+		{
+			fileSizeString = df.format((double) fileSize / 1024) + "KB";
+		} else if (fileSize < 1073741824)
+		{
+			fileSizeString = df.format((double) fileSize / 1048576) + "MB";
+		} else
+		{
+			fileSizeString = df.format((double) fileSize / 1073741824) + "GB";
+		}
+		return fileSizeString;
 	}
 }

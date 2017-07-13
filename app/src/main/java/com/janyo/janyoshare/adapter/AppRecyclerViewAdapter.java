@@ -51,7 +51,7 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 		holder.textView_packageName.setText(installApp.getPackageName());
 		holder.textView_versionName.setText(installApp.getVersionName());
 		holder.imageView.setImageDrawable(installApp.getIcon());
-		holder.textView_size.setText(installApp.getSize() / 1024 + "KB");
+		holder.textView_size.setText(FileUtil.FormatFileSize(installApp.getSize()));
 		holder.fullView.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
