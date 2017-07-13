@@ -16,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +34,6 @@ import java.util.List;
 
 public class AppFragment extends Fragment
 {
-	private static final String TAG = "AppFragment";
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private AppRecyclerViewAdapter appRecyclerViewAdapter;
 	private List<InstallApp> installAppList = new ArrayList<>();
@@ -91,9 +89,7 @@ public class AppFragment extends Fragment
 					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 				} else
 				{
-					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-					action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+					getActivity().invalidateOptionsMenu();
 				}
 			}
 		});
