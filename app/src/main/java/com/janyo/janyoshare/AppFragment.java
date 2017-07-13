@@ -36,7 +36,6 @@ import java.util.List;
 public class AppFragment extends Fragment
 {
 	private static final String TAG = "AppFragment";
-	private RecyclerView recyclerView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private AppRecyclerViewAdapter appRecyclerViewAdapter;
 	private List<InstallApp> installAppList = new ArrayList<>();
@@ -45,6 +44,11 @@ public class AppFragment extends Fragment
 	private AppManager.AppType type;
 	private Settings settings;
 	private int index = 0;
+	private MyHandler handler;
+
+	public AppFragment()
+	{
+	}
 
 	public static AppFragment newInstance(AppManager.AppType type)
 	{
@@ -54,31 +58,6 @@ public class AppFragment extends Fragment
 		fragment.setArguments(bundle);
 		return fragment;
 	}
-
-	@SuppressWarnings("unchecked")
-	@SuppressLint("HandlerLeak")
-	private Handler handler = new Handler()
-	{
-		@Override
-		public void handleMessage(Message message)
-		{
-			switch (message.what)
-			{
-				case 1:
-					List<InstallApp> installApps = (List<InstallApp>) message.obj;
-					showList.clear();
-					showList.addAll(installApps);
-					installAppList.clear();
-					installAppList.addAll(installApps);
-					appRecyclerViewAdapter = new AppRecyclerViewAdapter(getActivity(), showList);
-					recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-					recyclerView.setAdapter(appRecyclerViewAdapter);
-					appRecyclerViewAdapter.notifyDataSetChanged();
-					swipeRefreshLayout.setRefreshing(false);
-					break;
-			}
-		}
-	};
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState)
@@ -113,8 +92,8 @@ public class AppFragment extends Fragment
 				} else
 				{
 					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-					action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 				}
 			}
 		});
@@ -166,6 +145,7 @@ public class AppFragment extends Fragment
 						.show();
 				break;
 			case R.id.action_sort:
+				index = settings.getSort();
 				new AlertDialog.Builder(getActivity())
 						.setTitle("请选择排序方式")
 						.setSingleChoiceItems(R.array.sort, index, new DialogInterface.OnClickListener()
@@ -199,13 +179,19 @@ public class AppFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_app, container, false);
-		recyclerView = view.findViewById(R.id.recycler_view);
+		RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
 		swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
 		swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_light,
 				android.R.color.holo_green_light,
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light);
+
+		appRecyclerViewAdapter = new AppRecyclerViewAdapter(getActivity(), showList);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		recyclerView.setAdapter(appRecyclerViewAdapter);
+		handler = new MyHandler(showList, installAppList, appRecyclerViewAdapter, swipeRefreshLayout);
+
 		swipeRefreshLayout.setRefreshing(true);
 		refresh();
 
@@ -218,6 +204,15 @@ public class AppFragment extends Fragment
 			}
 		});
 		return view;
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		index = settings.getSort();
+		swipeRefreshLayout.setRefreshing(true);
+		refresh();
 	}
 
 	public void refresh()
@@ -234,5 +229,39 @@ public class AppFragment extends Fragment
 				handler.sendMessage(message);
 			}
 		}).start();
+	}
+}
+
+class MyHandler extends Handler
+{
+	private List<InstallApp> showList;
+	private List<InstallApp> installAppList;
+	private AppRecyclerViewAdapter appRecyclerViewAdapter;
+	private SwipeRefreshLayout swipeRefreshLayout;
+
+	MyHandler(List<InstallApp> showList, List<InstallApp> installAppList, AppRecyclerViewAdapter appRecyclerViewAdapter, SwipeRefreshLayout swipeRefreshLayout)
+	{
+		this.showList = showList;
+		this.installAppList = installAppList;
+		this.appRecyclerViewAdapter = appRecyclerViewAdapter;
+		this.swipeRefreshLayout = swipeRefreshLayout;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void handleMessage(Message message)
+	{
+		switch (message.what)
+		{
+			case 1:
+				List<InstallApp> installApps = (List<InstallApp>) message.obj;
+				showList.clear();
+				showList.addAll(installApps);
+				installAppList.clear();
+				installAppList.addAll(installApps);
+				appRecyclerViewAdapter.notifyDataSetChanged();
+				swipeRefreshLayout.setRefreshing(false);
+				break;
+		}
 	}
 }
