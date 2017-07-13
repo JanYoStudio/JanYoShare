@@ -9,6 +9,7 @@ public class InstallApp
 	private String sourceDir;
 	private String packageName;
 	private Drawable icon;
+	private long size;
 
 	public String getName()
 	{
@@ -58,5 +59,15 @@ public class InstallApp
 	public void setIcon(Drawable icon)
 	{
 		this.icon = icon;
+	}
+
+	public long getSize()
+	{
+		return size;
+	}
+
+	public void setSize(long size)
+	{
+		this.size = size;
 	}
 }
