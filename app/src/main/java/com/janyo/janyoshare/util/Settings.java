@@ -26,4 +26,14 @@ public class Settings
 	{
 		return sharedPreferences.getBoolean(context.getString(R.string.key_auto_clean), true);
 	}
+
+	public void setSort(int type)
+	{
+		sharedPreferences.edit().putInt("sortType", type).apply();
+	}
+
+	public int getSort()
+	{
+		return sharedPreferences.getInt("sortType", 0);
+	}
 }

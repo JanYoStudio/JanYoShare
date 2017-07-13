@@ -3,6 +3,7 @@
     <string name="action_search">搜索</string>
     <string name="action_clear_all">清除已复制的包</string>
     <string name="action_settings">设置</string>
+    <string name="action_sort">排序</string>
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
@@ -10,4 +11,11 @@
     <string name="help_text_1">JY Share可以使你快捷 分享/提取 系统预装/用户安装 的应用程序，并且在操作过程中自动重命名文件，使其具备一个包含意义的档案名。</string>
     <string name="help_text_2">通过单击列表中的应用执行提取操作，你可以进行分享操作，这将调用系统分享组件，应用将以附件形式附加到诸如邮件，或者一些支持文件共享的社交工具。此操作将会在SD卡JY Share目录产生临时文件，将在下一次启动程序时自动清理(默认开启)。为保证临时文件不会对你的剩余空间造成不必要的占用，我们建议你在应用设置中开启自动清理临时文件(默认开启) 。</string>
     <string name="autoCleanWarn">注意，你在使用JYShare提取你所需的App到SD卡JY Share目录后，如果你需要对已提取的App安装包进行额外的操作时，请确保你在下一次启动JYShare时从临时目录转移你的安装包，否则将被自动清理。</string>
+
+    <string-array name="sort">
+        <item>默认排序</item>
+        <item>按名称排序</item>
+        <item>按大小排序</item>
+        <item>按包名排序</item>
+    </string-array>
 </resources>

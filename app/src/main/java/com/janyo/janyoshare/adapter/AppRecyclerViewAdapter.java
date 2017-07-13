@@ -51,6 +51,7 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 		holder.textView_packageName.setText(installApp.getPackageName());
 		holder.textView_versionName.setText(installApp.getVersionName());
 		holder.imageView.setImageDrawable(installApp.getIcon());
+		holder.textView_size.setText(installApp.getSize() / 1024 + "KB");
 		holder.fullView.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -93,9 +94,9 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 											}
 										})
 										.show();
-							}else
+							} else
 							{
-								Snackbar.make(coordinatorLayout,"文件提取失败",Snackbar.LENGTH_SHORT)
+								Snackbar.make(coordinatorLayout, "文件提取失败", Snackbar.LENGTH_SHORT)
 										.show();
 							}
 						}
@@ -127,9 +128,9 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 							{
 								Snackbar.make(coordinatorLayout, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
 										.show();
-							}else
+							} else
 							{
-								Snackbar.make(coordinatorLayout,"文件提取失败",Snackbar.LENGTH_SHORT)
+								Snackbar.make(coordinatorLayout, "文件提取失败", Snackbar.LENGTH_SHORT)
 										.show();
 							}
 						}
@@ -158,6 +159,7 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 		TextView textView_name;
 		TextView textView_packageName;
 		TextView textView_versionName;
+		TextView textView_size;
 
 		public ViewHolder(View itemView)
 		{
@@ -167,6 +169,7 @@ public class AppRecyclerViewAdapter extends RecyclerView.Adapter<AppRecyclerView
 			textView_name = itemView.findViewById(R.id.app_name);
 			textView_packageName = itemView.findViewById(R.id.app_package_name);
 			textView_versionName = itemView.findViewById(R.id.app_version_name);
+			textView_size = itemView.findViewById(R.id.app_size);
 		}
 	}
 }

@@ -9,6 +9,12 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort"
+        android:title="@string/action_sort"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_clear"
         android:icon="@drawable/ic_clear_all"
         android:title="@string/action_clear_all"

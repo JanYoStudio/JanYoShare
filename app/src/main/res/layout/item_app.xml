@@ -51,6 +51,12 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/app_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+
     </LinearLayout>
 
 </RelativeLayout>

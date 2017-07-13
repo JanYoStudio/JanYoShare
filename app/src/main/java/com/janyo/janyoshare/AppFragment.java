@@ -3,6 +3,7 @@ package com.janyo.janyoshare;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,12 +28,14 @@ import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter;
 import com.janyo.janyoshare.classes.InstallApp;
 import com.janyo.janyoshare.util.AppManager;
 import com.janyo.janyoshare.util.FileUtil;
+import com.janyo.janyoshare.util.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AppFragment extends Fragment
 {
+	private static final String TAG = "AppFragment";
 	private RecyclerView recyclerView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private AppRecyclerViewAdapter appRecyclerViewAdapter;
@@ -38,6 +43,8 @@ public class AppFragment extends Fragment
 	private List<InstallApp> showList = new ArrayList<>();
 	private AppManager appManager;
 	private AppManager.AppType type;
+	private Settings settings;
+	private int index = 0;
 
 	public static AppFragment newInstance(AppManager.AppType type)
 	{
@@ -78,7 +85,9 @@ public class AppFragment extends Fragment
 	{
 		super.onCreate(savedInstanceState);
 		type = (AppManager.AppType) getArguments().getSerializable("type");
+		settings = new Settings(getActivity());
 		appManager = new AppManager(getActivity());
+		index = settings.getSort();
 		setHasOptionsMenu(true);
 	}
 
@@ -95,14 +104,17 @@ public class AppFragment extends Fragment
 			{
 				MenuItem action_clear = menu.findItem(R.id.action_clear);
 				MenuItem action_settings = menu.findItem(R.id.action_settings);
+				MenuItem action_sort = menu.findItem(R.id.action_sort);
 				if (b)
 				{
 					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 					action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 				} else
 				{
 					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 					action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				}
 			}
 		});
@@ -153,6 +165,29 @@ public class AppFragment extends Fragment
 				Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), "文件清除" + (FileUtil.cleanFileDir(getString(R.string.app_name)) ? "成功" : "失败") + "！", Snackbar.LENGTH_SHORT)
 						.show();
 				break;
+			case R.id.action_sort:
+				new AlertDialog.Builder(getActivity())
+						.setTitle("请选择排序方式")
+						.setSingleChoiceItems(R.array.sort, index, new DialogInterface.OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i)
+							{
+								index = i;
+							}
+						})
+						.setPositiveButton("确定", new DialogInterface.OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i)
+							{
+								settings.setSort(index);
+								swipeRefreshLayout.setRefreshing(true);
+								refresh();
+							}
+						})
+						.show();
+				break;
 			case R.id.action_settings:
 				startActivity(new Intent(getActivity(), SettingsActivity.class));
 				break;
@@ -192,7 +227,7 @@ public class AppFragment extends Fragment
 			@Override
 			public void run()
 			{
-				List<InstallApp> installAppList = appManager.getInstallAppList(type);
+				List<InstallApp> installAppList = appManager.getInstallAppList(type, index);
 				Message message = new Message();
 				message.obj = installAppList;
 				message.what = 1;
