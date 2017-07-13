@@ -17,7 +17,12 @@ public class FileUtil
 	public static boolean cleanFileDir(String dir)
 	{
 		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + dir + File.separator);
-		if (file.exists() && file.isDirectory())
+		if (!file.exists())
+		{
+			//noinspection ResultOfMethodCallIgnored
+			file.mkdirs();
+		}
+		if (file.isDirectory())
 		{
 			for (File item : file.listFiles())
 			{
