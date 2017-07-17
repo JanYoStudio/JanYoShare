@@ -22,4 +22,10 @@
         <item>按大小排序</item>
         <item>按包名排序</item>
     </string-array>
+
+    <string-array name="copy_do">
+        <item>仅提取</item>
+        <item>提取并分享</item>
+        <item>重命名并分享</item>
+    </string-array>
 </resources>
