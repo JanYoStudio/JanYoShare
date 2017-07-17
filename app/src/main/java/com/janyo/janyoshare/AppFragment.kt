@@ -4,12 +4,10 @@ package com.janyo.janyoshare
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
@@ -28,7 +26,6 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.FileUtil
 import com.janyo.janyoshare.util.Settings
-import java.io.File
 
 import java.util.ArrayList
 
@@ -162,165 +159,6 @@ class AppFragment : Fragment()
 
 		swipeRefreshLayout!!.setOnRefreshListener { refresh() }
 		return view
-	}
-
-	@Suppress("DEPRECATION")
-	override fun onContextItemSelected(item: MenuItem): Boolean
-	{
-		val installApp = appRecyclerViewAdapter!!.installApp
-		val progressDialog = ProgressDialog(context)
-		progressDialog.setCancelable(false)
-		progressDialog.setMessage("提取中……")
-		when (item.itemId)
-		{
-			R.id.action_copy ->
-			{
-				progressDialog.show()
-				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
-				{
-					Thread(Runnable {
-						val code = FileUtil.fileToSD(installApp!!.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-						progressDialog.dismiss()
-						when (code)
-						{
-							-1 ->
-							{
-								Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
-										.show()
-							}
-							0 ->
-							{
-								Snackbar.make(coordinatorLayout!!, "文件已经存在", Snackbar.LENGTH_SHORT)
-										.setAction("重新提取", {
-											progressDialog.show()
-											FileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
-											val temp = FileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-											progressDialog.dismiss()
-											if (temp == 1)
-											{
-												Snackbar.make(coordinatorLayout!!, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
-														.show()
-											}
-											else
-											{
-												Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
-														.show()
-											}
-										})
-										.show()
-							}
-							1 ->
-							{
-								Snackbar.make(coordinatorLayout!!, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
-										.show()
-							}
-						}
-					}).start()
-				}
-				else
-				{
-					progressDialog.dismiss()
-					Snackbar.make(coordinatorLayout!!, "文件夹不存在！", Snackbar.LENGTH_SHORT)
-							.show()
-				}
-				return true
-			}
-			R.id.action_copy_share ->
-			{
-				progressDialog.show()
-				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
-				{
-					Thread(Runnable {
-						val code = FileUtil.fileToSD(installApp!!.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-						progressDialog.dismiss()
-						when (code)
-						{
-							-1 ->
-							{
-								Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
-										.show()
-							}
-							0 ->
-							{
-								Snackbar.make(coordinatorLayout!!, "文件已经存在", Snackbar.LENGTH_SHORT)
-										.setAction("重新提取", {
-											progressDialog.show()
-											Thread(Runnable {
-												FileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
-												val temp = FileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-												progressDialog.dismiss()
-												if (temp == 1)
-												{
-													FileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-												}
-												else
-												{
-													Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
-															.show()
-												}
-											}).start()
-										})
-										.addCallback(object : Snackbar.Callback()
-										{
-											override fun onDismissed(transientBottomBar: Snackbar?,
-																	 event: Int)
-											{
-												if (event != DISMISS_EVENT_ACTION)
-												{
-													FileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-												}
-											}
-										})
-										.show()
-							}
-							1 ->
-							{
-								FileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-							}
-						}
-					}).start()
-				}
-				else
-				{
-					progressDialog.dismiss()
-					Snackbar.make(coordinatorLayout!!, "文件夹不存在！", Snackbar.LENGTH_SHORT)
-							.show()
-				}
-				return true
-			}
-			R.id.action_rename_share ->
-			{
-				progressDialog.show()
-				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
-				{
-					Thread(Runnable {
-						val code = FileUtil.fileToSD(installApp!!.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
-						progressDialog.dismiss()
-						if (code == 1)
-						{
-							val message = Message()
-							message.what = 1
-							message.obj = installApp
-							renameHandler!!.sendMessage(message)
-						}
-						else
-						{
-							Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
-									.show()
-						}
-					}).start()
-				}
-				else
-				{
-					progressDialog.dismiss()
-					Snackbar.make(coordinatorLayout!!, "文件夹不存在！", Snackbar.LENGTH_SHORT)
-							.show()
-				}
-				return true
-			}
-			else ->
-				return super.onContextItemSelected(item)
-		}
 	}
 
 	override fun onResume()
