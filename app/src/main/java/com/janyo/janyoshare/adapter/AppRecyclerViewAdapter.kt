@@ -230,7 +230,7 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 				val view = LayoutInflater.from(activity).inflate(R.layout.dialog_edit, TextInputLayout(activity), false)
 				val text: TextInputLayout = view.findViewById(R.id.layout)
 				text.hint = installApp.name + "_" + installApp.versionName
-				android.support.v7.app.AlertDialog.Builder(activity)
+				AlertDialog.Builder(activity)
 						.setTitle("请输入新的文件名(不包含扩展名)")
 						.setView(view)
 						.setPositiveButton(R.string.action_done, { _, _ ->
