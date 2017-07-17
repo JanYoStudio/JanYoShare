@@ -25,12 +25,16 @@ object FileUtil
 		{
 			for (item in file.listFiles())
 			{
-
-				item.delete()
+				deleteFile(item)
 			}
 			return true
 		}
 		return false
+	}
+
+	fun deleteFile(file: File): Boolean
+	{
+		return file.delete()
 	}
 
 	fun fileToSD(inputPath: String, fileName: String, version: String, dir: String): Int
@@ -41,6 +45,8 @@ object FileUtil
 
 	private fun fileCopy(inputPath: String, outPath: String): Int
 	{
+		if (File(outPath).exists())
+			return 0
 		var code = -1
 		try
 		{
