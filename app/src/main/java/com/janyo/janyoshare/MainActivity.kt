@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import com.janyo.janyoshare.adapter.ViewPagerAdapter
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.FileUtil
 import com.janyo.janyoshare.util.Settings

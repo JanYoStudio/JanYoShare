@@ -1,25 +1,26 @@
+@file:Suppress("DEPRECATION")
+
 package com.janyo.janyoshare
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
+import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
@@ -31,6 +32,7 @@ import java.util.ArrayList
 
 class AppFragment : Fragment()
 {
+	private var coordinatorLayout: CoordinatorLayout? = null
 	private var swipeRefreshLayout: SwipeRefreshLayout? = null
 	private var appRecyclerViewAdapter: AppRecyclerViewAdapter? = null
 	private val installAppList = ArrayList<InstallApp>()
@@ -39,7 +41,8 @@ class AppFragment : Fragment()
 	private var type: AppManager.AppType? = null
 	private var settings: Settings? = null
 	private var index = 0
-	private var handler: MyHandler? = null
+	private var loadHandler: LoadHandler? = null
+	private var renameHandler: RenameHandler? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -51,11 +54,11 @@ class AppFragment : Fragment()
 		setHasOptionsMenu(true)
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?)
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
 	{
-		inflater!!.inflate(R.menu.menu_main, menu)
+		inflater.inflate(R.menu.menu_main, menu)
 		val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-		val searchView = menu!!.findItem(R.id.action_search).actionView as SearchView
+		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
 		searchView.setOnQueryTextFocusChangeListener { _, b ->
 			val action_clear = menu.findItem(R.id.action_clear)
 			val action_settings = menu.findItem(R.id.action_settings)
@@ -109,9 +112,9 @@ class AppFragment : Fragment()
 	}
 
 	@SuppressLint("InflateParams")
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean
+	override fun onOptionsItemSelected(item: MenuItem): Boolean
 	{
-		when (item!!.itemId)
+		when (item.itemId)
 		{
 			R.id.action_clear -> Snackbar.make(activity.findViewById<View>(R.id.coordinatorLayout), "文件清除" + (if (FileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
 					.show()
@@ -136,6 +139,7 @@ class AppFragment : Fragment()
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View?
 	{
+		coordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
 		val view = inflater!!.inflate(R.layout.fragment_app, container, false)
 		val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
 		swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
@@ -148,13 +152,113 @@ class AppFragment : Fragment()
 		appRecyclerViewAdapter = AppRecyclerViewAdapter(activity, showList)
 		recyclerView.layoutManager = LinearLayoutManager(activity)
 		recyclerView.adapter = appRecyclerViewAdapter
-		handler = MyHandler(showList, installAppList, appRecyclerViewAdapter!!, swipeRefreshLayout!!)
+		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter!!, swipeRefreshLayout!!)
+		renameHandler = RenameHandler(activity)
 
 		swipeRefreshLayout!!.isRefreshing = true
 		refresh()
 
 		swipeRefreshLayout!!.setOnRefreshListener { refresh() }
 		return view
+	}
+
+	@Suppress("DEPRECATION")
+	override fun onContextItemSelected(item: MenuItem): Boolean
+	{
+		val installApp = appRecyclerViewAdapter!!.installApp
+		val progressDialog = ProgressDialog(context)
+		progressDialog.setCancelable(false)
+		progressDialog.setMessage("提取中……")
+		when (item.itemId)
+		{
+			R.id.action_copy ->
+			{
+				progressDialog.show()
+				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
+				{
+					Thread(Runnable {
+						val code = FileUtil.fileToSD(installApp!!.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+						progressDialog.dismiss()
+						if (code == 1)
+						{
+							Snackbar.make(coordinatorLayout!!, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
+									.show()
+						}
+						else
+						{
+							Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
+									.show()
+						}
+					}).start()
+				}
+				else
+				{
+					progressDialog.dismiss()
+					Snackbar.make(coordinatorLayout!!, "文件夹不存在！", Snackbar.LENGTH_SHORT)
+							.show()
+				}
+				return true
+			}
+			R.id.action_copy_share ->
+			{
+				progressDialog.show()
+				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
+				{
+					Thread(Runnable {
+						val code = FileUtil.fileToSD(installApp!!.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+						progressDialog.dismiss()
+						if (code == 1)
+						{
+							FileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+						}
+						else
+						{
+							Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
+									.show()
+						}
+					}).start()
+				}
+				else
+				{
+					progressDialog.dismiss()
+					Snackbar.make(coordinatorLayout!!, "文件夹不存在！", Snackbar.LENGTH_SHORT)
+							.show()
+				}
+				return true
+			}
+			R.id.action_rename_share ->
+			{
+				progressDialog.show()
+				if (FileUtil.isDirExist(context.getString(R.string.app_name)))
+				{
+					Thread(Runnable {
+						val code = FileUtil.fileToSD(installApp!!.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+						progressDialog.dismiss()
+						if (code == 1)
+						{
+							val message = Message()
+							message.what = 1
+							message.obj = installApp
+							renameHandler!!.sendMessage(message)
+						}
+						else
+						{
+							Snackbar.make(coordinatorLayout!!, "文件提取失败", Snackbar.LENGTH_SHORT)
+									.show()
+						}
+					}).start()
+				}
+				else
+				{
+					progressDialog.dismiss()
+					Snackbar.make(coordinatorLayout!!, "文件夹不存在！", Snackbar.LENGTH_SHORT)
+							.show()
+				}
+				return true
+			}
+			else ->
+				return super.onContextItemSelected(item)
+		}
 	}
 
 	override fun onResume()
@@ -172,13 +276,12 @@ class AppFragment : Fragment()
 			val message = Message()
 			message.obj = installAppList
 			message.what = 1
-			handler!!.sendMessage(message)
+			loadHandler!!.sendMessage(message)
 		}).start()
 	}
 
 	companion object
 	{
-
 		fun newInstance(type: AppManager.AppType): AppFragment
 		{
 			val bundle = Bundle()
@@ -190,10 +293,10 @@ class AppFragment : Fragment()
 	}
 }
 
-internal class MyHandler(private val showList: MutableList<InstallApp>,
-						 private val installAppList: MutableList<InstallApp>,
-						 private val appRecyclerViewAdapter: AppRecyclerViewAdapter,
-						 private val swipeRefreshLayout: SwipeRefreshLayout) : Handler()
+internal class LoadHandler(private val showList: MutableList<InstallApp>,
+						   private val installAppList: MutableList<InstallApp>,
+						   private val appRecyclerViewAdapter: AppRecyclerViewAdapter,
+						   private val swipeRefreshLayout: SwipeRefreshLayout) : Handler()
 {
 
 	@Suppress("UNCHECKED_CAST")
@@ -210,6 +313,39 @@ internal class MyHandler(private val showList: MutableList<InstallApp>,
 				installAppList.addAll(installApps)
 				appRecyclerViewAdapter.notifyDataSetChanged()
 				swipeRefreshLayout.isRefreshing = false
+			}
+		}
+	}
+}
+
+internal class RenameHandler(private val activity: Activity) : Handler()
+{
+	override fun handleMessage(message: Message)
+	{
+		when (message.what)
+		{
+			1 ->
+			{
+				val installApp = message.obj as InstallApp
+				val coordinatorLayout: CoordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
+				val view = LayoutInflater.from(activity).inflate(R.layout.dialog_edit, TextInputLayout(activity), false)
+				val text: TextInputLayout = view.findViewById(R.id.layout)
+				text.hint = installApp.name + "_" + installApp.versionName
+				AlertDialog.Builder(activity)
+						.setTitle("请输入新的文件名(不包含扩展名)")
+						.setView(view)
+						.setPositiveButton(R.string.action_done, { _, _ ->
+							if (FileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
+							{
+								FileUtil.doShare(activity, text.editText!!.text.toString(), activity.getString(R.string.app_name))
+							}
+							else
+							{
+								Snackbar.make(coordinatorLayout, "重命名失败，已取消分享！", Snackbar.LENGTH_SHORT)
+										.show()
+							}
+						})
+						.show()
 			}
 		}
 	}
