@@ -47,11 +47,11 @@ object FileUtil
 			val fileInputStream = FileInputStream(inputPath)
 			val fileOutputStream = FileOutputStream(outPath)
 			val Buff = ByteArray(1024)
-			var ReadCount=0
-			while (ReadCount!=-1)
+			var ReadCount = 0
+			while (ReadCount != -1)
 			{
-				fileOutputStream.write(Buff,0,ReadCount)
-				ReadCount=fileInputStream.read(Buff)
+				fileOutputStream.write(Buff, 0, ReadCount)
+				ReadCount = fileInputStream.read(Buff)
 			}
 			fileInputStream.close()
 			code = 1
@@ -62,6 +62,12 @@ object FileUtil
 		}
 
 		return code
+	}
+
+	fun fileRename(name: String, versionName: String, dir: String, newName: String): Boolean
+	{
+		val file = File(Environment.getExternalStoragePublicDirectory(dir), name + "_" + versionName + ".apk")
+		return file.renameTo(File(Environment.getExternalStoragePublicDirectory(dir), newName + ".apk"))
 	}
 
 	fun isDirExist(dir: String): Boolean
@@ -81,7 +87,12 @@ object FileUtil
 
 	fun doShare(context: Context, name: String, versionName: String, dir: String)
 	{
-		val file = File(Environment.getExternalStoragePublicDirectory(dir), name + "_" + versionName + ".apk")
+		doShare(context, name + "_" + versionName + ".apk", dir)
+	}
+
+	fun doShare(context: Context, fileName: String, dir: String)
+	{
+		val file = File(Environment.getExternalStoragePublicDirectory(dir), fileName)
 		Share(context, file)
 	}
 

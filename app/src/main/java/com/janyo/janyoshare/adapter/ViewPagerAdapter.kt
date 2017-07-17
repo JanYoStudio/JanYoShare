@@ -1,4 +1,4 @@
-package com.janyo.janyoshare
+package com.janyo.janyoshare.adapter
 
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
