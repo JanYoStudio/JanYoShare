@@ -236,7 +236,7 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							if (FileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
 							{
-								FileUtil.doShare(activity, text.editText!!.text.toString(), activity.getString(R.string.app_name))
+								FileUtil.doShare(activity, text.editText!!.text.toString() + ".apk", activity.getString(R.string.app_name))
 							}
 							else
 							{
