@@ -6,6 +6,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Environment
 import android.os.Handler
 import android.os.Message
@@ -16,6 +18,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
