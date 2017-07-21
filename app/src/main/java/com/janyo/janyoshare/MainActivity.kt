@@ -13,11 +13,14 @@ import com.janyo.janyoshare.adapter.ViewPagerAdapter
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.FileUtil
 import com.janyo.janyoshare.util.Settings
+import com.mystery0.tools.CrashHandler.CrashHandler
+import com.mystery0.tools.Logs.Logs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity()
 {
+	private val TAG = "MainActivity"
 	private var settings: Settings? = null
 	private val PERMISSION_CODE = 233
 	private var oneClickTime: Long = 0
@@ -66,6 +69,19 @@ class MainActivity : AppCompatActivity()
 			Snackbar.make(coordinatorLayout, "文件清除" + (if (FileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
 					.show()
 		}
+		CrashHandler.getInstance(this)
+				.clean(object : CrashHandler.AutoCleanListener
+				{
+					override fun done()
+					{
+						Logs.i(TAG, "done: clean crash log")
+					}
+
+					override fun error(message: String?)
+					{
+						Logs.i(TAG, "error: " + message)
+					}
+				})
 
 		setSupportActionBar(toolbar)
 	}
