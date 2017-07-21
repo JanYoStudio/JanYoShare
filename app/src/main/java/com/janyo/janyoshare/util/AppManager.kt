@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 
 import com.janyo.janyoshare.classes.InstallApp
+import com.mystery0.tools.Logs.Logs
 
 import java.io.File
 import java.util.ArrayList
@@ -11,6 +12,7 @@ import java.util.Collections
 
 class AppManager(private val context: Context)
 {
+	private val TAG = "AppManager"
 
 	enum class AppType
 	{
@@ -34,7 +36,14 @@ class AppManager(private val context: Context)
 					installApp.versionName = packageInfo.versionName
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
-					installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
+					try
+					{
+						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
+					}
+					catch (e: OutOfMemoryError)
+					{
+						Logs.i(TAG, "getInstallAppList: out of memory")
+					}
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installAppList.add(installApp)
 				}
@@ -49,7 +58,14 @@ class AppManager(private val context: Context)
 					installApp.versionName = packageInfo.versionName
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
-					installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
+					try
+					{
+						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
+					}
+					catch (e: OutOfMemoryError)
+					{
+						Logs.i(TAG, "getInstallAppList: out of memory")
+					}
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installAppList.add(installApp)
 				}

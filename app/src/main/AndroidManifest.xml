@@ -34,6 +34,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Preference">
         </activity>
+        <activity
+            android:name=".FileTransferActivity"
+            android:label="@string/title_activity_file_transfer"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>

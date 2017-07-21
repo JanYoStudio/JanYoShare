@@ -8,59 +8,59 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/dialog_about_margin_top_title"
         android:gravity="center_horizontal"
-        android:text="JanYo Studio"
-        android:textSize="24sp"
+        android:text="@string/janyo_studio"
+        android:textSize="@dimen/dialog_help_text_size"
         android:textStyle="bold"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/dialog_about_margin_top"
         android:gravity="center_horizontal"
-        android:text="DickLight"
-        android:textSize="18sp"/>
+        android:text="@string/dicklight"
+        android:textSize="@dimen/dialog_about_name_size"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="ZH_LYH"
-        android:textSize="18sp"/>
+        android:text="@string/zh_lyh"
+        android:textSize="@dimen/dialog_about_name_size"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="CieyGet"
-        android:textSize="18sp"/>
+        android:text="@string/cieyget"
+        android:textSize="@dimen/dialog_about_name_size"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Mystery0"
-        android:textSize="18sp"/>
+        android:text="@string/mystery0"
+        android:textSize="@dimen/dialog_about_name_size"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Gsoy"
-        android:textSize="18sp"/>
+        android:text="@string/gsoy"
+        android:textSize="@dimen/dialog_about_name_size"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/dialog_about_margin_top"
         android:gravity="center_horizontal"
-        android:text="Copyright @2016-2017 JanYo Studio"/>
+        android:text="@string/copyright"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="All Right Reserved"/>
+        android:text="@string/all_right_reserved"/>
 
 </LinearLayout>
