@@ -4,14 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
-import android.util.Log
+import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.text.DecimalFormat
 
 object FileUtil
 {
@@ -107,24 +106,6 @@ object FileUtil
 
 	fun FormatFileSize(fileSize: Long): String
 	{
-		val df = DecimalFormat("#.00")
-		val fileSizeString: String
-		if (fileSize < 1024)
-		{
-			fileSizeString = df.format(fileSize.toDouble()) + "B"
-		}
-		else if (fileSize < 1048576)
-		{
-			fileSizeString = df.format(fileSize.toDouble() / 1024) + "KB"
-		}
-		else if (fileSize < 1073741824)
-		{
-			fileSizeString = df.format(fileSize.toDouble() / 1048576) + "MB"
-		}
-		else
-		{
-			fileSizeString = df.format(fileSize.toDouble() / 1073741824) + "GB"
-		}
-		return fileSizeString
+		return FileUtil.FormatFileSize(fileSize)
 	}
 }
