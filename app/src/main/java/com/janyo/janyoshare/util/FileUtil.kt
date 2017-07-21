@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
+import com.mystery0.tools.Logs.Logs
 
 import java.io.File
 import java.io.FileInputStream
@@ -13,20 +15,18 @@ import java.text.DecimalFormat
 
 object FileUtil
 {
+	private val TAG = "FileUtil"
+
 	fun cleanFileDir(dir: String): Boolean
 	{
 		val file = File(Environment.getExternalStorageDirectory().absolutePath + File.separator + dir + File.separator)
 		if (!file.exists())
 		{
-
 			file.mkdirs()
 		}
 		if (file.isDirectory)
 		{
-			for (item in file.listFiles())
-			{
-				deleteFile(item)
-			}
+			file.listFiles().forEach { deleteFile(it) }
 			return true
 		}
 		return false
@@ -34,7 +34,10 @@ object FileUtil
 
 	fun deleteFile(file: File): Boolean
 	{
-		return file.delete()
+		if (file.isFile)
+			return file.delete()
+		Logs.i(TAG, "deleteFile: 该文件不是文件")
+		return true
 	}
 
 	fun fileToSD(inputPath: String, fileName: String, version: String, dir: String): Int
