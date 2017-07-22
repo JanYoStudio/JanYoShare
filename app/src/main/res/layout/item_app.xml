@@ -32,25 +32,28 @@
 
         <TextView
             android:id="@+id/app_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/textColorBlack"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/app_package_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/textColorBlack"/>
 
         <TextView
             android:id="@+id/app_version_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/textColorBlue"/>
 
