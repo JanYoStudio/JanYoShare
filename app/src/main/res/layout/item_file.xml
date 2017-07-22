@@ -23,18 +23,20 @@
 
         <TextView
             android:id="@+id/fileName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/textColorBlack"
             android:textSize="@dimen/item_file_name_size"/>
 
         <TextView
             android:id="@+id/filePath"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:ellipsize="end"
             android:maxLines="1"/>
 
         <ProgressBar
