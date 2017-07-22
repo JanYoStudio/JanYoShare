@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:maxLines="1"
             android:textColor="@color/textColorBlack"
             android:textSize="@dimen/item_file_name_size"/>
 
@@ -33,7 +34,8 @@
             android:id="@+id/filePath"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:maxLines="1"/>
 
         <ProgressBar
             android:id="@+id/progressBar"

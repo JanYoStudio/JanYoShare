@@ -36,14 +36,9 @@ class AppManager(private val context: Context)
 					installApp.versionName = packageInfo.versionName
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
-					try
-					{
-						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
-					}
-					catch (e: OutOfMemoryError)
-					{
-						Logs.i(TAG, "getInstallAppList: out of memory")
-					}
+					val path = context.cacheDir.absolutePath + File.separator + installApp.packageName
+					FileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path)
+					installApp.icon = path
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installAppList.add(installApp)
 				}
@@ -58,14 +53,9 @@ class AppManager(private val context: Context)
 					installApp.versionName = packageInfo.versionName
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
-					try
-					{
-						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
-					}
-					catch (e: OutOfMemoryError)
-					{
-						Logs.i(TAG, "getInstallAppList: out of memory")
-					}
+					val path = context.cacheDir.absolutePath + File.separator + installApp.packageName
+					FileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path)
+					installApp.icon = path
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installAppList.add(installApp)
 				}
