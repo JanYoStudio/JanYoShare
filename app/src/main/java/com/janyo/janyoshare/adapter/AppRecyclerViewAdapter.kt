@@ -45,7 +45,6 @@ class AppRecyclerViewAdapter(private val context: Context,
 		holder.textView_packageName.text = installApp.packageName
 		holder.textView_versionName.text = installApp.versionName
 		Glide.with(context).load(installApp.icon).into(holder.imageView)
-//		holder.imageView.setImageDrawable(installApp.icon)
 		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
 		holder.fullView.setOnClickListener {
 			AlertDialog.Builder(context)

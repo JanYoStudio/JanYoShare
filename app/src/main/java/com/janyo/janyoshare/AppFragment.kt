@@ -36,8 +36,7 @@ class AppFragment : Fragment()
 	private var appRecyclerViewAdapter: AppRecyclerViewAdapter? = null
 	private val installAppList = ArrayList<InstallApp>()
 	private val showList = ArrayList<InstallApp>()
-	private var appManager: AppManager? = null
-	private var type: AppManager.AppType? = null
+	private var type = -1
 	private var settings: Settings? = null
 	private var index = 0
 	private var loadHandler: LoadHandler? = null
@@ -46,9 +45,8 @@ class AppFragment : Fragment()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		type = arguments.getSerializable("type") as AppManager.AppType
+		type = arguments.getInt("type")
 		settings = Settings(activity)
-		appManager = AppManager(activity)
 		index = settings!!.sort
 		setHasOptionsMenu(true)
 	}
@@ -81,7 +79,7 @@ class AppFragment : Fragment()
 				showList.clear()
 				if (query.isNotEmpty())
 				{
-					val searchList = appManager!!.searchApps(installAppList, query)
+					val searchList = AppManager.searchApps(installAppList, query)
 					showList.addAll(searchList)
 				}
 				else
@@ -97,7 +95,7 @@ class AppFragment : Fragment()
 				showList.clear()
 				if (newText.isNotEmpty())
 				{
-					val searchList = appManager!!.searchApps(installAppList, newText)
+					val searchList = AppManager.searchApps(installAppList, newText)
 					showList.addAll(searchList)
 				}
 				else
@@ -172,7 +170,7 @@ class AppFragment : Fragment()
 	fun refresh()
 	{
 		Thread(Runnable {
-			val installAppList = appManager!!.getInstallAppList(type!!, index)
+			val installAppList = AppManager.getInstallAppList(activity, type, index)
 			val message = Message()
 			message.obj = installAppList
 			message.what = 1
@@ -182,10 +180,10 @@ class AppFragment : Fragment()
 
 	companion object
 	{
-		fun newInstance(type: AppManager.AppType): AppFragment
+		fun newInstance(type: Int): AppFragment
 		{
 			val bundle = Bundle()
-			bundle.putSerializable("type", type)
+			bundle.putInt("type", type)
 			val fragment = AppFragment()
 			fragment.arguments = bundle
 			return fragment
