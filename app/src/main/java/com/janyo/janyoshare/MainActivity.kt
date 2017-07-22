@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity()
 		setContentView(R.layout.activity_main)
 
 		val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.AppType.USER), "User Apps")
-		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.AppType.SYSTEM), "System Apps")
+		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.USER), "User Apps")
+		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.SYSTEM), "System Apps")
 		viewpager.adapter = viewPagerAdapter
 		title_tabs.setupWithViewPager(viewpager)
 		title_tabs.tabMode = TabLayout.MODE_FIXED

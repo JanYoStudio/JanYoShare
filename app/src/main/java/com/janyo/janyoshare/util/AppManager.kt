@@ -4,29 +4,24 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 
 import com.janyo.janyoshare.classes.InstallApp
-import com.mystery0.tools.Logs.Logs
 
 import java.io.File
 import java.util.ArrayList
 import java.util.Collections
 
-class AppManager(private val context: Context)
+object AppManager
 {
-	private val TAG = "AppManager"
+	var SYSTEM = 1
+	var USER = 2
 
-	enum class AppType
-	{
-		SYSTEM, USER
-	}
-
-	fun getInstallAppList(appType: AppType, type: Int): List<InstallApp>
+	fun getInstallAppList(context: Context, appType: Int, type: Int): List<InstallApp>
 	{
 		val packageManager = context.packageManager
 		val packageInfoList = packageManager.getInstalledPackages(0)
 		val installAppList = ArrayList<InstallApp>()
 		when (appType)
 		{
-			AppManager.AppType.SYSTEM -> for (i in packageInfoList.indices)
+			1 -> for (i in packageInfoList.indices)
 			{
 				val installApp = InstallApp()
 				val packageInfo = packageInfoList[i]
@@ -43,7 +38,7 @@ class AppManager(private val context: Context)
 					installAppList.add(installApp)
 				}
 			}
-			AppManager.AppType.USER -> for (i in packageInfoList.indices)
+			2 -> for (i in packageInfoList.indices)
 			{
 				val installApp = InstallApp()
 				val packageInfo = packageInfoList[i]
