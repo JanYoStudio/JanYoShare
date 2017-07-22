@@ -2,8 +2,14 @@ package com.janyo.janyoshare.util
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
 import android.net.Uri
 import android.os.Environment
+import android.support.graphics.drawable.VectorDrawableCompat
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 
@@ -11,6 +17,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+
 
 object FileUtil
 {
@@ -107,5 +114,57 @@ object FileUtil
 	fun FormatFileSize(fileSize: Long): String
 	{
 		return FileUtil.FormatFileSize(fileSize)
+	}
+
+	fun saveDrawableToSd(drawable: Drawable, path: String)
+	{
+		try
+		{
+			val file = File(path)
+			val out = FileOutputStream(file)
+			val bitmap: Bitmap
+			if (drawable is BitmapDrawable)
+			{
+				bitmap = drawable.bitmap
+			}
+			else if (drawable is VectorDrawableCompat)
+			{
+				bitmap = getBitmap(drawable)
+			}
+			else if (drawable is VectorDrawable)
+			{
+				bitmap = getBitmap(drawable)
+			}
+			else
+			{
+				throw IllegalArgumentException("Unsupported drawable type")
+			}
+			bitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+			out.close()
+		}
+		catch (e: IOException)
+		{
+			e.printStackTrace()
+		}
+	}
+
+	private fun getBitmap(vectorDrawable: VectorDrawable): Bitmap
+	{
+		val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth,
+				vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+		val canvas = Canvas(bitmap)
+		vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+		vectorDrawable.draw(canvas)
+		return bitmap
+	}
+
+	private fun getBitmap(vectorDrawableCompat: VectorDrawableCompat): Bitmap
+	{
+		val bitmap = Bitmap.createBitmap(vectorDrawableCompat.intrinsicWidth,
+				vectorDrawableCompat.intrinsicHeight, Bitmap.Config.ARGB_8888)
+		val canvas = Canvas(bitmap)
+		vectorDrawableCompat.setBounds(0, 0, canvas.width, canvas.height)
+		vectorDrawableCompat.draw(canvas)
+		return bitmap
 	}
 }

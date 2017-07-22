@@ -6,8 +6,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Environment
 import android.os.Handler
 import android.os.Message
@@ -46,7 +44,8 @@ class AppRecyclerViewAdapter(private val context: Context,
 		holder.textView_name.text = installApp.name
 		holder.textView_packageName.text = installApp.packageName
 		holder.textView_versionName.text = installApp.versionName
-		holder.imageView.setImageDrawable(installApp.icon)
+		Glide.with(context).load(installApp.icon).into(holder.imageView)
+//		holder.imageView.setImageDrawable(installApp.icon)
 		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
 		holder.fullView.setOnClickListener {
 			AlertDialog.Builder(context)
