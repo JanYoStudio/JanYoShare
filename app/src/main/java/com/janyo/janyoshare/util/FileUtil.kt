@@ -2,6 +2,7 @@ package com.janyo.janyoshare.util
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
@@ -123,21 +124,12 @@ object FileUtil
 			val file = File(path)
 			val out = FileOutputStream(file)
 			val bitmap: Bitmap
-			if (drawable is BitmapDrawable)
+			when
 			{
-				bitmap = drawable.bitmap
-			}
-			else if (drawable is VectorDrawableCompat)
-			{
-				bitmap = getBitmap(drawable)
-			}
-			else if (drawable is VectorDrawable)
-			{
-				bitmap = getBitmap(drawable)
-			}
-			else
-			{
-				throw IllegalArgumentException("Unsupported drawable type")
+				(drawable is BitmapDrawable) -> bitmap = drawable.bitmap
+				(drawable is VectorDrawableCompat) -> bitmap = getBitmap(drawable)
+				(drawable is VectorDrawable) -> bitmap = getBitmap(drawable)
+				else -> throw IllegalArgumentException("Unsupported drawable type")
 			}
 			bitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
 			out.close()
@@ -166,5 +158,27 @@ object FileUtil
 		vectorDrawableCompat.setBounds(0, 0, canvas.width, canvas.height)
 		vectorDrawableCompat.draw(canvas)
 		return bitmap
+	}
+
+	fun getFileEnd(path: String?): String
+	{
+		return path!!.substring(path.lastIndexOf(".") + 1)
+	}
+
+	fun getApkIconPath(context: Context, apkPath: String?): String
+	{
+		val packageManager = context.packageManager
+		val packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES)
+		val path: String
+		if (packageInfo != null)
+		{
+			val applicationInfo = packageInfo.applicationInfo
+			applicationInfo.sourceDir = apkPath
+			applicationInfo.publicSourceDir = apkPath
+			path = context.cacheDir.absolutePath + File.separator + applicationInfo.packageName
+			saveDrawableToSd(applicationInfo.loadIcon(packageManager), path)
+			return path
+		}
+		return "null"
 	}
 }
