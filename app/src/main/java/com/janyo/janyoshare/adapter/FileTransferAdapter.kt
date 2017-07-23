@@ -1,5 +1,6 @@
 package com.janyo.janyoshare.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +9,14 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
+import com.janyo.janyoshare.util.FileUtil
 import com.mystery0.tools.Logs.Logs
 
-
-class FileTransferAdapter(
-		var list: List<TransferFile>) : RecyclerView.Adapter<FileTransferAdapter.ViewHolder>()
+class FileTransferAdapter(private var context: Context,
+						  var list: List<TransferFile>) : RecyclerView.Adapter<FileTransferAdapter.ViewHolder>()
 {
 	private val TAG = "FileTransferAdapter"
 
@@ -23,6 +25,21 @@ class FileTransferAdapter(
 		val transferFile = list[position]
 		holder.progressBar.max = 100
 		holder.progressBar.progress = 20
+		when (FileUtil.getFileEnd(transferFile.filePath))
+		{
+			"png", "jpg", "jpeg" ->
+			{
+				Glide.with(context).load(transferFile.filePath).into(holder.fileImg)
+			}
+			"apk" ->
+			{
+				Glide.with(context).load(FileUtil.getApkIconPath(context, transferFile.filePath)).into(holder.fileImg)
+			}
+			else ->
+			{
+				Glide.with(context).load(R.drawable.ic_unknown_file_type).into(holder.fileImg)
+			}
+		}
 		holder.fileName.text = transferFile.fileName
 		holder.filePath.text = transferFile.filePath
 		holder.fileSize.text = transferFile.fileSize

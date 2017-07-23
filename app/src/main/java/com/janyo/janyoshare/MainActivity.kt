@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity()
 			override fun onPageSelected(position: Int)
 			{
 				val list = supportFragmentManager.fragments
-				list[position].onResume()
+				(list[position] as AppFragment).refreshList()
 			}
 
 			override fun onPageScrollStateChanged(state: Int)

@@ -159,9 +159,8 @@ class AppFragment : Fragment()
 		return view
 	}
 
-	override fun onResume()
+	fun refreshList()
 	{
-		super.onResume()
 		index = settings!!.sort
 		swipeRefreshLayout!!.isRefreshing = true
 		refresh()
