@@ -1,66 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dialog_about_margin_top_title"
-        android:gravity="center_horizontal"
-        android:text="@string/janyo_studio"
-        android:textSize="@dimen/dialog_help_text_size"
-        android:textStyle="bold"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dialog_about_margin_top"
-        android:gravity="center_horizontal"
-        android:text="@string/dicklight"
-        android:textSize="@dimen/dialog_about_name_size"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_about_margin_top_title"
+            android:gravity="center_horizontal"
+            android:text="@string/janyo_studio"
+            android:textSize="@dimen/dialog_help_text_size"
+            android:textStyle="bold"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/zh_lyh"
-        android:textSize="@dimen/dialog_about_name_size"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_about_margin_top"
+            android:gravity="center_horizontal"
+            android:text="@string/dicklight"
+            android:textSize="@dimen/dialog_about_name_size"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/cieyget"
-        android:textSize="@dimen/dialog_about_name_size"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/zh_lyh"
+            android:textSize="@dimen/dialog_about_name_size"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/mystery0"
-        android:textSize="@dimen/dialog_about_name_size"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/cieyget"
+            android:textSize="@dimen/dialog_about_name_size"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/gsoy"
-        android:textSize="@dimen/dialog_about_name_size"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/mystery0"
+            android:textSize="@dimen/dialog_about_name_size"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dialog_about_margin_top"
-        android:gravity="center_horizontal"
-        android:text="@string/copyright"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/gsoy"
+            android:textSize="@dimen/dialog_about_name_size"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/all_right_reserved"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_about_margin_top"
+            android:gravity="center_horizontal"
+            android:text="@string/copyright"/>
 
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/all_right_reserved"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

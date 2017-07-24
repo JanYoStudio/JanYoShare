@@ -12,7 +12,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
-import com.janyo.janyoshare.util.FileUtil
+import com.janyo.janyoshare.util.JYFileUtil
 import com.mystery0.tools.Logs.Logs
 
 class FileTransferAdapter(private var context: Context,
@@ -25,7 +25,7 @@ class FileTransferAdapter(private var context: Context,
 		val transferFile = list[position]
 		holder.progressBar.max = 100
 		holder.progressBar.progress = 20
-		when (FileUtil.getFileEnd(transferFile.filePath))
+		when (JYFileUtil.getFileEnd(transferFile.filePath))
 		{
 			"png", "jpg", "jpeg" ->
 			{
@@ -38,7 +38,7 @@ class FileTransferAdapter(private var context: Context,
 			{
 				Logs.i(TAG, "onBindViewHolder: apk")
 				Glide.with(context)
-						.load(FileUtil.getApkIconPath(context, transferFile.filePath))
+						.load(JYFileUtil.getApkIconPath(context, transferFile.filePath))
 						.into(holder.fileImg)
 			}
 			else ->

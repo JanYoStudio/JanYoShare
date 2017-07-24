@@ -6,12 +6,18 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.support.v4.widget.NestedScrollView
+import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
 import com.janyo.janyoshare.adapter.ViewPagerAdapter
 import com.janyo.janyoshare.util.AppManager
-import com.janyo.janyoshare.util.FileUtil
+import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.CrashHandler.CrashHandler
 import com.mystery0.tools.Logs.Logs
@@ -62,11 +68,11 @@ class MainActivity : AppCompatActivity()
 			}
 		})
 
-		FileUtil.isDirExist(getString(R.string.app_name))
+		JYFileUtil.isDirExist(getString(R.string.app_name))
 		if (ContextCompat.checkSelfPermission(this,
 				Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && settings!!.isAutoClean)
 		{
-			Snackbar.make(coordinatorLayout, "文件清除" + (if (FileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
+			Snackbar.make(coordinatorLayout, "文件清除" + (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
 					.show()
 		}
 		CrashHandler.getInstance(this)
@@ -84,6 +90,39 @@ class MainActivity : AppCompatActivity()
 				})
 
 		setSupportActionBar(toolbar)
+
+		if (settings!!.isFirst)
+		{
+			val view_howToUse = LayoutInflater.from(this).inflate(R.layout.dialog_help, NestedScrollView(this), false)
+			val textView = view_howToUse.findViewById<TextView>(R.id.autoCleanWarn)
+			if (settings!!.isAutoClean)
+			{
+				textView.visibility = View.VISIBLE
+			}
+			AlertDialog.Builder(this)
+					.setTitle(" ")
+					.setView(view_howToUse)
+					.setPositiveButton("确定", null)
+					.setOnDismissListener {
+						val view_license = LayoutInflater.from(this).inflate(R.layout.dialog_license, NestedScrollView(this), false)
+						val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
+						val text_license_point2 = view_license.findViewById<TextView>(R.id.license_point2)
+						val text_license_point3 = view_license.findViewById<TextView>(R.id.license_point3)
+						val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
+						point!!.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
+						text_license_point1.setCompoundDrawables(point, null, null, null)
+						text_license_point2.setCompoundDrawables(point, null, null, null)
+						text_license_point3.setCompoundDrawables(point, null, null, null)
+						AlertDialog.Builder(this)
+								.setTitle(" ")
+								.setView(view_license)
+								.setPositiveButton("确定", { _, _ ->
+									settings!!.isFirst = false
+								})
+								.show()
+					}
+					.show()
+		}
 	}
 
 	private fun checkPermission()
@@ -137,7 +176,7 @@ class MainActivity : AppCompatActivity()
 			{
 				if (settings!!.isAutoClean)
 				{
-					Snackbar.make(coordinatorLayout, "文件清除" + (if (FileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
+					Snackbar.make(coordinatorLayout, "文件清除" + (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
 							.show()
 				}
 			}

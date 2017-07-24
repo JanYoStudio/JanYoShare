@@ -20,7 +20,7 @@ import com.bumptech.glide.Glide
 
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
-import com.janyo.janyoshare.util.FileUtil
+import com.janyo.janyoshare.util.JYFileUtil
 import java.io.File
 
 class AppRecyclerViewAdapter(private val context: Context,
@@ -45,7 +45,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 		holder.textView_packageName.text = installApp.packageName
 		holder.textView_versionName.text = installApp.versionName
 		Glide.with(context).load(installApp.icon).into(holder.imageView)
-		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
+		holder.textView_size.text = JYFileUtil.FormatFileSize(installApp.size)
 		holder.fullView.setOnClickListener {
 			AlertDialog.Builder(context)
 					.setTitle("请选择操作")
@@ -55,10 +55,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 							0 ->
 							{
 								progressDialog.show()
-								if (FileUtil.isDirExist(context.getString(R.string.app_name)))
+								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
 								{
 									Thread(Runnable {
-										val code = FileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+										val code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 										progressDialog.dismiss()
 										when (code)
 										{
@@ -73,8 +73,8 @@ class AppRecyclerViewAdapter(private val context: Context,
 														.setAction("重新提取", {
 															progressDialog.show()
 															Thread(Runnable {
-																FileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
-																val temp = FileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+																JYFileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
+																val temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 																progressDialog.dismiss()
 																if (temp == 1)
 																{
@@ -108,10 +108,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 							1 ->
 							{
 								progressDialog.show()
-								if (FileUtil.isDirExist(context.getString(R.string.app_name)))
+								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
 								{
 									Thread(Runnable {
-										val code = FileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+										val code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 										progressDialog.dismiss()
 										when (code)
 										{
@@ -126,12 +126,12 @@ class AppRecyclerViewAdapter(private val context: Context,
 														.setAction("重新提取", {
 															progressDialog.show()
 															Thread(Runnable {
-																FileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
-																val temp = FileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+																JYFileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
+																val temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 																progressDialog.dismiss()
 																if (temp == 1)
 																{
-																	FileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+																	JYFileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 																}
 																else
 																{
@@ -148,7 +148,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 															{
 																if (event != DISMISS_EVENT_ACTION)
 																{
-																	FileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+																	JYFileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 																}
 															}
 														})
@@ -156,7 +156,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 											}
 											1 ->
 											{
-												FileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+												JYFileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 											}
 										}
 									}).start()
@@ -171,10 +171,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 							2 ->
 							{
 								progressDialog.show()
-								if (FileUtil.isDirExist(context.getString(R.string.app_name)))
+								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
 								{
 									Thread(Runnable {
-										val code = FileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+										val code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 										progressDialog.dismiss()
 										if (code != -1)
 										{
@@ -235,9 +235,9 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 						.setTitle("请输入新的文件名(不包含扩展名)")
 						.setView(view)
 						.setPositiveButton(R.string.action_done, { _, _ ->
-							if (FileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
+							if (JYFileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
 							{
-								FileUtil.doShare(activity, text.editText!!.text.toString() + ".apk", activity.getString(R.string.app_name))
+								JYFileUtil.doShare(activity, text.editText!!.text.toString() + ".apk", activity.getString(R.string.app_name))
 							}
 							else
 							{

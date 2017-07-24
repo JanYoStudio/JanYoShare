@@ -8,6 +8,9 @@
     <dimen name="dialog_about_margin_top_title">20dp</dimen>
     <dimen name="dialog_about_margin_top">5dp</dimen>
     <dimen name="dialog_about_name_size">18sp</dimen>
+    <dimen name="dialog_license_title">18sp</dimen>
+    <dimen name="dialog_license_margin_top_title">20dp</dimen>
+    <dimen name="dialog_license_margin_top">5dp</dimen>
     <dimen name="item_app_height">60dp</dimen>
     <dimen name="item_app_margin">5dp</dimen>
     <dimen name="item_file_height">76dp</dimen>

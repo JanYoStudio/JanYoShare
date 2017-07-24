@@ -22,6 +22,10 @@
             android:title="@string/title_open_source_address"/>
 
         <Preference
+            android:key="@string/key_license"
+            android:title="@string/title_license"/>
+
+        <Preference
             android:key="@string/key_check_update"
             android:title="@string/title_check_update"/>
 

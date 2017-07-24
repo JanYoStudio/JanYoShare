@@ -12,6 +12,9 @@
     <string name="key_open_source_address">key_open_source_address</string>
     <string name="title_open_source_address">开源地址</string>
 
+    <string name="key_license">key_license</string>
+    <string name="title_license">授权相关</string>
+
     <string name="key_check_update">key_check_update</string>
     <string name="title_check_update">检查更新</string>
 
