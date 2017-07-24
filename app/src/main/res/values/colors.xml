@@ -6,4 +6,7 @@
     <color name="textColorBlack">#000000</color>
     <color name="textColorBlue">#66CCFF</color>
     <color name="textColorWhite">#FFFFFF</color>
+    <color name="textColorRed">#F44336</color>
+    <color name="textColorCyan">#00BCD4</color>
+    <color name="textColorIndigo">#3F51B5</color>
 </resources>
