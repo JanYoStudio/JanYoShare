@@ -32,7 +32,7 @@ object AppManager
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
 					val path = context.cacheDir.absolutePath + File.separator + installApp.packageName
-					FileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path)
+					JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path)
 					installApp.icon = path
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installAppList.add(installApp)
@@ -49,7 +49,7 @@ object AppManager
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
 					val path = context.cacheDir.absolutePath + File.separator + installApp.packageName
-					FileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path)
+					JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path)
 					installApp.icon = path
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installAppList.add(installApp)

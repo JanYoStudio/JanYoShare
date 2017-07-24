@@ -16,4 +16,8 @@ class Settings(private val context: Context)
 	var sort: Int
 		get() = sharedPreferences.getInt("sortType", 0)
 		set(type) = sharedPreferences.edit().putInt("sortType", type).apply()
+
+	var isFirst: Boolean
+		get() = sharedPreferences.getBoolean("isFirst", true)
+		set(isFirst) = sharedPreferences.edit().putBoolean("isFirst", isFirst).apply()
 }

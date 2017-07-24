@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceActivity
 import android.preference.SwitchPreference
+import android.support.graphics.drawable.VectorDrawableCompat
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -26,6 +28,7 @@ class SettingsActivity : PreferenceActivity()
 	private var about: Preference? = null
 	private var howToUse: Preference? = null
 	private var openSourceAddress: Preference? = null
+	private var license: Preference? = null
 	private var checkUpdate: Preference? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -44,6 +47,7 @@ class SettingsActivity : PreferenceActivity()
 		about = findPreference(getString(R.string.key_about))
 		howToUse = findPreference(getString(R.string.key_how_to_use))
 		openSourceAddress = findPreference(getString(R.string.key_open_source_address))
+		license = findPreference(getString(R.string.key_license))
 		checkUpdate = findPreference(getString(R.string.key_check_update))
 
 		auto_clean!!.isChecked = settings!!.isAutoClean
@@ -119,6 +123,25 @@ class SettingsActivity : PreferenceActivity()
 			val content_url = Uri.parse(getString(R.string.address_open_source))
 			intent.data = content_url
 			startActivity(intent)
+			false
+		}
+		license!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+			val view_license = LayoutInflater.from(this@SettingsActivity).inflate(R.layout.dialog_license, NestedScrollView(this@SettingsActivity), false)
+			val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
+			val text_license_point2 = view_license.findViewById<TextView>(R.id.license_point2)
+			val text_license_point3 = view_license.findViewById<TextView>(R.id.license_point3)
+			val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
+			point!!.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
+			text_license_point1.setCompoundDrawables(point, null, null, null)
+			text_license_point2.setCompoundDrawables(point, null, null, null)
+			text_license_point3.setCompoundDrawables(point, null, null, null)
+			AlertDialog.Builder(this)
+					.setTitle(" ")
+					.setView(view_license)
+					.setPositiveButton("确定", { _, _ ->
+						settings!!.isFirst = false
+					})
+					.show()
 			false
 		}
 		checkUpdate!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {

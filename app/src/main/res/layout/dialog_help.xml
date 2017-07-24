@@ -1,52 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/dialog_margin"
         android:layout_marginLeft="@dimen/dialog_margin"
         android:layout_marginRight="@dimen/dialog_margin"
         android:layout_marginStart="@dimen/dialog_margin"
-        android:gravity="center_horizontal"
-        android:text="@string/how_to_use"
-        android:textSize="@dimen/dialog_help_text_size"
-        android:textStyle="bold"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dialog_margin"
-        android:layout_marginLeft="@dimen/dialog_margin"
-        android:layout_marginRight="@dimen/dialog_margin"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginTop="@dimen/dialog_margin"
-        android:text="@string/help_text_1"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/how_to_use"
+            android:textSize="@dimen/dialog_help_text_size"
+            android:textStyle="bold"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dialog_margin"
-        android:layout_marginLeft="@dimen/dialog_margin"
-        android:layout_marginRight="@dimen/dialog_margin"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginTop="@dimen/dialog_help_margin_top"
-        android:text="@string/help_text_2"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_margin"
+            android:text="@string/help_text_1"/>
 
-    <TextView
-        android:id="@+id/autoCleanWarn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dialog_margin"
-        android:layout_marginLeft="@dimen/dialog_margin"
-        android:layout_marginRight="@dimen/dialog_margin"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginTop="@dimen/dialog_help_margin_top"
-        android:text="@string/autoCleanWarn"
-        android:visibility="gone"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_help_margin_top"
+            android:text="@string/help_text_2"/>
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/autoCleanWarn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_help_margin_top"
+            android:text="@string/autoCleanWarn"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

@@ -24,7 +24,7 @@ import android.view.*
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.util.AppManager
-import com.janyo.janyoshare.util.FileUtil
+import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 
 import java.util.ArrayList
@@ -113,7 +113,7 @@ class AppFragment : Fragment()
 	{
 		when (item.itemId)
 		{
-			R.id.action_clear -> Snackbar.make(activity.findViewById<View>(R.id.coordinatorLayout), "文件清除" + (if (FileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
+			R.id.action_clear -> Snackbar.make(activity.findViewById<View>(R.id.coordinatorLayout), "文件清除" + (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
 					.show()
 			R.id.action_sort ->
 			{
@@ -232,9 +232,9 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 						.setTitle("请输入新的文件名(不包含扩展名)")
 						.setView(view)
 						.setPositiveButton(R.string.action_done, { _, _ ->
-							if (FileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
+							if (JYFileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
 							{
-								FileUtil.doShare(activity, text.editText!!.text.toString(), activity.getString(R.string.app_name))
+								JYFileUtil.doShare(activity, text.editText!!.text.toString(), activity.getString(R.string.app_name))
 							}
 							else
 							{

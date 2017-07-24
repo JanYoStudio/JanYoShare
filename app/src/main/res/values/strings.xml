@@ -25,6 +25,15 @@
     <string name="help_text_1">JY Share可以使你快捷 分享/提取 系统预装/用户安装 的应用程序，并且在操作过程中自动重命名文件或者手动重命名，使其具备一个包含意义的文件名。</string>
     <string name="help_text_2">通过单击列表中的应用然后选择对应的操作，这将调用系统分享组件，应用将以附件形式附加到诸如邮件，或者一些支持文件共享的社交工具。此操作将会在SD卡JY Share目录产生临时文件，将在下一次启动程序时自动清理(默认开启)。为保证临时文件不会对你的剩余空间造成不必要的占用，我们建议你在应用设置中开启自动清理临时文件(默认开启) 。</string>
     <string name="autoCleanWarn">注意，你在使用JYShare提取你所需的App到SD卡JY Share目录后，如果你需要对已提取的App安装包进行额外的操作时，请确保你在下一次启动JYShare时从临时目录转移你的安装包，否则将被自动清理。</string>
+    <string name="license_title">“JanYo Studio” 授权解决方案</string>
+    <string name="license_subtitle">为避免在其它非“JanYo Studio”通过书面授权认可的平台引发的授权 风险/争议，特拟此案。</string>
+    <string name="license_text1">“JanYo Studio”(以下简称“工作室”)发布的产品缺省使用“GPL（GNU General Public License）”授权协议。工作室将在产品内部标识产品源程序及其附属品，使得任何人可以自由获取、阅读、传播，以及基于源代码重新构建它的二进制版本并发行该副本。</string>
+    <string name="license_text2">工作室希望使用者在自由使用我们的产品时，尊重工作室的劳动成果，承认工作室的知识产权。</string>
+    <string name="license_text3">工作室保证产品的自由使用、传播、阅读不受限，使用者应保障工作室的合法权益：</string>
+    <string name="license_text4">针对开源资料，禁止删改原作者注明的版权、授权方式 等信息。</string>
+    <string name="license_text5">源代码允许自由使用、添加至自己的项目，但必须注明来源，以及源的授权协议。</string>
+    <string name="license_text6">在从事盈利、商用活动中，针对产品的传播复制需注明来源，以及源的授权协议。</string>
+    <string name="license_text7">针对产品授权、答疑可电邮至工作室官方电子邮箱 : mystery0dyl520@gmail.com</string>
 
     <string-array name="sort">
         <item>默认排序</item>
@@ -38,5 +47,6 @@
         <item>提取并分享</item>
         <item>重命名并分享</item>
     </string-array>
-    <string name="title_activity_file_transfer">FileTransferActivity</string>
+
+    <string name="title_activity_file_transfer">文件传输</string>
 </resources>

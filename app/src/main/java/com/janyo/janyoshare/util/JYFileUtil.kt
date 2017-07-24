@@ -20,9 +20,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-object FileUtil
+object JYFileUtil
 {
-	private val TAG = "FileUtil"
+	private val TAG = "JYFileUtil"
 
 	fun cleanFileDir(dir: String): Boolean
 	{
