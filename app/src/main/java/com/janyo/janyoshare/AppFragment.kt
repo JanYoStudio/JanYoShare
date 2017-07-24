@@ -113,15 +113,15 @@ class AppFragment : Fragment()
 	{
 		when (item.itemId)
 		{
-			R.id.action_clear -> Snackbar.make(activity.findViewById<View>(R.id.coordinatorLayout), "文件清除" + (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
+			R.id.action_clear -> Snackbar.make(activity.findViewById<View>(R.id.coordinatorLayout), String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
 					.show()
 			R.id.action_sort ->
 			{
 				index = settings!!.sort
 				AlertDialog.Builder(activity)
-						.setTitle("请选择排序方式")
+						.setTitle(R.string.hint_select_sort)
 						.setSingleChoiceItems(R.array.sort, index) { _, i -> index = i }
-						.setPositiveButton("确定") { _, _ ->
+						.setPositiveButton(R.string.action_done) { _, _ ->
 							settings!!.sort = index
 							swipeRefreshLayout!!.isRefreshing = true
 							refresh()
@@ -229,7 +229,7 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 				val text: TextInputLayout = view.findViewById(R.id.layout)
 				text.hint = installApp.name + "_" + installApp.versionName
 				AlertDialog.Builder(activity)
-						.setTitle("请输入新的文件名(不包含扩展名)")
+						.setTitle(R.string.hint_new_name)
 						.setView(view)
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							if (JYFileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
@@ -238,7 +238,7 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 							}
 							else
 							{
-								Snackbar.make(coordinatorLayout, "重命名失败，已取消分享！", Snackbar.LENGTH_SHORT)
+								Snackbar.make(coordinatorLayout, R.string.hint_rename_error, Snackbar.LENGTH_SHORT)
 										.show()
 							}
 						})

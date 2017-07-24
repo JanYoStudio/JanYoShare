@@ -29,21 +29,18 @@ class FileTransferAdapter(private var context: Context,
 		{
 			"png", "jpg", "jpeg" ->
 			{
-				Logs.i(TAG, "onBindViewHolder: 图片")
 				Glide.with(context)
 						.load(transferFile.filePath)
 						.into(holder.fileImg)
 			}
 			"apk" ->
 			{
-				Logs.i(TAG, "onBindViewHolder: apk")
 				Glide.with(context)
 						.load(JYFileUtil.getApkIconPath(context, transferFile.filePath))
 						.into(holder.fileImg)
 			}
 			else ->
 			{
-				Logs.i(TAG, "onBindViewHolder: 未知格式")
 				holder.fileImg.setImageResource(R.mipmap.ic_file)
 			}
 		}

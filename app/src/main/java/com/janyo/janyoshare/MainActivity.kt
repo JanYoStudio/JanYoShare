@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity()
 		if (ContextCompat.checkSelfPermission(this,
 				Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && settings!!.isAutoClean)
 		{
-			Snackbar.make(coordinatorLayout, "文件清除" + (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
+			Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
 					.show()
 		}
 		CrashHandler.getInstance(this)
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity()
 			AlertDialog.Builder(this)
 					.setTitle(" ")
 					.setView(view_howToUse)
-					.setPositiveButton("确定", null)
+					.setPositiveButton(R.string.action_done, null)
 					.setOnDismissListener {
 						val view_license = LayoutInflater.from(this).inflate(R.layout.dialog_license, NestedScrollView(this), false)
 						val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity()
 						AlertDialog.Builder(this)
 								.setTitle(" ")
 								.setView(view_license)
-								.setPositiveButton("确定", { _, _ ->
+								.setPositiveButton(R.string.action_done, { _, _ ->
 									settings!!.isFirst = false
 								})
 								.show()
@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity()
 		val doubleClickTime = System.currentTimeMillis()
 		if (doubleClickTime - oneClickTime > 2000)
 		{
-			Snackbar.make(coordinatorLayout, "再按一次返回键退出", Snackbar.LENGTH_SHORT)
+			Snackbar.make(coordinatorLayout, R.string.hint_twice_exit, Snackbar.LENGTH_SHORT)
 					.show()
 			oneClickTime = doubleClickTime
 		}
@@ -158,8 +158,8 @@ class MainActivity : AppCompatActivity()
 		{
 			PERMISSION_CODE -> if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
 			{
-				Snackbar.make(coordinatorLayout, "请授予存储权限来拷贝apk文件到SD卡", Snackbar.LENGTH_LONG)
-						.setAction("确定") { checkPermission() }
+				Snackbar.make(coordinatorLayout, R.string.hint_permission, Snackbar.LENGTH_LONG)
+						.setAction(R.string.action_done) { checkPermission() }
 						.addCallback(object : Snackbar.Callback()
 						{
 							override fun onDismissed(transientBottomBar: Snackbar?, event: Int)
@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity()
 			{
 				if (settings!!.isAutoClean)
 				{
-					Snackbar.make(coordinatorLayout, "文件清除" + (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败") + "！", Snackbar.LENGTH_SHORT)
+					Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
 							.show()
 				}
 			}

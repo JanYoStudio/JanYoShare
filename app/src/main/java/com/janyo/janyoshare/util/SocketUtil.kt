@@ -26,14 +26,12 @@ class SocketUtil
 	fun createSocketConnection(host: String, port: Int): Boolean
 	{
 		socket = Socket(host, port)
-		Logs.i(TAG, "createSocketConnection: isConnected: " + socket!!.isConnected)
 		return socket!!.isConnected
 	}
 
 	fun createServerConnection(port: Int): Boolean
 	{
 		socket = ServerSocket(port).accept()
-		Logs.i(TAG, "createSocketConnection: isConnected: " + socket!!.isConnected)
 		return socket!!.isConnected
 	}
 
@@ -54,6 +52,5 @@ class SocketUtil
 	fun disConnect()
 	{
 		socket!!.close()
-		Logs.i(TAG, "disConnect: isClosed: " + socket!!.isClosed)
 	}
 }
