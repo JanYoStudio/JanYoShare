@@ -14,11 +14,19 @@ import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.util.FileUtil
 import com.mystery0.tools.Logs.Logs
+import java.io.File
 
 class FileTransferAdapter(private var context: Context,
 						  var list: List<TransferFile>) : RecyclerView.Adapter<FileTransferAdapter.ViewHolder>()
 {
 	private val TAG = "FileTransferAdapter"
+	private var path: String = context.cacheDir.absolutePath + File.separator + "unknown_type_file"
+
+	init
+	{
+		@Suppress("DEPRECATION")
+		FileUtil.saveDrawableToSd(context.resources.getDrawable(R.drawable.ic_file), path)
+	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int)
 	{
@@ -29,15 +37,24 @@ class FileTransferAdapter(private var context: Context,
 		{
 			"png", "jpg", "jpeg" ->
 			{
-				Glide.with(context).load(transferFile.filePath).into(holder.fileImg)
+				Logs.i(TAG, "onBindViewHolder: 图片")
+				Glide.with(context)
+						.load(transferFile.filePath)
+						.into(holder.fileImg)
 			}
 			"apk" ->
 			{
-				Glide.with(context).load(FileUtil.getApkIconPath(context, transferFile.filePath)).into(holder.fileImg)
+				Logs.i(TAG, "onBindViewHolder: apk")
+				Glide.with(context)
+						.load(FileUtil.getApkIconPath(context, transferFile.filePath))
+						.into(holder.fileImg)
 			}
 			else ->
 			{
-				Glide.with(context).load(R.drawable.ic_unknown_file_type).into(holder.fileImg)
+				Logs.i(TAG, "onBindViewHolder: 未知格式")
+				Glide.with(context)
+						.load(path)
+						.into(holder.fileImg)
 			}
 		}
 		holder.fileName.text = transferFile.fileName
