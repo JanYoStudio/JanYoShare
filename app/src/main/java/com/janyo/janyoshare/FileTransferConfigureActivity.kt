@@ -9,7 +9,7 @@ import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import com.janyo.janyoshare.util.SocketUtil
-import com.janyo.janyoshare.util.WIFIUtilg
+import com.janyo.janyoshare.util.WIFIUtil
 import com.mystery0.tools.Logs.Logs
 
 import kotlinx.android.synthetic.main.activity_file_transfer_configure.*
@@ -66,7 +66,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			progressDialog!!.setMessage("Waiting……")
 			progressDialog!!.show()
 			Thread(Runnable {
-				WIFIUtilg(this).scanIP(object : WIFIUtilg.ScanListener
+				WIFIUtil(this).scanIP(object : WIFIUtil.ScanListener
 				{
 					override fun onScanFinish(ipv4: String)
 					{

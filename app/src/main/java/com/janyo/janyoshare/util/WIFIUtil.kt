@@ -7,9 +7,9 @@ import com.mystery0.tools.Logs.Logs
 import java.net.NetworkInterface
 import java.net.SocketException
 
-class WIFIUtilg(var context: Context)
+class WIFIUtil(var context: Context)
 {
-	private val TAG = "WIFIUtilg"
+	private val TAG = "WIFIUtil"
 	private val PORT = 8989//端口号
 	private var localAddress = ""//存储本机ip，例：本地ip ：192.168.1.1
 	private val ping = "ping -c 1 -w 0.5 "//其中 -c 1为发送的次数，-w 表示发送后等待响应的时间
