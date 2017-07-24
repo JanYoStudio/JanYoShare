@@ -8,11 +8,8 @@ import com.janyo.janyoshare.classes.TransferFile
 
 import kotlinx.android.synthetic.main.activity_file_transfer.*
 import android.content.Intent
-import com.janyo.janyoshare.util.WifiUtil
 import com.mystery0.tools.FileUtil.FileUtil
-import com.mystery0.tools.Logs.Logs
 import java.io.File
-import java.net.ServerSocket
 
 class FileTransferActivity : AppCompatActivity()
 {
@@ -20,12 +17,10 @@ class FileTransferActivity : AppCompatActivity()
 	private val CHOOSE_FILE = 233
 	private var list: ArrayList<TransferFile>? = null
 	private var adapter: FileTransferAdapter? = null
-	private var wifiUtil: WifiUtil? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		wifiUtil = WifiUtil("127.0.0.1", 1989)
 		setContentView(R.layout.activity_file_transfer)
 		setSupportActionBar(toolbar)
 		list = ArrayList<TransferFile>()

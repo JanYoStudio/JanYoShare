@@ -6,9 +6,7 @@ import com.mystery0.tools.Logs.Logs
 import kotlinx.android.synthetic.main.activity_test.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.ServerSocket
 import java.net.Socket
-import java.nio.charset.Charset
 
 class TestActivity : AppCompatActivity()
 {
