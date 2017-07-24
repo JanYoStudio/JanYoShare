@@ -128,7 +128,7 @@ class AppFragment : Fragment()
 						}
 						.show()
 			}
-			R.id.action_settings -> startActivity(Intent(activity, FileTransferActivity::class.java))
+			R.id.action_settings -> startActivity(Intent(activity, FileTransferConfigureActivity::class.java))
 		}
 		return super.onOptionsItemSelected(item)
 	}

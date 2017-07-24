@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.janyo.janyoshare.FileTransferConfigureActivity"
+    tools:showIn="@layout/activity_file_transfer_configure">
+
+    <TextView
+        android:id="@+id/sendFile"
+        android:layout_width="@dimen/item_file_transfer_configure_button_size"
+        android:layout_height="@dimen/item_file_transfer_configure_button_size"
+        android:background="@drawable/ic_circle_cyan"
+        android:gravity="center"
+        android:text="@string/send_file"/>
+
+    <TextView
+        android:id="@+id/receiveFile"
+        android:layout_width="@dimen/item_file_transfer_configure_button_size"
+        android:layout_height="@dimen/item_file_transfer_configure_button_size"
+        android:background="@drawable/ic_circle_cyan"
+        android:backgroundTint="@color/textColorIndigo"
+        android:gravity="center"
+        android:text="@string/receive_file"/>
+
+</LinearLayout>

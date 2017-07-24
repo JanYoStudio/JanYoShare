@@ -49,4 +49,7 @@
     </string-array>
 
     <string name="title_activity_file_transfer">文件传输</string>
+    <string name="title_activity_file_transfer_configure">FileTransferConfigureActivity</string>
+    <string name="send_file">发送文件</string>
+    <string name="receive_file">接收文件</string>
 </resources>

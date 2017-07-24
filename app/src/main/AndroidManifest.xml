@@ -3,6 +3,7 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".APP"
@@ -39,6 +40,7 @@
             android:label="@string/title_activity_file_transfer"
             android:theme="@style/AppTheme">
         </activity>
+
         <service
             android:name=".service.ShareTileService"
             android:icon="@drawable/ic_share"
@@ -48,6 +50,14 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE"/>
             </intent-filter>
         </service>
+
+        <activity android:name=".TestActivity">
+        </activity>
+        <activity
+            android:name=".FileTransferConfigureActivity"
+            android:label="@string/title_activity_file_transfer_configure"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>
