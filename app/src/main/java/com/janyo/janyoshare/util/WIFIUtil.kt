@@ -7,10 +7,9 @@ import com.mystery0.tools.Logs.Logs
 import java.net.NetworkInterface
 import java.net.SocketException
 
-class WIFIUtil(var context: Context)
+class WIFIUtil(var context: Context, val port: Int)
 {
 	private val TAG = "WIFIUtil"
-	private val PORT = 8989//端口号
 	private var localAddress = ""//存储本机ip，例：本地ip ：192.168.1.1
 	private val ping = "ping -c 1 -w 0.5 "//其中 -c 1为发送的次数，-w 表示发送后等待响应的时间
 
@@ -68,14 +67,9 @@ class WIFIUtil(var context: Context)
 					if (result == 0)
 					{
 						val socketUtil = SocketUtil()
-						if (socketUtil.createSocketConnection(currentIP, PORT))
+						if (socketUtil.createSocketConnection(currentIP, port))
 						{
-							scanListener.onScanFinish(currentIP)
-							Logs.i(TAG, "scanIP: 连接成功: " + currentIP)
-							socketUtil.sendMessage("scan" + localAddress + "(" + Build.MODEL + ")")
-							val resultMessage = socketUtil.receiveMessage()
-							if (resultMessage == context.getString(R.string.app_name))
-								scanListener.onConnect()
+							scanListener.onScanFinish(currentIP, socketUtil)
 						}
 					}
 				}
@@ -84,7 +78,6 @@ class WIFIUtil(var context: Context)
 					scanListener.onNoting()
 					e.printStackTrace()
 				}
-				scanListener.onNoting()
 			}).start()
 		}
 	}
@@ -121,8 +114,7 @@ class WIFIUtil(var context: Context)
 
 	interface ScanListener
 	{
-		fun onScanFinish(ipv4: String)
-		fun onConnect()
+		fun onScanFinish(ipv4: String, socketUtil: SocketUtil)
 		fun onNoting()
 	}
 }
