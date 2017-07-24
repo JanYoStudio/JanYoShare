@@ -43,7 +43,6 @@ object JYFileUtil
 	{
 		if (file.isFile)
 			return file.delete()
-		Logs.i(TAG, "deleteFile: 该文件不是文件")
 		return true
 	}
 

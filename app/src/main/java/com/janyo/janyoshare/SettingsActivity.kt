@@ -53,11 +53,11 @@ class SettingsActivity : PreferenceActivity()
 		auto_clean!!.isChecked = settings!!.isAutoClean
 		if (settings!!.isAutoClean)
 		{
-			auto_clean!!.summary = "已开启自动清理，将在下次启动时清理临时文件"
+			auto_clean!!.setSummary(R.string.summary_auto_clean_on)
 		}
 		else
 		{
-			auto_clean!!.summary = "已关闭自动清理"
+			auto_clean!!.setSummary(R.string.summary_auto_clean_off)
 		}
 	}
 
@@ -70,8 +70,8 @@ class SettingsActivity : PreferenceActivity()
 				AlertDialog.Builder(this@SettingsActivity)
 						.setTitle(" ")
 						.setMessage(R.string.autoCleanWarn)
-						.setPositiveButton("开启") { _, _ -> settings!!.isAutoClean = true }
-						.setNegativeButton("取消") { _, _ ->
+						.setPositiveButton(R.string.action_open) { _, _ -> settings!!.isAutoClean = true }
+						.setNegativeButton(R.string.action_cancel) { _, _ ->
 							auto_clean!!.isChecked = false
 							settings!!.isAutoClean = false
 						}
@@ -79,11 +79,11 @@ class SettingsActivity : PreferenceActivity()
 							auto_clean!!.isChecked = settings!!.isAutoClean
 							if (settings!!.isAutoClean)
 							{
-								auto_clean!!.summary = "已开启自动清理，将在下次启动时清理临时文件"
+								auto_clean!!.setSummary(R.string.summary_auto_clean_on)
 							}
 							else
 							{
-								auto_clean!!.summary = "已关闭自动清理"
+								auto_clean!!.setSummary(R.string.summary_auto_clean_off)
 							}
 						}
 						.show()
@@ -91,7 +91,7 @@ class SettingsActivity : PreferenceActivity()
 			else
 			{
 				settings!!.isAutoClean = false
-				auto_clean!!.summary = "已关闭自动清理"
+				auto_clean!!.setSummary(R.string.summary_auto_clean_off)
 			}
 			true
 		}
@@ -99,7 +99,7 @@ class SettingsActivity : PreferenceActivity()
 			AlertDialog.Builder(this@SettingsActivity)
 					.setTitle(" ")
 					.setView(LayoutInflater.from(this@SettingsActivity).inflate(R.layout.dialog_about, LinearLayout(this@SettingsActivity), false))
-					.setPositiveButton("关闭", null)
+					.setPositiveButton(R.string.action_close, null)
 					.show()
 			false
 		}
@@ -113,7 +113,7 @@ class SettingsActivity : PreferenceActivity()
 			AlertDialog.Builder(this@SettingsActivity)
 					.setTitle(" ")
 					.setView(view)
-					.setPositiveButton("确定", null)
+					.setPositiveButton(R.string.action_done, null)
 					.show()
 			false
 		}
@@ -138,7 +138,7 @@ class SettingsActivity : PreferenceActivity()
 			AlertDialog.Builder(this)
 					.setTitle(" ")
 					.setView(view_license)
-					.setPositiveButton("确定", { _, _ ->
+					.setPositiveButton(R.string.action_done, { _, _ ->
 						settings!!.isFirst = false
 					})
 					.show()

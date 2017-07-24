@@ -45,6 +45,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		progressDialog = ProgressDialog(this)
 		progressDialog!!.setCancelable(false)
 		sendHandler.progressDialog = progressDialog
+		sendHandler.context = this
 		receiveHandler.progressDialog = progressDialog
 		receiveHandler.context = this
 
@@ -54,7 +55,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		sendFile.setOnClickListener {
-			progressDialog!!.setMessage("等待设备连接……")
+			progressDialog!!.setMessage(getString(R.string.hint_socket_wait_server))
 			progressDialog!!.show()
 			Thread(Runnable {
 				val message_create = Message()
@@ -74,7 +75,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		receiveFile.setOnClickListener {
-			progressDialog!!.setMessage("正在搜索设备……")
+			progressDialog!!.setMessage(getString(R.string.hint_socket_wait_client))
 			progressDialog!!.show()
 			Thread(Runnable {
 				WIFIUtil(this, PORT).scanIP(object : WIFIUtil.ScanListener
@@ -111,6 +112,7 @@ internal class SendHandler : Handler()
 {
 	private val TAG = "SendHandler"
 	var progressDialog: ProgressDialog? = null
+	var context: Context? = null
 
 	override fun handleMessage(msg: Message)
 	{
@@ -119,7 +121,7 @@ internal class SendHandler : Handler()
 			FileTransferConfigureActivity.CREATE_SERVER ->
 			{
 				Logs.i(TAG, "连接中……")
-				progressDialog!!.setMessage("连接中……")
+				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_connecting))
 			}
 			FileTransferConfigureActivity.SEND_MESSAGE ->
 			{
@@ -147,7 +149,7 @@ internal class ReceiveHandler : Handler()
 			FileTransferConfigureActivity.CREATE_CONNECTION ->
 			{
 				Logs.i(TAG, "连接中 " + msg.obj)
-				progressDialog!!.setMessage("连接中……")
+				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_connecting))
 			}
 			FileTransferConfigureActivity.CONNECTED ->
 			{
@@ -159,9 +161,9 @@ internal class ReceiveHandler : Handler()
 				@Suppress("UNCHECKED_CAST")
 				val map = msg.obj as HashMap<String, Any>
 				AlertDialog.Builder(context!!)
-						.setTitle("确认设备？")
-						.setMessage("确认将文件发送给 " + map["message"] + " 吗？")
-						.setPositiveButton("确定", { _, _ ->
+						.setTitle(R.string.hint_socket_verify_device_title)
+						.setMessage(String.format(context!!.getString(R.string.hint_socket_verify_device_message), map["message"]))
+						.setPositiveButton(R.string.action_done, { _, _ ->
 							Thread(Runnable {
 								val socketUtil = map["socket"] as SocketUtil
 								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_DONE)
@@ -171,7 +173,7 @@ internal class ReceiveHandler : Handler()
 								sendMessage(message)
 							}).start()
 						})
-						.setNegativeButton("取消", null)
+						.setNegativeButton(R.string.action_cancel, null)
 						.show()
 			}
 		}

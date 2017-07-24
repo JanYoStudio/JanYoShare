@@ -15,18 +15,44 @@
     <string name="action_settings">设置</string>
     <string name="action_sort">排序</string>
     <string name="action_done">确定</string>
+    <string name="action_cancel">取消</string>
     <string name="action_copy">仅提取</string>
     <string name="action_copy_share">提取并分享</string>
     <string name="action_rename_share">重命名并分享</string>
+    <string name="action_close">关闭</string>
+    <string name="action_open">开启</string>
+
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>
     <string name="send_file">发送文件</string>
     <string name="receive_file">接收文件</string>
+    <string name="copy_file_loading">提取中……</string>
+    <string name="copy_file_selection">请选择操作</string>
+
+    <string name="hint_copy_error">文件提取失败！</string>
+    <string name="hint_copy_exist">文件已经存在！</string>
+    <string name="hint_copy_not_exist">文件不存在！</string>
+    <string name="hint_recopy">重新提取</string>
+    <string name="hint_copy_done">文件提取成功！存储路径为SD卡根目录下%1$s文件夹。</string>
+    <string name="hint_new_name">请输入新的文件名(不包含扩展名)</string>
+    <string name="hint_rename_error">重命名失败，已取消分享！</string>
+    <string name="hint_clear_file">文件清除%1$s！</string>
+    <string name="hint_select_sort">请选择排序方式</string>
+    <string name="hint_socket_wait_server">等待设备连接……</string>
+    <string name="hint_socket_wait_client">正在搜索设备……</string>
+    <string name="hint_socket_connecting">连接中……</string>
+    <string name="hint_socket_verify_device_title">确认设备？</string>
+    <string name="hint_socket_verify_device_message">确认将文件发送给 %1$s 吗？</string>
+    <string name="hint_twice_exit">再按一次返回键退出</string>
+    <string name="hint_permission">请授予存储权限来拷贝apk文件到SD卡</string>
+
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
+
     <string name="help_text_1">JY Share可以使你快捷 分享/提取 系统预装/用户安装 的应用程序，并且在操作过程中自动重命名文件或者手动重命名，使其具备一个包含意义的文件名。</string>
     <string name="help_text_2">通过单击列表中的应用然后选择对应的操作，这将调用系统分享组件，应用将以附件形式附加到诸如邮件，或者一些支持文件共享的社交工具。此操作将会在SD卡JY Share目录产生临时文件，将在下一次启动程序时自动清理(默认开启)。为保证临时文件不会对你的剩余空间造成不必要的占用，我们建议你在应用设置中开启自动清理临时文件(默认开启) 。</string>
     <string name="autoCleanWarn">注意，你在使用JYShare提取你所需的App到SD卡JY Share目录后，如果你需要对已提取的App安装包进行额外的操作时，请确保你在下一次启动JYShare时从临时目录转移你的安装包，否则将被自动清理。</string>
+
     <string name="license_title">“JanYo Studio” 授权解决方案</string>
     <string name="license_subtitle">为避免在其它非“JanYo Studio”通过书面授权认可的平台引发的授权 风险/争议，特拟此案。</string>
     <string name="license_text1">“JanYo Studio”(以下简称“工作室”)发布的产品缺省使用“GPL（GNU General Public License）”授权协议。工作室将在产品内部标识产品源程序及其附属品，使得任何人可以自由获取、阅读、传播，以及基于源代码重新构建它的二进制版本并发行该副本。</string>

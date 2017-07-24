@@ -39,7 +39,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 	{
 		val progressDialog = ProgressDialog(context)
 		progressDialog.setCancelable(false)
-		progressDialog.setMessage("提取中……")
+		progressDialog.setMessage(context.getString(R.string.copy_file_loading))
 		val installApp = installAppList[position]
 		holder.textView_name.text = installApp.name
 		holder.textView_packageName.text = installApp.packageName
@@ -48,7 +48,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 		holder.textView_size.text = JYFileUtil.FormatFileSize(installApp.size)
 		holder.fullView.setOnClickListener {
 			AlertDialog.Builder(context)
-					.setTitle("请选择操作")
+					.setTitle(R.string.copy_file_selection)
 					.setItems(R.array.copy_do, { _, choose ->
 						when (choose)
 						{
@@ -64,13 +64,13 @@ class AppRecyclerViewAdapter(private val context: Context,
 										{
 											-1 ->
 											{
-												Snackbar.make(coordinatorLayout, "文件提取失败", Snackbar.LENGTH_SHORT)
+												Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
 														.show()
 											}
 											0 ->
 											{
-												Snackbar.make(coordinatorLayout, "文件已经存在", Snackbar.LENGTH_SHORT)
-														.setAction("重新提取", {
+												Snackbar.make(coordinatorLayout, R.string.hint_copy_exist, Snackbar.LENGTH_SHORT)
+														.setAction(R.string.hint_recopy, {
 															progressDialog.show()
 															Thread(Runnable {
 																JYFileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
@@ -78,12 +78,12 @@ class AppRecyclerViewAdapter(private val context: Context,
 																progressDialog.dismiss()
 																if (temp == 1)
 																{
-																	Snackbar.make(coordinatorLayout, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
+																	Snackbar.make(coordinatorLayout, String.format(context.getString(R.string.hint_copy_done), context.getString(R.string.app_name)), Snackbar.LENGTH_SHORT)
 																			.show()
 																}
 																else
 																{
-																	Snackbar.make(coordinatorLayout, "文件提取失败", Snackbar.LENGTH_SHORT)
+																	Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
 																			.show()
 																}
 															}).start()
@@ -92,7 +92,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 											}
 											1 ->
 											{
-												Snackbar.make(coordinatorLayout, "文件提取成功！存储路径为SD卡根目录下" + context.getString(R.string.app_name) + "文件夹", Snackbar.LENGTH_SHORT)
+												Snackbar.make(coordinatorLayout, String.format(context.getString(R.string.hint_copy_done), context.getString(R.string.app_name)), Snackbar.LENGTH_SHORT)
 														.show()
 											}
 										}
@@ -101,7 +101,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 								else
 								{
 									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, "文件夹不存在！", Snackbar.LENGTH_SHORT)
+									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
 											.show()
 								}
 							}
@@ -117,13 +117,13 @@ class AppRecyclerViewAdapter(private val context: Context,
 										{
 											-1 ->
 											{
-												Snackbar.make(coordinatorLayout, "文件提取失败", Snackbar.LENGTH_SHORT)
+												Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
 														.show()
 											}
 											0 ->
 											{
-												Snackbar.make(coordinatorLayout, "文件已经存在", Snackbar.LENGTH_SHORT)
-														.setAction("重新提取", {
+												Snackbar.make(coordinatorLayout, R.string.hint_copy_exist, Snackbar.LENGTH_SHORT)
+														.setAction(R.string.hint_recopy, {
 															progressDialog.show()
 															Thread(Runnable {
 																JYFileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
@@ -135,7 +135,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 																}
 																else
 																{
-																	Snackbar.make(coordinatorLayout, "文件提取失败", Snackbar.LENGTH_SHORT)
+																	Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
 																			.show()
 																}
 															}).start()
@@ -164,7 +164,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 								else
 								{
 									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, "文件夹不存在！", Snackbar.LENGTH_SHORT)
+									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
 											.show()
 								}
 							}
@@ -185,7 +185,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 										}
 										else
 										{
-											Snackbar.make(coordinatorLayout, "文件提取失败", Snackbar.LENGTH_SHORT)
+											Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
 													.show()
 										}
 									}).start()
@@ -193,7 +193,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 								else
 								{
 									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, "文件夹不存在！", Snackbar.LENGTH_SHORT)
+									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
 											.show()
 								}
 							}
@@ -232,7 +232,7 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 				val text: TextInputLayout = view.findViewById(R.id.layout)
 				text.hint = installApp.name + "_" + installApp.versionName
 				AlertDialog.Builder(activity)
-						.setTitle("请输入新的文件名(不包含扩展名)")
+						.setTitle(R.string.hint_new_name)
 						.setView(view)
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							if (JYFileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
@@ -241,7 +241,7 @@ internal class RenameHandler(private val activity: Activity) : Handler()
 							}
 							else
 							{
-								Snackbar.make(coordinatorLayout, "重命名失败，已取消分享！", Snackbar.LENGTH_SHORT)
+								Snackbar.make(coordinatorLayout, R.string.hint_rename_error, Snackbar.LENGTH_SHORT)
 										.show()
 							}
 						})
