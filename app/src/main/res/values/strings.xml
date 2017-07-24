@@ -20,6 +20,8 @@
     <string name="action_rename_share">重命名并分享</string>
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>
+    <string name="send_file">发送文件</string>
+    <string name="receive_file">接收文件</string>
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
     <string name="help_text_1">JY Share可以使你快捷 分享/提取 系统预装/用户安装 的应用程序，并且在操作过程中自动重命名文件或者手动重命名，使其具备一个包含意义的文件名。</string>
@@ -49,7 +51,5 @@
     </string-array>
 
     <string name="title_activity_file_transfer">文件传输</string>
-    <string name="title_activity_file_transfer_configure">FileTransferConfigureActivity</string>
-    <string name="send_file">发送文件</string>
-    <string name="receive_file">接收文件</string>
+    <string name="title_activity_file_transfer_configure">文件传输</string>
 </resources>

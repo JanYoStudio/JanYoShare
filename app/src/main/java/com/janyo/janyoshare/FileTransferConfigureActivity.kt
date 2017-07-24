@@ -54,7 +54,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		sendFile.setOnClickListener {
-			progressDialog!!.setMessage("Waiting……")
+			progressDialog!!.setMessage("等待设备连接……")
 			progressDialog!!.show()
 			Thread(Runnable {
 				val message_create = Message()
@@ -74,7 +74,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		receiveFile.setOnClickListener {
-			progressDialog!!.setMessage("Waiting……")
+			progressDialog!!.setMessage("正在搜索设备……")
 			progressDialog!!.show()
 			Thread(Runnable {
 				WIFIUtil(this, PORT).scanIP(object : WIFIUtil.ScanListener
@@ -118,8 +118,8 @@ internal class SendHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_SERVER ->
 			{
-				Logs.i(TAG, "Connecting……")
-				progressDialog!!.setMessage("Connecting……")
+				Logs.i(TAG, "连接中……")
+				progressDialog!!.setMessage("连接中……")
 			}
 			FileTransferConfigureActivity.SEND_MESSAGE ->
 			{
@@ -146,8 +146,8 @@ internal class ReceiveHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_CONNECTION ->
 			{
-				Logs.i(TAG, "Connecting " + msg.obj)
-				progressDialog!!.setMessage("Connecting……")
+				Logs.i(TAG, "连接中 " + msg.obj)
+				progressDialog!!.setMessage("连接中……")
 			}
 			FileTransferConfigureActivity.CONNECTED ->
 			{
