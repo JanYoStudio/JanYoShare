@@ -9,28 +9,16 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.android.volley.toolbox.ImageLoader
-import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.util.FileUtil
-import com.mystery0.tools.ImageLoader.ImageCache
 import com.mystery0.tools.Logs.Logs
-import java.io.File
 
 class FileTransferAdapter(private var context: Context,
 						  var list: List<TransferFile>) : RecyclerView.Adapter<FileTransferAdapter.ViewHolder>()
 {
 	private val TAG = "FileTransferAdapter"
-	private var path: String = context.cacheDir.absolutePath + File.separator + "unknown_type_file"
-	private val requestQuque=Volley.newRequestQueue(context)
-
-	init
-	{
-		@Suppress("DEPRECATION")
-		FileUtil.saveDrawableToSd(context.resources.getDrawable(R.drawable.ic_file), path)
-	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int)
 	{
@@ -56,7 +44,7 @@ class FileTransferAdapter(private var context: Context,
 			else ->
 			{
 				Logs.i(TAG, "onBindViewHolder: 未知格式")
-				val imageLoader=ImageLoader(requestQuque,ImageCache(context,"file_unknown_type"))
+				holder.fileImg.setImageResource(R.mipmap.ic_file)
 			}
 		}
 		holder.fileName.text = transferFile.fileName
