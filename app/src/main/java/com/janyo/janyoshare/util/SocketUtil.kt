@@ -1,6 +1,5 @@
 package com.janyo.janyoshare.util
 
-import com.mystery0.tools.Logs.Logs
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.ServerSocket
@@ -8,7 +7,6 @@ import java.net.Socket
 
 class SocketUtil
 {
-	private val TAG = "SocketUtil"
 	var host: String = ""
 	var port: Int = 0
 	var socket: Socket? = null

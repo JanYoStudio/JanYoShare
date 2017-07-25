@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
 import com.mystery0.tools.Logs.Logs
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.content_file_transfer_configure.*
 class FileTransferConfigureActivity : AppCompatActivity()
 {
 	private val TAG = "FileTransferConfigureActivity"
+
 	private val PORT = 8989
 	private val sendHandler = SendHandler()
 	private val receiveHandler = ReceiveHandler()
@@ -30,9 +32,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 	{
 		val CREATE_SERVER = 1
 		val CREATE_CONNECTION = 2
-		val SEND_MESSAGE = 3
-		val CONNECTED = 4
-		val VERIFY_DEVICE = 5
+		val CONNECTED = 3
+		val VERIFY_DEVICE = 4
 		val VERIFY_DONE = "VERIFY_DONE"
 	}
 
@@ -68,8 +69,10 @@ class FileTransferConfigureActivity : AppCompatActivity()
 				sendHandler.sendMessage(message_send)
 				if (socketUtil.receiveMessage() == VERIFY_DONE)
 				{
-					Logs.i(TAG, "onCreate: 开始传输")
-					progressDialog!!.dismiss()
+					FileTransferHandler.getInstance().host = socketUtil.receiveMessage()
+					val message = Message.obtain()
+					message.what = CONNECTED
+					sendHandler.sendMessage(message)
 				}
 			}).start()
 		}
@@ -92,6 +95,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 						message_verify.what = VERIFY_DEVICE
 						val map = HashMap<String, Any>()
 						map.put("message", resultMessage)
+						map.put("ip", ipv4)
 						map.put("socket", socketUtil)
 						message_verify.obj = map
 						receiveHandler.sendMessage(message_verify)
@@ -110,7 +114,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 internal class SendHandler : Handler()
 {
-	private val TAG = "SendHandler"
 	var progressDialog: ProgressDialog? = null
 	var context: Context? = null
 
@@ -120,17 +123,15 @@ internal class SendHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_SERVER ->
 			{
-				Logs.i(TAG, "连接中……")
 				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_connecting))
-			}
-			FileTransferConfigureActivity.SEND_MESSAGE ->
-			{
-				Logs.i(TAG, "handleMessage: 连接成功")
-				progressDialog!!.dismiss()
 			}
 			FileTransferConfigureActivity.VERIFY_DEVICE ->
 			{
-				Logs.i(TAG, "handleMessage: 验证设备")
+				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_verifying))
+			}
+			FileTransferConfigureActivity.CONNECTED->
+			{
+				progressDialog!!.dismiss()
 			}
 		}
 	}
@@ -138,7 +139,6 @@ internal class SendHandler : Handler()
 
 internal class ReceiveHandler : Handler()
 {
-	private val TAG = "ReceiveHandler"
 	var progressDialog: ProgressDialog? = null
 	var context: Context? = null
 
@@ -148,13 +148,7 @@ internal class ReceiveHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_CONNECTION ->
 			{
-				Logs.i(TAG, "连接中 " + msg.obj)
 				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_connecting))
-			}
-			FileTransferConfigureActivity.CONNECTED ->
-			{
-				Logs.i(TAG, "handleMessage: 连接成功" + msg.obj)
-				progressDialog!!.dismiss()
 			}
 			FileTransferConfigureActivity.VERIFY_DEVICE ->
 			{
@@ -165,8 +159,12 @@ internal class ReceiveHandler : Handler()
 						.setMessage(String.format(context!!.getString(R.string.hint_socket_verify_device_message), map["message"]))
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							Thread(Runnable {
+								FileTransferHandler.getInstance().host = map["ip"] as String
+
 								val socketUtil = map["socket"] as SocketUtil
 								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_DONE)
+								socketUtil.sendMessage(FileTransferHandler.getInstance().host!!.toString())
+
 								val message = Message()
 								message.what = FileTransferConfigureActivity.CONNECTED
 								message.obj = map["message"]
@@ -175,6 +173,10 @@ internal class ReceiveHandler : Handler()
 						})
 						.setNegativeButton(R.string.action_cancel, null)
 						.show()
+			}
+			FileTransferConfigureActivity.CONNECTED ->
+			{
+				progressDialog!!.dismiss()
 			}
 		}
 	}

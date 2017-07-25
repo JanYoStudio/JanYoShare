@@ -1,8 +1,6 @@
 package com.janyo.janyoshare.util
 
 import android.content.Context
-import android.os.Build
-import com.janyo.janyoshare.R
 import com.mystery0.tools.Logs.Logs
 import java.net.NetworkInterface
 import java.net.SocketException
@@ -44,11 +42,10 @@ class WIFIUtil(var context: Context, val port: Int)
 	fun scanIP(scanListener: ScanListener)
 	{
 		getLocalAddress()
-		Logs.i(TAG, "scanIP: " + localAddress)
 		val localAddressIndex = localAddress.substring(0, localAddress.lastIndexOf(".") + 1)
 		if (localAddressIndex == "")
 		{
-			Logs.i(TAG, "scanIP: 扫描失败")
+			Logs.e(TAG, "scanIP: 扫描失败")
 			return
 		}
 
