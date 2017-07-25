@@ -21,6 +21,8 @@ import android.widget.TextView
 import android.widget.Toast
 
 import com.janyo.janyoshare.util.Settings
+import java.util.*
+import kotlin.concurrent.timerTask
 
 class SettingsActivity : PreferenceActivity()
 {
@@ -37,7 +39,6 @@ class SettingsActivity : PreferenceActivity()
 	private var checkUpdate: Preference? = null
 	private var versionCode: Preference? = null
 	private var clickTime = 0
-	private var hintToast: Toast? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -79,8 +80,10 @@ class SettingsActivity : PreferenceActivity()
 		{
 			preferenceScreen.removePreference(developerMode)
 		}
-
-		Toast.makeText(this, R.string.hint_developer_mode_enable, Toast.LENGTH_SHORT)
+		else
+		{
+			clickTime = 7
+		}
 	}
 
 	private fun monitor()
@@ -191,8 +194,11 @@ class SettingsActivity : PreferenceActivity()
 					clickTime++
 				clickTime in 3..6 ->
 				{
-					Toast.makeText(this, String.format(getString(R.string.hint_developer_mode), 7 - clickTime), Toast.LENGTH_SHORT)
-							.show()
+					val hintToast = Toast.makeText(this, String.format(getString(R.string.hint_developer_mode), 7 - clickTime), Toast.LENGTH_SHORT)
+					hintToast!!.show()
+					Timer().schedule(timerTask {
+						hintToast.cancel()
+					}, 100)
 					clickTime++
 				}
 				clickTime >= 7 ->
@@ -203,8 +209,11 @@ class SettingsActivity : PreferenceActivity()
 						settings!!.isDeveloperModeEnable = true
 						developerModeEnable!!.isChecked = true
 					}
-					hintToast!!.cancel()
-					hintToast!!.show()
+					val hintToast = Toast.makeText(this, R.string.hint_developer_mode_enable, Toast.LENGTH_SHORT)
+					hintToast.show()
+					Timer().schedule(timerTask {
+						hintToast.cancel()
+					}, 1000)
 				}
 			}
 			false
