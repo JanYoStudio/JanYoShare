@@ -7,6 +7,20 @@
         android:title="@string/title_auto_clean"/>
 
     <PreferenceCategory
+        android:key="@string/key_developer_mode"
+        android:title="@string/title_developer_mode">
+
+        <SwitchPreference
+            android:key="@string/key_developer_mode_enable"
+            android:title="@string/title_developer_mode_enable"/>
+
+        <SwitchPreference
+            android:key="@string/key_auto_upload_log"
+            android:title="@string/title_auto_upload_log"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/about">
 
         <Preference
@@ -28,6 +42,10 @@
         <Preference
             android:key="@string/key_check_update"
             android:title="@string/title_check_update"/>
+
+        <Preference
+            android:key="@string/key_version_code"
+            android:title="@string/title_version_code"/>
 
     </PreferenceCategory>
 

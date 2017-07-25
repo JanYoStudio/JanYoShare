@@ -20,4 +20,12 @@ class Settings(private val context: Context)
 	var isFirst: Boolean
 		get() = sharedPreferences.getBoolean("isFirst", true)
 		set(isFirst) = sharedPreferences.edit().putBoolean("isFirst", isFirst).apply()
+
+	var isDeveloperModeEnable: Boolean
+		get() = sharedPreferences.getBoolean("isDeveloperModeEnable", false)
+		set(isDeveloperModeEnable) = sharedPreferences.edit().putBoolean("isDeveloperModeEnable", isDeveloperModeEnable).apply()
+
+	var isAutoUploadLog: Boolean
+		get() = sharedPreferences.getBoolean("isAutoUploadLog", false)
+		set(isAutoUploadLog) = sharedPreferences.edit().putBoolean("isAutoUploadLog", isAutoUploadLog).apply()
 }
