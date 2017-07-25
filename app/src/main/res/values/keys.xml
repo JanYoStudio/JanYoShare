@@ -20,4 +20,16 @@
     <string name="key_check_update">key_check_update</string>
     <string name="title_check_update">检查更新</string>
 
+    <string name="key_version_code">key_version_code</string>
+    <string name="title_version_code">版本号</string>
+
+    <string name="key_developer_mode">key_developer_mode</string>
+    <string name="title_developer_mode">开发者选项</string>
+
+    <string name="key_developer_mode_enable">key_developer_mode_enable</string>
+    <string name="title_developer_mode_enable">启用开发者模式</string>
+
+    <string name="key_auto_upload_log">key_auto_upload_log</string>
+    <string name="title_auto_upload_log">自动上传日志文件</string>
+
 </resources>

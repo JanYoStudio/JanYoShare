@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceActivity
+import android.preference.PreferenceCategory
 import android.preference.SwitchPreference
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.widget.NestedScrollView
@@ -17,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 
 import com.janyo.janyoshare.util.Settings
 
@@ -25,11 +27,17 @@ class SettingsActivity : PreferenceActivity()
 	private var settings: Settings? = null
 	private var toolbar: Toolbar? = null
 	private var auto_clean: SwitchPreference? = null
+	private var developerMode: PreferenceCategory? = null
+	private var developerModeEnable: SwitchPreference? = null
+	private var autoUploadLog: SwitchPreference? = null
 	private var about: Preference? = null
 	private var howToUse: Preference? = null
 	private var openSourceAddress: Preference? = null
 	private var license: Preference? = null
 	private var checkUpdate: Preference? = null
+	private var versionCode: Preference? = null
+	private var clickTime = 0
+	private var hintToast: Toast? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -44,13 +52,20 @@ class SettingsActivity : PreferenceActivity()
 	private fun initialization()
 	{
 		auto_clean = findPreference(getString(R.string.key_auto_clean)) as SwitchPreference
+		developerMode = findPreference(getString(R.string.key_developer_mode)) as PreferenceCategory
+		developerModeEnable = findPreference(getString(R.string.key_developer_mode_enable)) as SwitchPreference
+		autoUploadLog = findPreference(getString(R.string.key_auto_upload_log)) as SwitchPreference
 		about = findPreference(getString(R.string.key_about))
 		howToUse = findPreference(getString(R.string.key_how_to_use))
 		openSourceAddress = findPreference(getString(R.string.key_open_source_address))
 		license = findPreference(getString(R.string.key_license))
 		checkUpdate = findPreference(getString(R.string.key_check_update))
+		versionCode = findPreference(getString(R.string.key_version_code))
 
 		auto_clean!!.isChecked = settings!!.isAutoClean
+		developerModeEnable!!.isChecked = settings!!.isDeveloperModeEnable
+		autoUploadLog!!.isChecked = settings!!.isAutoUploadLog
+
 		if (settings!!.isAutoClean)
 		{
 			auto_clean!!.setSummary(R.string.summary_auto_clean_on)
@@ -59,6 +74,13 @@ class SettingsActivity : PreferenceActivity()
 		{
 			auto_clean!!.setSummary(R.string.summary_auto_clean_off)
 		}
+
+		if (!settings!!.isDeveloperModeEnable)
+		{
+			preferenceScreen.removePreference(developerMode)
+		}
+
+		Toast.makeText(this, R.string.hint_developer_mode_enable, Toast.LENGTH_SHORT)
 	}
 
 	private fun monitor()
@@ -93,6 +115,16 @@ class SettingsActivity : PreferenceActivity()
 				settings!!.isAutoClean = false
 				auto_clean!!.setSummary(R.string.summary_auto_clean_off)
 			}
+			true
+		}
+		developerModeEnable!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
+			val isDeveloperModeEnable = !developerModeEnable!!.isChecked
+			settings!!.isDeveloperModeEnable = isDeveloperModeEnable
+			true
+		}
+		autoUploadLog!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
+			val isAutoUploadLog = !autoUploadLog!!.isChecked
+			settings!!.isAutoUploadLog = isAutoUploadLog
 			true
 		}
 		about!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
@@ -150,6 +182,31 @@ class SettingsActivity : PreferenceActivity()
 			val content_url = Uri.parse(getString(R.string.address_check_update))
 			intent.data = content_url
 			startActivity(intent)
+			false
+		}
+		versionCode!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+			when
+			{
+				clickTime < 3 ->
+					clickTime++
+				clickTime in 3..6 ->
+				{
+					Toast.makeText(this, String.format(getString(R.string.hint_developer_mode), 7 - clickTime), Toast.LENGTH_SHORT)
+							.show()
+					clickTime++
+				}
+				clickTime >= 7 ->
+				{
+					if (!settings!!.isDeveloperModeEnable)
+					{
+						preferenceScreen.addPreference(developerMode)
+						settings!!.isDeveloperModeEnable = true
+						developerModeEnable!!.isChecked = true
+					}
+					hintToast!!.cancel()
+					hintToast!!.show()
+				}
+			}
 			false
 		}
 	}
