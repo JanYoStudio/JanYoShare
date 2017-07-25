@@ -46,7 +46,7 @@
     <string name="hint_twice_exit">再按一次返回键退出</string>
     <string name="hint_permission">请授予存储权限来拷贝apk文件到SD卡</string>
     <string name="hint_developer_mode">还差%1$d步启用开发者模式</string>
-    <string name="hint_developer_mode_enable">已启用开发者模式的！</string>
+    <string name="hint_developer_mode_enable">已启用开发者模式！</string>
 
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
