@@ -1,4 +1,4 @@
-package com.janyo.janyoshare
+package com.janyo.janyoshare.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -15,6 +15,8 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import com.janyo.janyoshare.AppFragment
+import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.ViewPagerAdapter
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.JYFileUtil

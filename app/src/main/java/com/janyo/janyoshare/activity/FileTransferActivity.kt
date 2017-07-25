@@ -1,4 +1,4 @@
-package com.janyo.janyoshare
+package com.janyo.janyoshare.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,7 +8,11 @@ import com.janyo.janyoshare.classes.TransferFile
 
 import kotlinx.android.synthetic.main.activity_file_transfer.*
 import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
+import com.janyo.janyoshare.R
 import com.mystery0.tools.FileUtil.FileUtil
+import com.mystery0.tools.Logs.Logs
 import java.io.File
 
 class FileTransferActivity : AppCompatActivity()
@@ -49,6 +53,24 @@ class FileTransferActivity : AppCompatActivity()
 			list!!.add(transferFile)
 			adapter!!.notifyDataSetChanged()
 		}
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu): Boolean
+	{
+		menuInflater.inflate(R.menu.menu_file_transfer, menu)
+		return true
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean
+	{
+		when (item.itemId)
+		{
+			R.id.action_file_transfer ->
+			{
+				Logs.i(TAG, "onOptionsItemSelected: 发送文件")
+			}
+		}
+		return super.onOptionsItemSelected(item)
 	}
 
 }
