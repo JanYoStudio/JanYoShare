@@ -6,6 +6,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Message
@@ -17,6 +19,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
@@ -199,6 +202,15 @@ class AppRecyclerViewAdapter(private val context: Context,
 									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
 											.show()
 								}
+							}
+							3 ->
+							{
+								val intent = Intent(context, FileTransferConfigureActivity::class.java)
+								val bundle = Bundle()
+								bundle.putSerializable("app", installApp)
+								intent.putExtra("action", 1)
+								intent.putExtra("app", bundle)
+								context.startActivity(intent)
 							}
 						}
 					})

@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.janyo.janyoshare
+package com.janyo.janyoshare.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.janyo.janyoshare.R
 
 import com.janyo.janyoshare.util.Settings
 import java.util.*

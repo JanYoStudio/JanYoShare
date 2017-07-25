@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.janyo.janyoshare.FileTransferConfigureActivity"
+    tools:context="com.janyo.janyoshare.activity.FileTransferConfigureActivity"
     tools:showIn="@layout/activity_file_transfer_configure">
 
     <TextView
