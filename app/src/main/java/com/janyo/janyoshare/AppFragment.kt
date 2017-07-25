@@ -54,6 +54,7 @@ class AppFragment : Fragment()
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
 	{
 		inflater.inflate(R.menu.menu_main, menu)
+		@Suppress("CAST_NEVER_SUCCEEDS")
 		val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
 		searchView.setOnQueryTextFocusChangeListener { _, b ->

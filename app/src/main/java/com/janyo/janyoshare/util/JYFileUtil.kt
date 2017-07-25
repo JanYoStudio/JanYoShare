@@ -116,7 +116,7 @@ object JYFileUtil
 		return FileUtil.FormatFileSize(fileSize)
 	}
 
-	fun saveDrawableToSd(drawable: Drawable, path: String)
+	fun saveDrawableToSd(drawable: Drawable, path: String): Boolean
 	{
 		try
 		{
@@ -128,7 +128,11 @@ object JYFileUtil
 				(drawable is BitmapDrawable) -> bitmap = drawable.bitmap
 				(drawable is VectorDrawableCompat) -> bitmap = getBitmap(drawable)
 				(drawable is VectorDrawable) -> bitmap = getBitmap(drawable)
-				else -> throw IllegalArgumentException("Unsupported drawable type")
+				else ->
+				{
+					Logs.i(TAG, "saveDrawableToSd: 不支持的drawable类型")
+					return false
+				}
 			}
 			bitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
 			out.close()
@@ -136,7 +140,9 @@ object JYFileUtil
 		catch (e: IOException)
 		{
 			e.printStackTrace()
+			return false
 		}
+		return true
 	}
 
 	private fun getBitmap(vectorDrawable: VectorDrawable): Bitmap
