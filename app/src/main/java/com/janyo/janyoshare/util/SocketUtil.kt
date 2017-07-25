@@ -13,44 +13,74 @@ class SocketUtil
 	var port: Int = 0
 	var socket: Socket? = null
 
-	fun createSocketConnection(): Boolean
-	{
-		return createSocketConnection(host, port)
-	}
-
-	fun createServerConnection(): Boolean
-	{
-		return createServerConnection(port)
-	}
-
 	fun createSocketConnection(host: String, port: Int): Boolean
 	{
-		socket = Socket(host, port)
+		this.host=host
+		this.port=port
+		try
+		{
+			socket = Socket(host, port)
+		}
+		catch (e: Exception)
+		{
+			e.printStackTrace()
+			if (socket != null)
+				socket!!.close()
+		}
 		return socket!!.isConnected
 	}
 
 	fun createServerConnection(port: Int): Boolean
 	{
-		socket = ServerSocket(port).accept()
+		this.port=port
+		try
+		{
+			socket = ServerSocket(port).accept()
+		}
+		catch (e: Exception)
+		{
+			e.printStackTrace()
+			if (socket != null)
+				socket!!.close()
+		}
 		return socket!!.isConnected
 	}
 
 	fun receiveMessage(): String
 	{
-		val inputStream = socket!!.getInputStream()
-		val response = BufferedReader(InputStreamReader(inputStream)).readLine()
+		val response: String
+		try
+		{
+			val inputStream = socket!!.getInputStream()
+			response = BufferedReader(InputStreamReader(inputStream)).readLine()
+		}
+		catch (e: Exception)
+		{
+			e.printStackTrace()
+			return "null"
+		}
 		return response
 	}
 
 	fun sendMessage(message: String)
 	{
-		val outStream = socket!!.getOutputStream()
-		outStream.write((message + "\n").toByteArray())
-		outStream.flush()
+		try
+		{
+			val outStream = socket!!.getOutputStream()
+			outStream.write((message + "\n").toByteArray())
+			outStream.flush()
+		}
+		catch (e: Exception)
+		{
+			e.printStackTrace()
+		}
 	}
 
 	fun disConnect()
 	{
-		socket!!.close()
+		if (socket != null)
+		{
+			socket!!.close()
+		}
 	}
 }

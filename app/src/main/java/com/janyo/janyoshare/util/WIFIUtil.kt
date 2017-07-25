@@ -75,8 +75,7 @@ class WIFIUtil(var context: Context, val port: Int)
 				}
 				catch (e: Exception)
 				{
-					scanListener.onNoting()
-					e.printStackTrace()
+					scanListener.onError(e)
 				}
 			}).start()
 		}
@@ -115,6 +114,6 @@ class WIFIUtil(var context: Context, val port: Int)
 	interface ScanListener
 	{
 		fun onScanFinish(ipv4: String, socketUtil: SocketUtil)
-		fun onNoting()
+		fun onError(e: Exception)
 	}
 }

@@ -97,9 +97,9 @@ class FileTransferConfigureActivity : AppCompatActivity()
 						receiveHandler.sendMessage(message_verify)
 					}
 
-					override fun onNoting()
+					override fun onError(e: Exception)
 					{
-						Logs.i(TAG, "onNoting: ")
+						Logs.e(TAG, "onError: " + e.message)
 					}
 
 				})
