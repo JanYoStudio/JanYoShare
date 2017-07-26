@@ -1,9 +1,8 @@
 package com.janyo.janyoshare.classes
 
 import android.graphics.drawable.Drawable
-import java.io.Serializable
 
-class InstallApp:Serializable
+class InstallApp
 {
 	var name: String? = null
 	var versionName: String? = null

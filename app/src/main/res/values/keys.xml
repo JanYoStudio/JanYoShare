@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="com.janyo.janyoshare.UPDATE_PROGRESS">com.janyo.janyoshare.UPDATE_PROGRESS</string>
+
     <string name="key_auto_clean">key_auto_clean</string>
     <string name="title_auto_clean">自动清理</string>
     <string name="summary_auto_clean_on">已开启自动清理，将在下次启动时清理临时文件</string>

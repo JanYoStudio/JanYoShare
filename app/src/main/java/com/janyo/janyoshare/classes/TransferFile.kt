@@ -1,11 +1,11 @@
 package com.janyo.janyoshare.classes
 
-import android.graphics.drawable.Drawable
+import java.io.Serializable
 
-class TransferFile
+class TransferFile : Serializable
 {
-	var fileImg: Drawable? = null
+	var fileIconPath: String? = null
 	var fileName: String? = null
 	var filePath: String? = null
-	var fileSize: String? = null
+	var fileSize: Long = 0
 }

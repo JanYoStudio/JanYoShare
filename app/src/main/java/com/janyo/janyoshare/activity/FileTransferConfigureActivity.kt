@@ -13,7 +13,9 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.janyo.janyoshare.R
-import com.janyo.janyoshare.classes.InstallApp
+import com.janyo.janyoshare.classes.TransferFile
+import com.janyo.janyoshare.service.ReceiveFileService
+import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
@@ -62,8 +64,9 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		if (intent.getIntExtra("action", 0) == 1)
 		{
 			openServer()
-			val installApp = intent.getBundleExtra("app").getSerializable("app") as InstallApp
-			Logs.i(TAG, "onCreate: " + installApp.packageName)
+			val transferFile = intent.getBundleExtra("app").getSerializable("app") as TransferFile
+			Logs.i(TAG, "onCreate: " + transferFile.fileName)
+			FileTransferHandler.getInstance().fileList.add(transferFile)
 		}
 
 		sendFile.setOnClickListener {
@@ -153,6 +156,8 @@ internal class SendHandler : Handler()
 				progressDialog!!.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
+				FileTransferHandler.getInstance().tag = 1
+				context!!.startService(Intent(context, SendFileService::class.java))
 				context!!.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 		}
@@ -203,6 +208,8 @@ internal class ReceiveHandler : Handler()
 				progressDialog!!.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
+				FileTransferHandler.getInstance().tag = 2
+				context!!.startService(Intent(context, ReceiveFileService::class.java))
 				context!!.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 		}

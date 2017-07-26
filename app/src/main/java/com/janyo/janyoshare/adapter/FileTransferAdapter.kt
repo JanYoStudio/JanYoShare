@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.util.JYFileUtil
+import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 
 class FileTransferAdapter(private var context: Context,
@@ -36,7 +37,7 @@ class FileTransferAdapter(private var context: Context,
 			"apk" ->
 			{
 				Glide.with(context)
-						.load(JYFileUtil.getApkIconPath(context, transferFile.filePath))
+						.load(if (transferFile.fileIconPath != null) transferFile.fileIconPath else JYFileUtil.getApkIconPath(context, transferFile.filePath))
 						.into(holder.fileImg)
 			}
 			else ->
@@ -46,7 +47,7 @@ class FileTransferAdapter(private var context: Context,
 		}
 		holder.fileName.text = transferFile.fileName
 		holder.filePath.text = transferFile.filePath
-		holder.fileSize.text = transferFile.fileSize
+		holder.fileSize.text = FileUtil.FormatFileSize(transferFile.fileSize)
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder

@@ -46,10 +46,20 @@ object JYFileUtil
 		return true
 	}
 
+	fun getSaveFilePath(fileName: String, dir: String): String
+	{
+		return File(Environment.getExternalStoragePublicDirectory(dir), fileName).absolutePath
+	}
+
+	fun getFilePath(fileName: String, version: String, dir: String): String
+	{
+		return File(Environment.getExternalStoragePublicDirectory(dir), fileName).absolutePath + "_" + version + ".apk"
+	}
+
 	fun fileToSD(inputPath: String, fileName: String, version: String, dir: String): Int
 	{
 		val outFile = File(Environment.getExternalStoragePublicDirectory(dir), fileName)
-		return fileCopy(inputPath, outFile.toString() + "_" + version + ".apk")
+		return fileCopy(inputPath, outFile.absolutePath + "_" + version + ".apk")
 	}
 
 	private fun fileCopy(inputPath: String, outPath: String): Int
@@ -109,11 +119,6 @@ object JYFileUtil
 	{
 		val file = File(Environment.getExternalStoragePublicDirectory(dir), fileName)
 		Share(context, file)
-	}
-
-	fun FormatFileSize(fileSize: Long): String
-	{
-		return FileUtil.FormatFileSize(fileSize)
 	}
 
 	fun saveDrawableToSd(drawable: Drawable, path: String): Boolean
