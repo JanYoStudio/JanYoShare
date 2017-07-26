@@ -69,7 +69,6 @@ class FileTransferActivity : AppCompatActivity()
 		{
 			R.id.action_send_files ->
 			{
-				Logs.i(TAG, "onOptionsItemSelected: 发送文件")
 				when (FileTransferHandler.getInstance().tag)
 				{
 					0 ->

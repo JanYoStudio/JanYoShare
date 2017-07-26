@@ -26,7 +26,7 @@ class SendFileService : Service()
 		//传输请求头
 		val transferHeader = TransferHeader()
 		transferHeader.list = FileTransferHandler.getInstance().fileList
-		if (FileTransferHandler.getInstance().socketUtil!!.sendObject(transferHeader))
+		if (socketUtil!!.sendObject(transferHeader))
 		{
 			Logs.i(TAG, "onCreate: 请求头传输成功")
 			sendFile(FileTransferHandler.getInstance().fileList[index])
@@ -76,6 +76,7 @@ class SendFileService : Service()
 
 	override fun onDestroy()
 	{
+		socketUtil!!.disConnect()
 		Logs.i(TAG, "onDestroy: ")
 	}
 
@@ -110,6 +111,8 @@ class SendFileService : Service()
 				index++
 				if (index < list.size)
 					sendFile(list[index])
+				else
+					stopSelf()
 			}
 
 			override fun onError(code: Int, e: Exception)
