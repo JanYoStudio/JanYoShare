@@ -79,13 +79,13 @@ class FileTransferActivity : AppCompatActivity()
 					1 ->
 					{
 						val intent = Intent(this, SendFileService::class.java)
-						intent.putExtra("action", "notify")
+						intent.putExtra("action", "start")
 						startService(intent)
 					}
 					2 ->
 					{
 						val intent = Intent(this, ReceiveFileService::class.java)
-						intent.putExtra("action", "notify")
+						intent.putExtra("action", "start")
 						startService(intent)
 					}
 				}
