@@ -5,6 +5,7 @@ import java.io.*
 import java.net.ServerSocket
 import java.net.Socket
 
+
 class SocketUtil
 {
 	private val TAG = "SocketUtil"
@@ -85,38 +86,29 @@ class SocketUtil
 		}
 		try
 		{
-			file.createNewFile()
-			val dataInputStream = DataInputStream(BufferedInputStream(socket!!.getInputStream()))
-			val dataOutputStream = DataOutputStream(BufferedOutputStream(FileOutputStream(file)))
-			val buffer = ByteArray(1024)
-			var index = 0
+			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket!!.getInputStream()))
+			val bytes = ByteArray(1024)
 			var transferredSize = 0L
+			val dataOutputStream = DataOutputStream(BufferedOutputStream(BufferedOutputStream(FileOutputStream(file))))
 			fileTransferListener.onStart()
 			while (true)
 			{
-				val bytesRead = dataInputStream.read(buffer)
-				transferredSize += bytesRead
-				if (bytesRead <= 0)
+				val read = dataInputStream!!.read(bytes)
+				transferredSize += read
+				Logs.i(TAG, "receiveFile: " + read)
+				if (read <= 0)
 				{
 					break
 				}
-				index++
-				if (index > 20)
-				{
-					val progress = (transferredSize * 100 / fileSize).toInt()
-					fileTransferListener.onProgress(progress)
-					index = 0
-				}
-				dataOutputStream.write(buffer, 0, bytesRead)
+				fileTransferListener.onProgress((transferredSize * 100 / fileSize).toInt())
+				dataOutputStream.write(bytes, 0, read)
 			}
-			dataInputStream.close()
-			dataOutputStream.close()
-			fileTransferListener.onFinish()
 		}
 		catch (e: Exception)
 		{
 			fileTransferListener.onError(2, e)
 		}
+		fileTransferListener.onFinish()
 		return file
 	}
 
@@ -131,31 +123,22 @@ class SocketUtil
 		{
 			val dataOutputStream = DataOutputStream(socket!!.getOutputStream())
 			val dataInputStream = DataInputStream(BufferedInputStream(FileInputStream(file)))
-			val buffer = ByteArray(1024)
-			var index = 0
-			val fileSize = file.length()
 			var transferredSize = 0L
-			fileTransferListener.onStart()//文件传输准备完毕
+			val bytes = ByteArray(1024)
+			fileTransferListener.onStart()
 			while (true)
 			{
-				val bytesRead = dataInputStream.read(buffer)
-				transferredSize += bytesRead
-				if (bytesRead <= 0)
+				val read = dataInputStream.read(bytes)
+				Logs.i(TAG, "sendFile: " + read)
+				transferredSize += read
+				if (read <= 0)
 				{
 					break
 				}
-				index++
-				if (index > 20)
-				{
-					val progress = (transferredSize * 100 / fileSize).toInt()
-					fileTransferListener.onProgress(progress)
-					index = 0
-				}
-				dataOutputStream.write(buffer, 0, bytesRead)
+				fileTransferListener.onProgress((transferredSize * 100 / file.length()).toInt())
+				dataOutputStream.write(bytes, 0, read)
 			}
 			dataOutputStream.flush()
-			dataOutputStream.close()
-			dataInputStream.close()
 			fileTransferListener.onFinish()
 		}
 		catch (e: Exception)
@@ -190,7 +173,6 @@ class SocketUtil
 			val objectOutputStream = ObjectOutputStream(socket!!.getOutputStream())
 			objectOutputStream.writeObject(obj)
 			objectOutputStream.flush()
-			objectOutputStream.close()
 		}
 		catch (e: Exception)
 		{
@@ -205,6 +187,8 @@ class SocketUtil
 		Logs.i(TAG, "disConnect: 断开Socket连接")
 		if (socket != null)
 		{
+			socket!!.getInputStream().close()
+			socket!!.getOutputStream().close()
 			socket!!.close()
 		}
 	}
