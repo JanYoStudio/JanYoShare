@@ -93,14 +93,15 @@ class SocketUtil
 			var bytesRead = socketInputStream.read(buffer)
 			while (bytesRead > 0)
 			{
-				Logs.i(TAG, "sendFile: " + bytesRead)
 				fileOutputStream.write(buffer, 0, bytesRead)
 				bytesRead = socketInputStream.read(buffer)
 				index++
 				if (index > 20)
 				{
-					val progress = (fileOutputStream.channel.size() / fileSize).toInt()
+					Logs.i(TAG, "receiveFile: " + bytesRead)
+					val progress = (fileOutputStream.channel.size() * 100 / fileSize).toInt()
 					fileTransferListener.onProgress(progress)
+					index = 0
 				}
 			}
 			socketInputStream.close()
@@ -128,18 +129,21 @@ class SocketUtil
 			val buffer = ByteArray(1024)
 			var index = 0
 			val fileSize = fileInputStream.channel.size()
+			var transferredSize = 0L
 			fileTransferListener.onStart()//文件传输准备完毕
 			var bytesRead = fileInputStream.read(buffer)
 			while (bytesRead > 0)
 			{
-				Logs.i(TAG, "sendFile: " + bytesRead)
 				socketOutputStream.write(buffer, 0, bytesRead)
+				transferredSize += bytesRead
 				bytesRead = fileInputStream.read(buffer)
 				index++
 				if (index > 20)
 				{
-					val progress = ((fileSize - fileInputStream.channel.size()) / fileSize).toInt()
+					Logs.i(TAG, "receiveFile: " + bytesRead)
+					val progress = (transferredSize * 100 / fileSize).toInt()
 					fileTransferListener.onProgress(progress)
+					index = 0
 				}
 			}
 			socketOutputStream.close()
