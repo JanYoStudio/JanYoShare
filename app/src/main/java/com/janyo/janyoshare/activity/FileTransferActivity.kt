@@ -11,6 +11,9 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.service.ReceiveFileService
+import com.janyo.janyoshare.service.SendFileService
+import com.janyo.janyoshare.util.FileTransferHandler
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 import java.io.File
@@ -19,16 +22,15 @@ class FileTransferActivity : AppCompatActivity()
 {
 	private val TAG = "FileTransferActivity"
 	private val CHOOSE_FILE = 233
-	private var list: ArrayList<TransferFile>? = null
 	private var adapter: FileTransferAdapter? = null
+	private val list = FileTransferHandler.getInstance().fileList
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_file_transfer)
 		setSupportActionBar(toolbar)
-		list = ArrayList<TransferFile>()
-		adapter = FileTransferAdapter(this, list!!)
+		adapter = FileTransferAdapter(this, list)
 
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
@@ -49,8 +51,8 @@ class FileTransferActivity : AppCompatActivity()
 			val transferFile = TransferFile()
 			transferFile.fileName = file.name
 			transferFile.filePath = file.absolutePath
-			transferFile.fileSize = FileUtil.FormatFileSize(file.length())
-			list!!.add(transferFile)
+			transferFile.fileSize = file.length()
+			list.add(transferFile)
 			adapter!!.notifyDataSetChanged()
 		}
 	}
@@ -65,9 +67,28 @@ class FileTransferActivity : AppCompatActivity()
 	{
 		when (item.itemId)
 		{
-			R.id.action_file_transfer ->
+			R.id.action_send_files ->
 			{
 				Logs.i(TAG, "onOptionsItemSelected: 发送文件")
+				when (FileTransferHandler.getInstance().tag)
+				{
+					0 ->
+					{
+						Logs.e(TAG, "onOptionsItemSelected: 未知标志，取消传输")
+					}
+					1 ->
+					{
+						val intent = Intent(this, SendFileService::class.java)
+						intent.putExtra("action", "notify")
+						startService(intent)
+					}
+					2 ->
+					{
+						val intent = Intent(this, ReceiveFileService::class.java)
+						intent.putExtra("action", "notify")
+						startService(intent)
+					}
+				}
 			}
 		}
 		return super.onOptionsItemSelected(item)

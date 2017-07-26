@@ -23,7 +23,9 @@ import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
+import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.util.JYFileUtil
+import com.mystery0.tools.FileUtil.FileUtil
 import java.io.File
 
 class AppRecyclerViewAdapter(private val context: Context,
@@ -51,7 +53,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 			Glide.with(context).load(installApp.iconPath).into(holder.imageView)
 		else
 			holder.imageView.setImageDrawable(installApp.icon)
-		holder.textView_size.text = JYFileUtil.FormatFileSize(installApp.size)
+		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
 		holder.fullView.setOnClickListener {
 			AlertDialog.Builder(context)
 					.setTitle(R.string.copy_file_selection)
@@ -205,12 +207,39 @@ class AppRecyclerViewAdapter(private val context: Context,
 							}
 							3 ->
 							{
-								val intent = Intent(context, FileTransferConfigureActivity::class.java)
-								val bundle = Bundle()
-								bundle.putSerializable("app", installApp)
-								intent.putExtra("action", 1)
-								intent.putExtra("app", bundle)
-								context.startActivity(intent)
+								progressDialog.show()
+								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
+								{
+									Thread(Runnable {
+										val code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+										progressDialog.dismiss()
+										if (code != -1)
+										{
+											val transferFile = TransferFile()
+											transferFile.fileName = installApp.name + ".apk"
+											transferFile.filePath = JYFileUtil.getFilePath(installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+											transferFile.fileIconPath = installApp.iconPath
+											transferFile.fileSize = installApp.size
+											val intent = Intent(context, FileTransferConfigureActivity::class.java)
+											val bundle = Bundle()
+											bundle.putSerializable("app", transferFile)
+											intent.putExtra("action", 1)
+											intent.putExtra("app", bundle)
+											context.startActivity(intent)
+										}
+										else
+										{
+											Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
+													.show()
+										}
+									}).start()
+								}
+								else
+								{
+									progressDialog.dismiss()
+									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
+											.show()
+								}
 							}
 						}
 					})

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name=".APP"
@@ -40,6 +41,11 @@
             android:label="@string/title_activity_file_transfer"
             android:theme="@style/AppTheme">
         </activity>
+        <activity
+            android:name=".activity.FileTransferConfigureActivity"
+            android:label="@string/title_activity_file_transfer_configure"
+            android:theme="@style/AppTheme">
+        </activity>
 
         <service
             android:name=".service.ShareTileService"
@@ -50,14 +56,26 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE"/>
             </intent-filter>
         </service>
-
-        <activity android:name=".TestActivity">
-        </activity>
-        <activity
-            android:name=".activity.FileTransferConfigureActivity"
-            android:label="@string/title_activity_file_transfer_configure"
-            android:theme="@style/AppTheme">
-        </activity>
+        <service
+            android:name=".service.SendFileService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name=".service.ReceiveFileService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name=".service.TransferPauseService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name=".service.TransferResumeService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name=".service.TransferCancelService"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>
