@@ -15,7 +15,6 @@ import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.service.ReceiveFileService
-import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
@@ -29,10 +28,34 @@ class FileTransferConfigureActivity : AppCompatActivity()
 	private val TAG = "FileTransferConfigureActivity"
 
 	private val PORT = 8989
+	private var temp = 0
 	private val sendHandler = SendHandler()
 	private val receiveHandler = ReceiveHandler()
 	private var progressDialog: ProgressDialog? = null
 	private val socketUtil = SocketUtil()
+
+	private val openAPThread = Thread(Runnable {
+		val message_create = Message()
+		message_create.what = CREATE_SERVER
+		message_create.obj = socketUtil.createServerConnection(PORT)
+		sendHandler.sendMessage(message_create)
+		val message_send = Message()
+		message_send.what = VERIFY_DEVICE
+		socketUtil.sendMessage(Build.MODEL)
+		sendHandler.sendMessage(message_send)
+		if (socketUtil.receiveMessage() == VERIFY_DONE)
+		{
+			FileTransferHandler.getInstance().socketUtil = socketUtil
+			val message = Message.obtain()
+			message.what = CONNECTED
+			sendHandler.sendMessage(message)
+		}
+		else
+		{
+			Logs.e(TAG, "openServer: 连接错误")
+			progressDialog!!.dismiss()
+		}
+	})
 
 	companion object
 	{
@@ -40,6 +63,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		val CREATE_CONNECTION = 2
 		val CONNECTED = 3
 		val VERIFY_DEVICE = 4
+		val SCAN_COMPLETE = 5
 		val VERIFY_DONE = "VERIFY_DONE"
 	}
 
@@ -63,14 +87,18 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 		if (intent.getIntExtra("action", 0) == 1)
 		{
-			openServer()
+			progressDialog!!.setMessage(getString(R.string.hint_socket_wait_server))
+			progressDialog!!.show()
+			openAPThread.start()
 			val transferFile = intent.getBundleExtra("app").getSerializable("app") as TransferFile
 			Logs.i(TAG, "onCreate: " + transferFile.fileName)
 			FileTransferHandler.getInstance().fileList.add(transferFile)
 		}
 
 		sendFile.setOnClickListener {
-			openServer()
+			progressDialog!!.setMessage(getString(R.string.hint_socket_wait_server))
+			progressDialog!!.show()
+			openAPThread.start()
 		}
 
 		receiveFile.setOnClickListener {
@@ -81,6 +109,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 				{
 					override fun onScanFinish(ipv4: String, socketUtil: SocketUtil)
 					{
+						temp++
 						val message = Message()
 						message.what = CREATE_CONNECTION
 						message.obj = ipv4
@@ -91,8 +120,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 						message_verify.what = VERIFY_DEVICE
 						val map = HashMap<String, Any>()
 						map.put("message", resultMessage)
-						map.put("ip", ipv4)
-						map.put("port", PORT)
 						map.put("socket", socketUtil)
 						message_verify.obj = map
 						receiveHandler.sendMessage(message_verify)
@@ -100,37 +127,19 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 					override fun onError(e: Exception)
 					{
+						temp++
+						if (temp >= 256)
+						{
+							Logs.i(TAG, "onError: 搜索完毕")
+							val message = Message()
+							message.what = SCAN_COMPLETE
+							receiveHandler.sendMessage(message)
+						}
 						Logs.e(TAG, "onError: " + e.message)
 					}
-
 				})
 			}).start()
 		}
-	}
-
-	private fun openServer()
-	{
-		progressDialog!!.setMessage(getString(R.string.hint_socket_wait_server))
-		progressDialog!!.show()
-		Thread(Runnable {
-			val message_create = Message()
-			message_create.what = CREATE_SERVER
-			message_create.obj = socketUtil.createServerConnection(PORT)
-			sendHandler.sendMessage(message_create)
-			val message_send = Message()
-			message_send.what = VERIFY_DEVICE
-			socketUtil.sendMessage(Build.MODEL)
-			sendHandler.sendMessage(message_send)
-			if (socketUtil.receiveMessage() == VERIFY_DONE)
-			{
-				FileTransferHandler.getInstance().host = socketUtil.receiveMessage()
-				FileTransferHandler.getInstance().port = PORT
-				FileTransferHandler.getInstance().socketUtil = socketUtil
-				val message = Message.obtain()
-				message.what = CONNECTED
-				sendHandler.sendMessage(message)
-			}
-		}).start()
 	}
 }
 
@@ -186,12 +195,9 @@ internal class ReceiveHandler : Handler()
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							Thread(Runnable {
 								val socketUtil = map["socket"] as SocketUtil
-								FileTransferHandler.getInstance().host = map["ip"] as String
-								FileTransferHandler.getInstance().port = map["port"] as Int
 								FileTransferHandler.getInstance().socketUtil = socketUtil
 
 								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_DONE)
-								socketUtil.sendMessage(FileTransferHandler.getInstance().host!!.toString())
 
 								val message = Message()
 								message.what = FileTransferConfigureActivity.CONNECTED
@@ -210,6 +216,12 @@ internal class ReceiveHandler : Handler()
 				FileTransferHandler.getInstance().tag = 2
 				context!!.startService(Intent(context, ReceiveFileService::class.java))
 				context!!.startActivity(Intent(context, FileTransferActivity::class.java))
+			}
+			FileTransferConfigureActivity.SCAN_COMPLETE ->
+			{
+				progressDialog!!.dismiss()
+				Toast.makeText(context, R.string.hint_socket_scan_complete, Toast.LENGTH_SHORT)
+						.show()
 			}
 		}
 	}

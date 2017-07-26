@@ -49,6 +49,7 @@
     <string name="hint_socket_verify_device_message">确认从 %1$s 处接收文件吗？</string>
     <string name="hint_socket_verifying">验证中……</string>
     <string name="hint_socket_connected">连接成功！</string>
+    <string name="hint_socket_scan_complete">未找到设备</string>
     <string name="hint_twice_exit">再按一次返回键退出</string>
     <string name="hint_permission">请授予存储权限来拷贝apk文件到SD卡</string>
     <string name="hint_developer_mode">还差%1$d步启用开发者模式</string>

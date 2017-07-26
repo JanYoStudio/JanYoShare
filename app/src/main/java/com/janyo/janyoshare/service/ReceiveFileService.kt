@@ -24,7 +24,7 @@ class ReceiveFileService : Service()
 
 	private val thread = Thread(Runnable {
 		//获取请求头
-		val obj = FileTransferHandler.getInstance().socketUtil!!.receiveObject()
+		val obj = socketUtil!!.receiveObject()
 		if (obj != null)
 		{
 			val transferHeader = obj as TransferHeader
@@ -61,7 +61,8 @@ class ReceiveFileService : Service()
 
 	override fun onDestroy()
 	{
-
+		socketUtil!!.disConnect()
+		Logs.i(TAG, "onDestroy: ")
 	}
 
 	private fun receiveFile(transferFile: TransferFile)
@@ -97,7 +98,7 @@ class ReceiveFileService : Service()
 				if (index < list.size)
 					receiveFile(list[index])
 				else
-					thread.start()
+					stopSelf()
 			}
 
 			override fun onError(code: Int, e: Exception)
