@@ -111,8 +111,8 @@ class SendFileService : Service()
 				index++
 				if (index < list.size)
 					sendFile(list[index])
-				else
-					stopSelf()
+//				else
+//					stopSelf()
 			}
 
 			override fun onError(code: Int, e: Exception)
