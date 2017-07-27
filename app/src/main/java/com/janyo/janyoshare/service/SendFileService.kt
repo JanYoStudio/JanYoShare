@@ -18,15 +18,15 @@ import java.io.File
 class SendFileService : Service()
 {
 	private val TAG = "SendFileService"
-	private var localBroadcastManager: LocalBroadcastManager? = null
-	private val socketUtil = FileTransferHandler.getInstance().socketUtil
+	private lateinit var localBroadcastManager: LocalBroadcastManager
+	private val socketUtil = SocketUtil()
 	private var index = 0
 
 	private val thread = Thread(Runnable {
 		//传输请求头
 		val transferHeader = TransferHeader()
 		transferHeader.list = FileTransferHandler.getInstance().fileList
-		if (socketUtil!!.sendObject(transferHeader))
+		if (socketUtil.sendObject(transferHeader))
 		{
 			Logs.i(TAG, "onCreate: 请求头传输成功")
 			sendFile(FileTransferHandler.getInstance().fileList[index])
@@ -44,7 +44,10 @@ class SendFileService : Service()
 		localBroadcastManager = LocalBroadcastManager.getInstance(this)
 		val intentFilter = IntentFilter()
 		intentFilter.addAction(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-		localBroadcastManager!!.registerReceiver(FileTransferReceiver(), intentFilter)
+		localBroadcastManager.registerReceiver(FileTransferReceiver(), intentFilter)
+		Thread(Runnable {
+			socketUtil.createServerConnection(FileTransferHandler.getInstance().transferPort)
+		}).start()
 	}
 
 	override fun onBind(intent: Intent): IBinder?
@@ -76,43 +79,43 @@ class SendFileService : Service()
 
 	override fun onDestroy()
 	{
-		socketUtil!!.disConnect()
+		socketUtil.disConnect()
 		Logs.i(TAG, "onDestroy: ")
 	}
 
 	private fun sendFile(transferFile: TransferFile)
 	{
 		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-		socketUtil!!.sendFile(File(transferFile.filePath), object : SocketUtil.FileTransferListener
+		socketUtil.sendFile(File(transferFile.filePath), object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
 			{
 				Logs.i(TAG, "onStart: ")
-				FileTransferHandler.getInstance().currentFile = transferFile
 				FileTransferHandler.getInstance().currentProgress = 0
+				FileTransferHandler.getInstance().currentFile = transferFile
 				TransferFileNotification.notify(this@SendFileService, index, "start")
 			}
 
 			override fun onProgress(progress: Int)
 			{
-				broadcastIntent.putExtra("progress", progress)
+				FileTransferHandler.getInstance().currentProgress = progress
 				broadcastIntent.putExtra("index", index)
-				localBroadcastManager!!.sendBroadcast(broadcastIntent)
+				localBroadcastManager.sendBroadcast(broadcastIntent)
 				TransferFileNotification.notify(this@SendFileService, index, "start")
 			}
 
 			override fun onFinish()
 			{
 				Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
-				broadcastIntent.putExtra("progress", 100)
+				FileTransferHandler.getInstance().currentProgress = 100
 				broadcastIntent.putExtra("index", index)
-				localBroadcastManager!!.sendBroadcast(broadcastIntent)
+				localBroadcastManager.sendBroadcast(broadcastIntent)
 				val list = FileTransferHandler.getInstance().fileList
 				index++
 				if (index < list.size)
 					sendFile(list[index])
-//				else
-//					stopSelf()
+				else
+					stopSelf()
 			}
 
 			override fun onError(code: Int, e: Exception)

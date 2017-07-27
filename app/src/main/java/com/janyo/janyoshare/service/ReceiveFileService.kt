@@ -19,12 +19,13 @@ class ReceiveFileService : Service()
 {
 	private val TAG = "ReceiveFileService"
 	private var localBroadcastManager: LocalBroadcastManager? = null
-	private val socketUtil = FileTransferHandler.getInstance().socketUtil
+	private val socketUtil = SocketUtil()
 	private var index = 0
 
 	private val thread = Thread(Runnable {
+		socketUtil.createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort)
 		//获取请求头
-		val obj = socketUtil!!.receiveObject()
+		val obj = socketUtil.receiveObject()
 		if (obj != null)
 		{
 			val transferHeader = obj as TransferHeader
@@ -61,7 +62,7 @@ class ReceiveFileService : Service()
 
 	override fun onDestroy()
 	{
-		socketUtil!!.disConnect()
+		socketUtil.disConnect()
 		Logs.i(TAG, "onDestroy: ")
 	}
 
@@ -69,7 +70,7 @@ class ReceiveFileService : Service()
 	{
 		val path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, getString(R.string.app_name))
 		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-		socketUtil!!.receiveFile(transferFile.fileSize, path, object : SocketUtil.FileTransferListener
+		socketUtil.receiveFile(transferFile.fileSize, path, object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
 			{
@@ -81,7 +82,7 @@ class ReceiveFileService : Service()
 
 			override fun onProgress(progress: Int)
 			{
-				broadcastIntent.putExtra("progress", progress)
+				FileTransferHandler.getInstance().currentProgress = progress
 				broadcastIntent.putExtra("index", index)
 				localBroadcastManager!!.sendBroadcast(broadcastIntent)
 				TransferFileNotification.notify(this@ReceiveFileService, index, "start")
@@ -90,15 +91,15 @@ class ReceiveFileService : Service()
 			override fun onFinish()
 			{
 				Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
-				broadcastIntent.putExtra("progress", 100)
+				FileTransferHandler.getInstance().currentProgress = 100
 				broadcastIntent.putExtra("index", index)
 				localBroadcastManager!!.sendBroadcast(broadcastIntent)
 				val list = FileTransferHandler.getInstance().fileList
 				index++
 				if (index < list.size)
 					receiveFile(list[index])
-//				else
-//					stopSelf()
+				else
+					stopSelf()
 			}
 
 			override fun onError(code: Int, e: Exception)

@@ -2,6 +2,7 @@ package com.janyo.janyoshare.util
 
 import com.mystery0.tools.Logs.Logs
 import java.io.*
+import java.net.ConnectException
 import java.net.ServerSocket
 import java.net.Socket
 
@@ -9,42 +10,64 @@ import java.net.Socket
 class SocketUtil
 {
 	private val TAG = "SocketUtil"
-	var socket: Socket? = null
+	lateinit var socket: Socket
+	lateinit var ip: String
 
-	fun createSocketConnection(host: String, port: Int): Boolean
+	fun tryCreateSocketConnection(host: String, port: Int): Boolean
 	{
 		try
 		{
-			if (socket != null && socket!!.isConnected)
+			val socket = Socket(host, port)
+			if (socket.isConnected)
 			{
-				return true
+				socket.keepAlive = true
+				ip = host
+				this.socket = socket
 			}
-			socket = Socket(host, port)
-			socket!!.keepAlive = true
+			return socket.isConnected
 		}
-		catch (e: Exception)
+		catch (e: ConnectException)
 		{
-			Logs.wtf(TAG, "createSocketConnection", e)
+			return false
 		}
-		return socket!!.isConnected
+	}
+
+	fun createSocketConnection(host: String, port: Int): Boolean
+	{
+		for (i in 0..19)
+		{
+			try
+			{
+				val socket = Socket(host, port)
+				if (socket.isConnected)
+				{
+					this.socket = socket
+					break
+				}
+			}
+			catch (e: Exception)
+			{
+				Thread.sleep(100)
+				continue
+			}
+		}
+		socket.keepAlive = true
+		ip = host
+		return socket.isConnected
 	}
 
 	fun createServerConnection(port: Int): Boolean
 	{
 		try
 		{
-			if (socket != null && socket!!.isConnected)
-			{
-				return true
-			}
 			socket = ServerSocket(port).accept()
-			socket!!.keepAlive = true
+			socket.keepAlive = true
 		}
 		catch (e: Exception)
 		{
 			Logs.wtf(TAG, "createServerConnection", e)
 		}
-		return socket!!.isConnected
+		return socket.isConnected
 	}
 
 	fun receiveMessage(): String
@@ -52,7 +75,7 @@ class SocketUtil
 		var response = "null"
 		try
 		{
-			val inputStream = socket!!.getInputStream()
+			val inputStream = socket.getInputStream()
 			response = BufferedReader(InputStreamReader(inputStream)).readLine()
 		}
 		catch (e: Exception)
@@ -66,7 +89,7 @@ class SocketUtil
 	{
 		try
 		{
-			val outputStream = socket!!.getOutputStream()
+			val outputStream = socket.getOutputStream()
 			outputStream.write((message + "\n").toByteArray())
 			outputStream.flush()
 		}
@@ -86,28 +109,36 @@ class SocketUtil
 		}
 		try
 		{
-			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket!!.getInputStream()))
+			Logs.i(TAG, "receiveFile: 文件大小" + fileSize)
+			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket.getInputStream()))
 			val bytes = ByteArray(1024)
 			var transferredSize = 0L
-			val dataOutputStream = DataOutputStream(BufferedOutputStream(BufferedOutputStream(FileOutputStream(file))))
+			val dataOutputStream = DataOutputStream(BufferedOutputStream(FileOutputStream(file)))
 			fileTransferListener.onStart()
 			while (true)
 			{
 				val read = dataInputStream!!.read(bytes)
 				transferredSize += read
 				Logs.i(TAG, "receiveFile: " + read)
-				if (read <= 0)
+				if (read == -1)
 				{
+					Logs.i(TAG, "receiveFile: 退出循环")
 					break
 				}
 				fileTransferListener.onProgress((transferredSize * 100 / fileSize).toInt())
 				dataOutputStream.write(bytes, 0, read)
+				Logs.i(TAG, "receiveFile: 写入" + read + "个数据")
 			}
+			dataInputStream.close()
+			Logs.i(TAG, "receiveFile: 关闭输入流")
+			dataOutputStream.close()
+			Logs.i(TAG, "receiveFile: 关闭输出流")
 		}
 		catch (e: Exception)
 		{
 			fileTransferListener.onError(2, e)
 		}
+		Logs.i(TAG, "receiveFile: 文件完成")
 		fileTransferListener.onFinish()
 		return file
 	}
@@ -121,7 +152,8 @@ class SocketUtil
 		}
 		try
 		{
-			val dataOutputStream = DataOutputStream(socket!!.getOutputStream())
+			Logs.i(TAG, "sendFile: fileSize" + file.length())
+			val dataOutputStream = DataOutputStream(socket.getOutputStream())
 			val dataInputStream = DataInputStream(BufferedInputStream(FileInputStream(file)))
 			var transferredSize = 0L
 			val bytes = ByteArray(1024)
@@ -131,14 +163,20 @@ class SocketUtil
 				val read = dataInputStream.read(bytes)
 				Logs.i(TAG, "sendFile: " + read)
 				transferredSize += read
+				fileTransferListener.onProgress((transferredSize * 100 / file.length()).toInt())
 				if (read <= 0)
 				{
+					Logs.i(TAG, "sendFile: 退出循环")
 					break
 				}
-				fileTransferListener.onProgress((transferredSize * 100 / file.length()).toInt())
 				dataOutputStream.write(bytes, 0, read)
 			}
 			dataOutputStream.flush()
+			Logs.i(TAG, "sendFile: 推流")
+			dataInputStream.close()
+			Logs.i(TAG, "sendFile: 关闭输入流")
+			dataOutputStream.close()
+			Logs.i(TAG, "sendFile: 关闭输出流")
 			fileTransferListener.onFinish()
 		}
 		catch (e: Exception)
@@ -152,7 +190,7 @@ class SocketUtil
 		var obj: Any? = null
 		try
 		{
-			val objectInputStream = ObjectInputStream(BufferedInputStream(socket!!.getInputStream()))
+			val objectInputStream = ObjectInputStream(BufferedInputStream(socket.getInputStream()))
 			obj = objectInputStream.readObject()
 		}
 		catch (e: Exception)
@@ -170,7 +208,7 @@ class SocketUtil
 		}
 		try
 		{
-			val objectOutputStream = ObjectOutputStream(socket!!.getOutputStream())
+			val objectOutputStream = ObjectOutputStream(socket.getOutputStream())
 			objectOutputStream.writeObject(obj)
 			objectOutputStream.flush()
 		}
@@ -185,12 +223,7 @@ class SocketUtil
 	fun disConnect()
 	{
 		Logs.i(TAG, "disConnect: 断开Socket连接")
-		if (socket != null)
-		{
-			socket!!.getInputStream().close()
-			socket!!.getOutputStream().close()
-			socket!!.close()
-		}
+		socket.close()
 	}
 
 	interface FileTransferListener

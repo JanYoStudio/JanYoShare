@@ -65,7 +65,7 @@ class WIFIUtil(var context: Context, val port: Int)
 					if (result == 0)
 					{
 						val socketUtil = SocketUtil()
-						if (socketUtil.createSocketConnection(currentIP, port))
+						if (socketUtil.tryCreateSocketConnection(currentIP, port))
 						{
 							tag = true
 							scanListener.onScan(currentIP, socketUtil)
