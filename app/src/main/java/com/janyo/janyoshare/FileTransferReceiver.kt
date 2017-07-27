@@ -10,9 +10,7 @@ class FileTransferReceiver : BroadcastReceiver()
 {
 	override fun onReceive(context: Context, intent: Intent)
 	{
-		val progress = intent.getIntExtra("progress", 0)
 		val index = intent.getIntExtra("index", 0)
-		FileTransferHandler.getInstance().currentProgress = progress
 		TransferFileNotification.notify(context, index, "start")
 	}
 }

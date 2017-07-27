@@ -11,14 +11,12 @@ import android.graphics.drawable.VectorDrawable
 import android.net.Uri
 import android.os.Environment
 import android.support.graphics.drawable.VectorDrawableCompat
-import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-
 
 object JYFileUtil
 {
@@ -71,12 +69,12 @@ object JYFileUtil
 		{
 			val fileInputStream = FileInputStream(inputPath)
 			val fileOutputStream = FileOutputStream(outPath)
-			val Buff = ByteArray(1024)
+			val bytes = ByteArray(1024)
 			var ReadCount = 0
 			while (ReadCount != -1)
 			{
-				fileOutputStream.write(Buff, 0, ReadCount)
-				ReadCount = fileInputStream.read(Buff)
+				fileOutputStream.write(bytes, 0, ReadCount)
+				ReadCount = fileInputStream.read(bytes)
 			}
 			fileInputStream.close()
 			code = 1

@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.service.ReceiveFileService
+import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
@@ -27,16 +28,15 @@ class FileTransferConfigureActivity : AppCompatActivity()
 {
 	private val TAG = "FileTransferConfigureActivity"
 
-	private val PORT = 8989
 	private val sendHandler = SendHandler()
 	private val receiveHandler = ReceiveHandler()
-	private var progressDialog: ProgressDialog? = null
+	private lateinit var progressDialog: ProgressDialog
 	private val socketUtil = SocketUtil()
 
 	private val openAPThread = Thread(Runnable {
 		val message_create = Message()
 		message_create.what = CREATE_SERVER
-		message_create.obj = socketUtil.createServerConnection(PORT)
+		message_create.obj = socketUtil.createServerConnection(FileTransferHandler.getInstance().verifyPort)
 		sendHandler.sendMessage(message_create)
 		val message_send = Message()
 		message_send.what = VERIFY_DEVICE
@@ -44,15 +44,16 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		sendHandler.sendMessage(message_send)
 		if (socketUtil.receiveMessage() == VERIFY_DONE)
 		{
-			FileTransferHandler.getInstance().socketUtil = socketUtil
+//			FileTransferHandler.getInstance().socketUtil = socketUtil
 			val message = Message.obtain()
 			message.what = CONNECTED
 			sendHandler.sendMessage(message)
+			socketUtil.disConnect()
 		}
 		else
 		{
 			Logs.e(TAG, "openServer: 连接错误")
-			progressDialog!!.dismiss()
+			progressDialog.dismiss()
 		}
 	})
 
@@ -73,7 +74,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		setSupportActionBar(toolbar)
 
 		progressDialog = ProgressDialog(this)
-		progressDialog!!.setCancelable(false)
+		progressDialog.setCancelable(false)
 		sendHandler.progressDialog = progressDialog
 		sendHandler.context = this
 		receiveHandler.progressDialog = progressDialog
@@ -86,8 +87,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 		if (intent.getIntExtra("action", 0) == 1)
 		{
-			progressDialog!!.setMessage(getString(R.string.hint_socket_wait_server))
-			progressDialog!!.show()
+			progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
+			progressDialog.show()
 			openAPThread.start()
 			val transferFile = intent.getBundleExtra("app").getSerializable("app") as TransferFile
 			Logs.i(TAG, "onCreate: " + transferFile.fileName)
@@ -95,16 +96,16 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		sendFile.setOnClickListener {
-			progressDialog!!.setMessage(getString(R.string.hint_socket_wait_server))
-			progressDialog!!.show()
+			progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
+			progressDialog.show()
 			openAPThread.start()
 		}
 
 		receiveFile.setOnClickListener {
-			progressDialog!!.setMessage(getString(R.string.hint_socket_wait_client))
-			progressDialog!!.show()
+			progressDialog.setMessage(getString(R.string.hint_socket_wait_client))
+			progressDialog.show()
 			Thread(Runnable {
-				WIFIUtil(this, PORT).scanIP(object : WIFIUtil.ScanListener
+				WIFIUtil(this, FileTransferHandler.getInstance().verifyPort).scanIP(object : WIFIUtil.ScanListener
 				{
 					override fun onScan(ipv4: String, socketUtil: SocketUtil)
 					{
@@ -142,8 +143,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 internal class SendHandler : Handler()
 {
-	var progressDialog: ProgressDialog? = null
-	var context: Context? = null
+	lateinit var progressDialog: ProgressDialog
+	lateinit var context: Context
 
 	override fun handleMessage(msg: Message)
 	{
@@ -151,19 +152,20 @@ internal class SendHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_SERVER ->
 			{
-				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_connecting))
+				progressDialog.setMessage(context.getString(R.string.hint_socket_connecting))
 			}
 			FileTransferConfigureActivity.VERIFY_DEVICE ->
 			{
-				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_verifying))
+				progressDialog.setMessage(context.getString(R.string.hint_socket_verifying))
 			}
 			FileTransferConfigureActivity.CONNECTED ->
 			{
-				progressDialog!!.dismiss()
+				progressDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHandler.getInstance().tag = 1
-				context!!.startActivity(Intent(context, FileTransferActivity::class.java))
+				context.startService(Intent(context,SendFileService::class.java))
+				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 		}
 	}
@@ -171,8 +173,8 @@ internal class SendHandler : Handler()
 
 internal class ReceiveHandler : Handler()
 {
-	var progressDialog: ProgressDialog? = null
-	var context: Context? = null
+	lateinit var progressDialog: ProgressDialog
+	lateinit var context: Context
 
 	override fun handleMessage(msg: Message)
 	{
@@ -180,19 +182,19 @@ internal class ReceiveHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_CONNECTION ->
 			{
-				progressDialog!!.setMessage(context!!.getString(R.string.hint_socket_connecting))
+				progressDialog.setMessage(context.getString(R.string.hint_socket_connecting))
 			}
 			FileTransferConfigureActivity.VERIFY_DEVICE ->
 			{
 				@Suppress("UNCHECKED_CAST")
 				val map = msg.obj as HashMap<String, Any>
-				AlertDialog.Builder(context!!)
+				AlertDialog.Builder(context)
 						.setTitle(R.string.hint_socket_verify_device_title)
-						.setMessage(String.format(context!!.getString(R.string.hint_socket_verify_device_message), map["message"]))
+						.setMessage(String.format(context.getString(R.string.hint_socket_verify_device_message), map["message"]))
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							Thread(Runnable {
 								val socketUtil = map["socket"] as SocketUtil
-								FileTransferHandler.getInstance().socketUtil = socketUtil
+//								FileTransferHandler.getInstance().socketUtil = socketUtil
 
 								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_DONE)
 
@@ -200,6 +202,8 @@ internal class ReceiveHandler : Handler()
 								message.what = FileTransferConfigureActivity.CONNECTED
 								message.obj = map["message"]
 								sendMessage(message)
+								FileTransferHandler.getInstance().ip = socketUtil.ip
+								socketUtil.disConnect()
 							}).start()
 						})
 						.setNegativeButton(R.string.action_cancel, null)
@@ -207,16 +211,16 @@ internal class ReceiveHandler : Handler()
 			}
 			FileTransferConfigureActivity.CONNECTED ->
 			{
-				progressDialog!!.dismiss()
+				progressDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHandler.getInstance().tag = 2
-				context!!.startService(Intent(context, ReceiveFileService::class.java))
-				context!!.startActivity(Intent(context, FileTransferActivity::class.java))
+				context.startService(Intent(context, ReceiveFileService::class.java))
+				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 			FileTransferConfigureActivity.SCAN_COMPLETE ->
 			{
-				progressDialog!!.dismiss()
+				progressDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_scan_complete, Toast.LENGTH_SHORT)
 						.show()
 			}
