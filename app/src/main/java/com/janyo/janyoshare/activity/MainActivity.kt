@@ -136,6 +136,10 @@ class MainActivity : AppCompatActivity()
 												Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
 														.show()
 											}
+											else
+											{
+												Logs.e(TAG, "onResponse: " + message)
+											}
 										}
 									})
 									.open()
