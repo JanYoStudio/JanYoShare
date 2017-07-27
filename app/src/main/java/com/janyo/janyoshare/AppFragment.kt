@@ -3,16 +3,13 @@
 package com.janyo.janyoshare
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
-import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
@@ -25,6 +22,7 @@ import com.janyo.janyoshare.activity.SettingsActivity
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
+import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
@@ -42,7 +40,6 @@ class AppFragment : Fragment()
 	private var settings: Settings? = null
 	private var index = 0
 	private var loadHandler: LoadHandler? = null
-	private var renameHandler: RenameHandler? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -154,7 +151,6 @@ class AppFragment : Fragment()
 		recyclerView.layoutManager = LinearLayoutManager(activity)
 		recyclerView.adapter = appRecyclerViewAdapter
 		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter!!, swipeRefreshLayout!!)
-		renameHandler = RenameHandler(activity)
 
 		swipeRefreshLayout!!.isRefreshing = true
 		refresh()
@@ -190,64 +186,6 @@ class AppFragment : Fragment()
 			val fragment = AppFragment()
 			fragment.arguments = bundle
 			return fragment
-		}
-	}
-}
-
-internal class LoadHandler(private val showList: MutableList<InstallApp>,
-						   private val installAppList: MutableList<InstallApp>,
-						   private val appRecyclerViewAdapter: AppRecyclerViewAdapter,
-						   private val swipeRefreshLayout: SwipeRefreshLayout) : Handler()
-{
-
-	@Suppress("UNCHECKED_CAST")
-	override fun handleMessage(message: Message)
-	{
-		when (message.what)
-		{
-			1 ->
-			{
-				val installApps = message.obj as List<InstallApp>
-				showList.clear()
-				showList.addAll(installApps)
-				installAppList.clear()
-				installAppList.addAll(installApps)
-				appRecyclerViewAdapter.notifyDataSetChanged()
-				swipeRefreshLayout.isRefreshing = false
-			}
-		}
-	}
-}
-
-internal class RenameHandler(private val activity: Activity) : Handler()
-{
-	override fun handleMessage(message: Message)
-	{
-		when (message.what)
-		{
-			1 ->
-			{
-				val installApp = message.obj as InstallApp
-				val coordinatorLayout: CoordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
-				val view = LayoutInflater.from(activity).inflate(R.layout.dialog_edit, TextInputLayout(activity), false)
-				val text: TextInputLayout = view.findViewById(R.id.layout)
-				text.hint = installApp.name + "_" + installApp.versionName
-				AlertDialog.Builder(activity)
-						.setTitle(R.string.hint_new_name)
-						.setView(view)
-						.setPositiveButton(R.string.action_done, { _, _ ->
-							if (JYFileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
-							{
-								JYFileUtil.doShare(activity, text.editText!!.text.toString(), activity.getString(R.string.app_name))
-							}
-							else
-							{
-								Snackbar.make(coordinatorLayout, R.string.hint_rename_error, Snackbar.LENGTH_SHORT)
-										.show()
-							}
-						})
-						.show()
-			}
 		}
 	}
 }

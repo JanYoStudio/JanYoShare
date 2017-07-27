@@ -64,18 +64,18 @@
             android:name=".service.ReceiveFileService"
             android:enabled="true"
             android:exported="true"/>
-        <service
-            android:name=".service.TransferPauseService"
-            android:enabled="true"
-            android:exported="true"/>
-        <service
-            android:name=".service.TransferResumeService"
-            android:enabled="true"
-            android:exported="true"/>
-        <service
-            android:name=".service.TransferCancelService"
-            android:enabled="true"
-            android:exported="true"/>
+        <!--<service-->
+            <!--android:name=".service.TransferPauseService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true"/>-->
+        <!--<service-->
+            <!--android:name=".service.TransferResumeService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true"/>-->
+        <!--<service-->
+            <!--android:name=".service.TransferCancelService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true"/>-->
     </application>
 
 </manifest>

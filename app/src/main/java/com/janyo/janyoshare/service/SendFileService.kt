@@ -65,14 +65,14 @@ class SendFileService : Service()
 			{
 				thread.start()
 			}
-			"pause" ->
-			{
-
-			}
-			"stop" ->
-			{
-
-			}
+//			"pause" ->
+//			{
+//
+//			}
+//			"stop" ->
+//			{
+//
+//			}
 		}
 		return super.onStartCommand(intent, flags, startId)
 	}
@@ -85,7 +85,7 @@ class SendFileService : Service()
 
 	private fun sendFile(transferFile: TransferFile)
 	{
-		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
+//		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
 		socketUtil.sendFile(File(transferFile.filePath), object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
@@ -99,8 +99,8 @@ class SendFileService : Service()
 			override fun onProgress(progress: Int)
 			{
 				FileTransferHandler.getInstance().currentProgress = progress
-				broadcastIntent.putExtra("index", index)
-				localBroadcastManager.sendBroadcast(broadcastIntent)
+//				broadcastIntent.putExtra("index", index)
+//				localBroadcastManager.sendBroadcast(broadcastIntent)
 				TransferFileNotification.notify(this@SendFileService, index, "start")
 			}
 
@@ -108,8 +108,9 @@ class SendFileService : Service()
 			{
 				Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
 				FileTransferHandler.getInstance().currentProgress = 100
-				broadcastIntent.putExtra("index", index)
-				localBroadcastManager.sendBroadcast(broadcastIntent)
+//				broadcastIntent.putExtra("index", index)
+//				localBroadcastManager.sendBroadcast(broadcastIntent)
+				TransferFileNotification.done(this@SendFileService,index)
 				val list = FileTransferHandler.getInstance().fileList
 				index++
 				if (index < list.size)

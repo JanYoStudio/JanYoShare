@@ -3,19 +3,14 @@
 package com.janyo.janyoshare.activity
 
 import android.app.ProgressDialog
-import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.Message
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
-import com.janyo.janyoshare.service.ReceiveFileService
-import com.janyo.janyoshare.service.SendFileService
+import com.janyo.janyoshare.handler.ReceiveHandler
+import com.janyo.janyoshare.handler.SendHandler
 import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
@@ -44,7 +39,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		sendHandler.sendMessage(message_send)
 		if (socketUtil.receiveMessage() == VERIFY_DONE)
 		{
-//			FileTransferHandler.getInstance().socketUtil = socketUtil
 			val message = Message.obtain()
 			message.what = CONNECTED
 			sendHandler.sendMessage(message)
@@ -139,92 +133,16 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			}).start()
 		}
 	}
-}
 
-internal class SendHandler : Handler()
-{
-	lateinit var progressDialog: ProgressDialog
-	lateinit var context: Context
-
-	override fun handleMessage(msg: Message)
+	override fun onBackPressed()
 	{
-		when (msg.what)
+		if (openAPThread.isAlive)
 		{
-			FileTransferConfigureActivity.CREATE_SERVER ->
-			{
-				progressDialog.setMessage(context.getString(R.string.hint_socket_connecting))
-			}
-			FileTransferConfigureActivity.VERIFY_DEVICE ->
-			{
-				progressDialog.setMessage(context.getString(R.string.hint_socket_verifying))
-			}
-			FileTransferConfigureActivity.CONNECTED ->
-			{
-				progressDialog.dismiss()
-				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
-						.show()
-				FileTransferHandler.getInstance().tag = 1
-				context.startService(Intent(context, SendFileService::class.java))
-				context.startActivity(Intent(context, FileTransferActivity::class.java))
-			}
+			openAPThread.interrupt()
+			progressDialog.dismiss()
 		}
+		else
+			super.onBackPressed()
 	}
 }
 
-internal class ReceiveHandler : Handler()
-{
-	lateinit var progressDialog: ProgressDialog
-	lateinit var context: Context
-
-	override fun handleMessage(msg: Message)
-	{
-		when (msg.what)
-		{
-			FileTransferConfigureActivity.CREATE_CONNECTION ->
-			{
-				progressDialog.setMessage(context.getString(R.string.hint_socket_connecting))
-			}
-			FileTransferConfigureActivity.VERIFY_DEVICE ->
-			{
-				@Suppress("UNCHECKED_CAST")
-				val map = msg.obj as HashMap<String, Any>
-				AlertDialog.Builder(context)
-						.setCancelable(false)
-						.setTitle(R.string.hint_socket_verify_device_title)
-						.setMessage(String.format(context.getString(R.string.hint_socket_verify_device_message), map["message"]))
-						.setPositiveButton(R.string.action_done, { _, _ ->
-							Thread(Runnable {
-								val socketUtil = map["socket"] as SocketUtil
-//								FileTransferHandler.getInstance().socketUtil = socketUtil
-
-								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_DONE)
-
-								val message = Message()
-								message.what = FileTransferConfigureActivity.CONNECTED
-								message.obj = map["message"]
-								sendMessage(message)
-								FileTransferHandler.getInstance().ip = socketUtil.ip
-								socketUtil.disConnect()
-							}).start()
-						})
-						.setNegativeButton(R.string.action_cancel, null)
-						.show()
-			}
-			FileTransferConfigureActivity.CONNECTED ->
-			{
-				progressDialog.dismiss()
-				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
-						.show()
-				FileTransferHandler.getInstance().tag = 2
-				context.startService(Intent(context, ReceiveFileService::class.java))
-				context.startActivity(Intent(context, FileTransferActivity::class.java))
-			}
-			FileTransferConfigureActivity.SCAN_COMPLETE ->
-			{
-				progressDialog.dismiss()
-				Toast.makeText(context, R.string.hint_socket_scan_complete, Toast.LENGTH_SHORT)
-						.show()
-			}
-		}
-	}
-}

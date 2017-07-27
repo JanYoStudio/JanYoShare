@@ -130,10 +130,6 @@ class SocketUtil
 				Logs.i(TAG, "receiveFile: 写入" + read + "个数据")
 				Thread.sleep(100)
 			}
-			dataInputStream.close()
-			Logs.i(TAG, "receiveFile: 关闭输入流")
-			dataOutputStream.close()
-			Logs.i(TAG, "receiveFile: 关闭输出流")
 		}
 		catch (e: Exception)
 		{
@@ -174,10 +170,6 @@ class SocketUtil
 			}
 			dataOutputStream.flush()
 			Logs.i(TAG, "sendFile: 推流")
-			dataInputStream.close()
-			Logs.i(TAG, "sendFile: 关闭输入流")
-			dataOutputStream.close()
-			Logs.i(TAG, "sendFile: 关闭输出流")
 			fileTransferListener.onFinish()
 		}
 		catch (e: Exception)
@@ -224,6 +216,8 @@ class SocketUtil
 	fun disConnect()
 	{
 		Logs.i(TAG, "disConnect: 断开Socket连接")
+		socket.getInputStream().close()
+		socket.getOutputStream().close()
 		socket.close()
 	}
 

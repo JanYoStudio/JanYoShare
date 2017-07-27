@@ -56,6 +56,7 @@
     <string name="hint_developer_mode">还差%1$d步启用开发者模式</string>
     <string name="hint_developer_mode_enable">已启用开发者模式！</string>
     <string name="hint_transfer_file_notification_title">正在传输： %1$s</string>
+    <string name="hint_transfer_file_notification_done">传输完成： %1$s</string>
 
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>

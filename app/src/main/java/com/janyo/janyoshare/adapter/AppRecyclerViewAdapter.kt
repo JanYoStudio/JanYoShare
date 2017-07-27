@@ -9,11 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
-import android.support.design.widget.TextInputLayout
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.ImageView
@@ -24,6 +22,7 @@ import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.classes.TransferFile
+import com.janyo.janyoshare.handler.RenameHandler
 import com.janyo.janyoshare.util.JYFileUtil
 import com.mystery0.tools.FileUtil.FileUtil
 import java.io.File
@@ -259,38 +258,5 @@ class AppRecyclerViewAdapter(private val context: Context,
 		var textView_packageName: TextView = fullView.findViewById<TextView>(R.id.app_package_name)
 		var textView_versionName: TextView = fullView.findViewById<TextView>(R.id.app_version_name)
 		var textView_size: TextView = fullView.findViewById<TextView>(R.id.app_size)
-	}
-}
-
-internal class RenameHandler(private val activity: Activity) : Handler()
-{
-	override fun handleMessage(message: Message)
-	{
-		when (message.what)
-		{
-			1 ->
-			{
-				val installApp = message.obj as InstallApp
-				val coordinatorLayout: CoordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
-				val view = LayoutInflater.from(activity).inflate(R.layout.dialog_edit, TextInputLayout(activity), false)
-				val text: TextInputLayout = view.findViewById(R.id.layout)
-				text.hint = installApp.name + "_" + installApp.versionName
-				AlertDialog.Builder(activity)
-						.setTitle(R.string.hint_new_name)
-						.setView(view)
-						.setPositiveButton(R.string.action_done, { _, _ ->
-							if (JYFileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
-							{
-								JYFileUtil.doShare(activity, text.editText!!.text.toString() + ".apk", activity.getString(R.string.app_name))
-							}
-							else
-							{
-								Snackbar.make(coordinatorLayout, R.string.hint_rename_error, Snackbar.LENGTH_SHORT)
-										.show()
-							}
-						})
-						.show()
-			}
-		}
 	}
 }
