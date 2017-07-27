@@ -111,7 +111,7 @@ class SocketUtil
 		{
 			Logs.i(TAG, "receiveFile: 文件大小" + fileSize)
 			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket.getInputStream()))
-			val bytes = ByteArray(1024)
+			val bytes = ByteArray(1024 * 1024)
 			var transferredSize = 0L
 			val dataOutputStream = DataOutputStream(BufferedOutputStream(FileOutputStream(file)))
 			fileTransferListener.onStart()
@@ -128,6 +128,7 @@ class SocketUtil
 				fileTransferListener.onProgress((transferredSize * 100 / fileSize).toInt())
 				dataOutputStream.write(bytes, 0, read)
 				Logs.i(TAG, "receiveFile: 写入" + read + "个数据")
+				Thread.sleep(100)
 			}
 			dataInputStream.close()
 			Logs.i(TAG, "receiveFile: 关闭输入流")
@@ -156,7 +157,7 @@ class SocketUtil
 			val dataOutputStream = DataOutputStream(socket.getOutputStream())
 			val dataInputStream = DataInputStream(BufferedInputStream(FileInputStream(file)))
 			var transferredSize = 0L
-			val bytes = ByteArray(1024)
+			val bytes = ByteArray(1024 * 1024)
 			fileTransferListener.onStart()
 			while (true)
 			{

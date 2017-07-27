@@ -69,7 +69,7 @@ object JYFileUtil
 		{
 			val fileInputStream = FileInputStream(inputPath)
 			val fileOutputStream = FileOutputStream(outPath)
-			val bytes = ByteArray(1024)
+			val bytes = ByteArray(1024 * 1024 * 10)
 			var ReadCount = 0
 			while (ReadCount != -1)
 			{
