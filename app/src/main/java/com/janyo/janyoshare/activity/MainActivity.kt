@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import com.janyo.janyoshare.AppFragment
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.ViewPagerAdapter
@@ -25,6 +26,13 @@ import com.mystery0.tools.CrashHandler.CrashHandler
 import com.mystery0.tools.Logs.Logs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.io.File
+import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
+import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
+import com.android.volley.toolbox.Volley
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class MainActivity : AppCompatActivity()
 {
@@ -90,6 +98,50 @@ class MainActivity : AppCompatActivity()
 						Logs.i(TAG, "error: " + message)
 					}
 				})
+		if (settings!!.isAutoUploadLog)
+		{
+			CrashHandler.getInstance(this)
+					.sendException(object : CrashHandler.CatchExceptionListener
+					{
+						override fun onException(file: File, appVersionName: String,
+												 appVersionCode: Int, AndroidVersion: String,
+												 sdk: Int, vendor: String, model: String)
+						{
+							val map = HashMap<String, String>()
+							val fileMap = HashMap<String, File>()
+							val time: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(Calendar.getInstance().time)
+							fileMap.put("logFile", file)
+							map.put("date", time)
+							map.put("appName", getString(R.string.app_name))
+							map.put("appVersionName", appVersionName)
+							map.put("appVersionCode", appVersionCode.toString())
+							map.put("androidVersion", AndroidVersion)
+							map.put("sdk", sdk.toString())
+							map.put("vendor", vendor)
+							map.put("model", model)
+							HttpUtil(this@MainActivity)
+									.setRequestQueue(Volley.newRequestQueue(applicationContext))
+									.setUrl("http://123.206.186.70/php/uploadLog/upload_file.php")
+									.setRequestMethod(HttpUtil.RequestMethod.POST)
+									.setFileRequest(HttpUtil.FileRequest.UPLOAD)
+									.isFileRequest(true)
+									.setMap(map)
+									.setFileMap(fileMap)
+									.setResponseListener(object : ResponseListener
+									{
+										override fun onResponse(code: Int, message: String?)
+										{
+											if (code == 0)
+											{
+												Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
+														.show()
+											}
+										}
+									})
+									.open()
+						}
+					})
+		}
 
 		setSupportActionBar(toolbar)
 
