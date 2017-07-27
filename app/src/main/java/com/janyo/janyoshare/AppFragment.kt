@@ -157,6 +157,20 @@ class AppFragment : Fragment()
 		return view
 	}
 
+	fun refreshList()
+	{
+		index = settings.sort
+		swipeRefreshLayout.isRefreshing = true
+		if (JYFileUtil.isCacheAvaliable(activity))
+		{
+			getCatchList()
+		}
+		else
+		{
+			refresh()
+		}
+	}
+
 	fun getCatchList()
 	{
 		Thread(Runnable {
@@ -176,23 +190,9 @@ class AppFragment : Fragment()
 			}
 			else
 			{
-				refreshList()
+				refresh()
 			}
 		}).start()
-	}
-
-	fun refreshList()
-	{
-		index = settings.sort
-		swipeRefreshLayout.isRefreshing = true
-		if (JYFileUtil.isCacheAvaliable(activity))
-		{
-			getCatchList()
-		}
-		else
-		{
-			refresh()
-		}
 	}
 
 	fun refresh()
