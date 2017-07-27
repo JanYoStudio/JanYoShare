@@ -31,22 +31,22 @@ import java.util.ArrayList
 
 class AppFragment : Fragment()
 {
-	private var coordinatorLayout: CoordinatorLayout? = null
-	private var swipeRefreshLayout: SwipeRefreshLayout? = null
-	private var appRecyclerViewAdapter: AppRecyclerViewAdapter? = null
+	private lateinit var coordinatorLayout: CoordinatorLayout
+	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+	private lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
 	private val installAppList = ArrayList<InstallApp>()
 	private val showList = ArrayList<InstallApp>()
 	private var type = -1
-	private var settings: Settings? = null
+	private lateinit var settings: Settings
 	private var index = 0
-	private var loadHandler: LoadHandler? = null
+	private lateinit var loadHandler: LoadHandler
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		type = arguments.getInt("type")
 		settings = Settings(activity)
-		index = settings!!.sort
+		index = settings.sort
 		setHasOptionsMenu(true)
 	}
 
@@ -86,7 +86,7 @@ class AppFragment : Fragment()
 				{
 					showList.addAll(installAppList)
 				}
-				appRecyclerViewAdapter!!.notifyDataSetChanged()
+				appRecyclerViewAdapter.notifyDataSetChanged()
 				return true
 			}
 
@@ -102,7 +102,7 @@ class AppFragment : Fragment()
 				{
 					showList.addAll(installAppList)
 				}
-				appRecyclerViewAdapter!!.notifyDataSetChanged()
+				appRecyclerViewAdapter.notifyDataSetChanged()
 				return false
 			}
 		})
@@ -117,13 +117,13 @@ class AppFragment : Fragment()
 					.show()
 			R.id.action_sort ->
 			{
-				index = settings!!.sort
+				index = settings.sort
 				AlertDialog.Builder(activity)
 						.setTitle(R.string.hint_select_sort)
 						.setSingleChoiceItems(R.array.sort, index) { _, i -> index = i }
 						.setPositiveButton(R.string.action_done) { _, _ ->
-							settings!!.sort = index
-							swipeRefreshLayout!!.isRefreshing = true
+							settings.sort = index
+							swipeRefreshLayout.isRefreshing = true
 							refresh()
 						}
 						.show()
@@ -141,7 +141,7 @@ class AppFragment : Fragment()
 		val view = inflater!!.inflate(R.layout.fragment_app, container, false)
 		val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
 		swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
-		swipeRefreshLayout!!.setColorSchemeResources(
+		swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_light,
 				android.R.color.holo_green_light,
 				android.R.color.holo_orange_light,
@@ -150,19 +150,43 @@ class AppFragment : Fragment()
 		appRecyclerViewAdapter = AppRecyclerViewAdapter(activity, showList)
 		recyclerView.layoutManager = LinearLayoutManager(activity)
 		recyclerView.adapter = appRecyclerViewAdapter
-		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter!!, swipeRefreshLayout!!)
+		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter, swipeRefreshLayout)
 
-		swipeRefreshLayout!!.isRefreshing = true
-		refresh()
+		swipeRefreshLayout.isRefreshing = true
+		getCatchList()
 
-		swipeRefreshLayout!!.setOnRefreshListener { refresh() }
+		swipeRefreshLayout.setOnRefreshListener { refresh() }
 		return view
+	}
+
+	fun getCatchList()
+	{
+		Thread(Runnable {
+			var fileName = ""
+			when (type)
+			{
+				AppManager.SYSTEM -> fileName = "system.list"
+				AppManager.USER -> fileName = "user.list"
+			}
+			val installAppList = JYFileUtil.getList(activity, fileName)
+			if (installAppList != null)
+			{
+				val message = Message()
+				message.obj = installAppList
+				message.what = 1
+				loadHandler.sendMessage(message)
+			}
+			else
+			{
+				refreshList()
+			}
+		}).start()
 	}
 
 	fun refreshList()
 	{
-		index = settings!!.sort
-		swipeRefreshLayout!!.isRefreshing = true
+		index = settings.sort
+		swipeRefreshLayout.isRefreshing = true
 		refresh()
 	}
 
@@ -170,10 +194,15 @@ class AppFragment : Fragment()
 	{
 		Thread(Runnable {
 			val installAppList = AppManager.getInstallAppList(activity, type, index)
+			when (type)
+			{
+				AppManager.SYSTEM -> JYFileUtil.saveList(activity, installAppList, "system.list")
+				AppManager.USER -> JYFileUtil.saveList(activity, installAppList, "user.list")
+			}
 			val message = Message()
 			message.obj = installAppList
 			message.what = 1
-			loadHandler!!.sendMessage(message)
+			loadHandler.sendMessage(message)
 		}).start()
 	}
 
