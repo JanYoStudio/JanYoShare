@@ -23,7 +23,14 @@ class Settings(private val context: Context)
 
 	var isDeveloperModeEnable: Boolean
 		get() = sharedPreferences.getBoolean("isDeveloperModeEnable", false)
-		set(isDeveloperModeEnable) = sharedPreferences.edit().putBoolean("isDeveloperModeEnable", isDeveloperModeEnable).apply()
+		set(isDeveloperModeEnable)
+		{
+			if (!isDeveloperModeEnable)
+			{
+				isAutoUploadLog = false
+			}
+			sharedPreferences.edit().putBoolean("isDeveloperModeEnable", isDeveloperModeEnable).apply()
+		}
 
 	var isAutoUploadLog: Boolean
 		get() = sharedPreferences.getBoolean("isAutoUploadLog", false)

@@ -24,7 +24,7 @@ class SocketUtil
 		}
 		catch (e: Exception)
 		{
-			e.printStackTrace()
+			Logs.wtf(TAG, "createSocketConnection", e)
 		}
 		return socket!!.isConnected
 	}
@@ -42,7 +42,7 @@ class SocketUtil
 		}
 		catch (e: Exception)
 		{
-			e.printStackTrace()
+			Logs.wtf(TAG, "createServerConnection", e)
 		}
 		return socket!!.isConnected
 	}
@@ -57,7 +57,7 @@ class SocketUtil
 		}
 		catch (e: Exception)
 		{
-			e.printStackTrace()
+			Logs.wtf(TAG, "receiveMessage", e)
 		}
 		return response
 	}
@@ -72,7 +72,7 @@ class SocketUtil
 		}
 		catch (e: Exception)
 		{
-			e.printStackTrace()
+			Logs.wtf(TAG, "sendMessage", e)
 		}
 	}
 
@@ -157,7 +157,7 @@ class SocketUtil
 		}
 		catch (e: Exception)
 		{
-			e.printStackTrace()
+			Logs.wtf(TAG, "receiveObject", e)
 		}
 		return obj
 	}
@@ -176,7 +176,7 @@ class SocketUtil
 		}
 		catch (e: Exception)
 		{
-			e.printStackTrace()
+			Logs.wtf(TAG, "sendObject", e)
 			return false
 		}
 		return true
