@@ -28,7 +28,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 	private val TAG = "FileTransferConfigureActivity"
 
 	private val PORT = 8989
-	private var temp = 0
 	private val sendHandler = SendHandler()
 	private val receiveHandler = ReceiveHandler()
 	private var progressDialog: ProgressDialog? = null
@@ -107,9 +106,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			Thread(Runnable {
 				WIFIUtil(this, PORT).scanIP(object : WIFIUtil.ScanListener
 				{
-					override fun onScanFinish(ipv4: String, socketUtil: SocketUtil)
+					override fun onScan(ipv4: String, socketUtil: SocketUtil)
 					{
-						temp++
 						val message = Message()
 						message.what = CREATE_CONNECTION
 						message.obj = ipv4
@@ -127,15 +125,14 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 					override fun onError(e: Exception)
 					{
-						temp++
-						if (temp >= 256)
-						{
-							Logs.i(TAG, "onError: 搜索完毕")
-							val message = Message()
-							message.what = SCAN_COMPLETE
-							receiveHandler.sendMessage(message)
-						}
-						Logs.e(TAG, "onError: " + e.message)
+					}
+
+					override fun onFinish()
+					{
+						Logs.i(TAG, "onError: 搜索完毕")
+						val message = Message()
+						message.what = SCAN_COMPLETE
+						receiveHandler.sendMessage(message)
 					}
 				})
 			}).start()

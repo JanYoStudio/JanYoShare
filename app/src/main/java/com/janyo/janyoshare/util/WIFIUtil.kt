@@ -51,6 +51,7 @@ class WIFIUtil(var context: Context, val port: Int)
 
 		for (i in 0..255)
 		{
+			var tag = false
 			Thread(Runnable {
 				val p = ping + localAddressIndex + i
 				val currentIP = localAddressIndex + i
@@ -66,7 +67,8 @@ class WIFIUtil(var context: Context, val port: Int)
 						val socketUtil = SocketUtil()
 						if (socketUtil.createSocketConnection(currentIP, port))
 						{
-							scanListener.onScanFinish(currentIP, socketUtil)
+							tag = true
+							scanListener.onScan(currentIP, socketUtil)
 						}
 					}
 				}
@@ -74,6 +76,8 @@ class WIFIUtil(var context: Context, val port: Int)
 				{
 					scanListener.onError(e)
 				}
+				if (!tag && i == 255)
+					scanListener.onFinish()
 			}).start()
 		}
 	}
@@ -110,7 +114,8 @@ class WIFIUtil(var context: Context, val port: Int)
 
 	interface ScanListener
 	{
-		fun onScanFinish(ipv4: String, socketUtil: SocketUtil)
+		fun onScan(ipv4: String, socketUtil: SocketUtil)
+		fun onFinish()
 		fun onError(e: Exception)
 	}
 }
