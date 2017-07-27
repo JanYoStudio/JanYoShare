@@ -164,7 +164,7 @@ internal class SendHandler : Handler()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHandler.getInstance().tag = 1
-				context.startService(Intent(context,SendFileService::class.java))
+				context.startService(Intent(context, SendFileService::class.java))
 				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 		}
@@ -189,6 +189,7 @@ internal class ReceiveHandler : Handler()
 				@Suppress("UNCHECKED_CAST")
 				val map = msg.obj as HashMap<String, Any>
 				AlertDialog.Builder(context)
+						.setCancelable(false)
 						.setTitle(R.string.hint_socket_verify_device_title)
 						.setMessage(String.format(context.getString(R.string.hint_socket_verify_device_message), map["message"]))
 						.setPositiveButton(R.string.action_done, { _, _ ->
