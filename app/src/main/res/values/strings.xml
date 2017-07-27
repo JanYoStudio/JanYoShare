@@ -42,6 +42,7 @@
     <string name="hint_rename_error">重命名失败，已取消分享！</string>
     <string name="hint_clear_file">文件清除%1$s！</string>
     <string name="hint_select_sort">请选择排序方式</string>
+    <string name="hint_upload_log_done">日志已经成功反馈给开发者！</string>
     <string name="hint_socket_wait_server">等待设备连接……</string>
     <string name="hint_socket_wait_client">正在搜索设备……</string>
     <string name="hint_socket_connecting">连接中……</string>
