@@ -11,12 +11,9 @@ import android.graphics.drawable.VectorDrawable
 import android.net.Uri
 import android.os.Environment
 import android.support.graphics.drawable.VectorDrawableCompat
+import com.janyo.janyoshare.classes.InstallApp
 import com.mystery0.tools.Logs.Logs
-
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 
 object JYFileUtil
 {
@@ -188,5 +185,50 @@ object JYFileUtil
 			return path
 		}
 		return "null"
+	}
+
+	fun saveList(context: Context, list: List<InstallApp>, fileName: String)
+	{
+		val file = File(context.externalCacheDir!!.absolutePath + File.separator + fileName)
+		try
+		{
+			if (file.exists() || file.createNewFile())
+			{
+				val fileOutputStream = FileOutputStream(file)
+				val objectOutputStream = ObjectOutputStream(fileOutputStream)
+				objectOutputStream.writeObject(list)
+				fileOutputStream.close()
+				objectOutputStream.close()
+			}
+		}
+		catch (e: Exception)
+		{
+			e.printStackTrace()
+			if (file.exists())
+				file.delete()
+		}
+	}
+
+	@Suppress("UNCHECKED_CAST")
+	fun getList(context: Context, fileName: String): List<InstallApp>?
+	{
+		var savedArrayList: ArrayList<InstallApp>? = null
+		try
+		{
+			val file = File(context.externalCacheDir!!.absolutePath + File.separator + fileName)
+			if (file.exists() || file.createNewFile())
+			{
+				val fileInputStream = FileInputStream(file.toString())
+				val objectInputStream = ObjectInputStream(fileInputStream)
+				savedArrayList = objectInputStream.readObject() as ArrayList<InstallApp>
+				fileInputStream.close()
+				objectInputStream.close()
+			}
+		}
+		catch (e: Exception)
+		{
+			e.printStackTrace()
+		}
+		return savedArrayList
 	}
 }
