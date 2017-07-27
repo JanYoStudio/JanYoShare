@@ -35,47 +35,67 @@ object TransferFileNotification
 								PendingIntent.FLAG_UPDATE_CURRENT))
 				.setAutoCancel(true)
 
-		val pauseIntent = Intent(context, TransferPauseService::class.java)
-		val resumeIntent = Intent(context, TransferResumeService::class.java)
-		val cancelIntent = Intent(context, TransferCancelService::class.java)
+//		val pauseIntent = Intent(context, TransferPauseService::class.java)
+//		val resumeIntent = Intent(context, TransferResumeService::class.java)
+//		val cancelIntent = Intent(context, TransferCancelService::class.java)
 
-		when (action)
-		{
-			"start", "resume" ->
-				builder.addAction(
-						R.drawable.ic_pause,
-						context.resources.getString(R.string.action_pause),
-						PendingIntent.getService(
+//		when (action)
+//		{
+//			"start", "resume" ->
+//				builder.addAction(
+//						R.drawable.ic_pause,
+//						context.resources.getString(R.string.action_pause),
+//						PendingIntent.getService(
+//								context,
+//								0,
+//								pauseIntent,
+//								PendingIntent.FLAG_UPDATE_CURRENT))
+//						.addAction(
+//								R.drawable.ic_cancel,
+//								context.resources.getString(R.string.action_cancel),
+//								PendingIntent.getService(
+//										context,
+//										0,
+//										cancelIntent,
+//										PendingIntent.FLAG_UPDATE_CURRENT))
+//			"pause" ->
+//				builder.addAction(
+//						R.drawable.ic_resume,
+//						context.resources.getString(R.string.action_resume),
+//						PendingIntent.getService(
+//								context,
+//								0,
+//								resumeIntent,
+//								PendingIntent.FLAG_UPDATE_CURRENT))
+//						.addAction(
+//								R.drawable.ic_cancel,
+//								context.resources.getString(R.string.action_cancel),
+//								PendingIntent.getService(
+//										context,
+//										0,
+//										cancelIntent,
+//										PendingIntent.FLAG_UPDATE_CURRENT))
+//		}
+
+		notify(context, builder.build())
+	}
+
+	fun done(context: Context, number: Int)
+	{
+		val title = context.getString(R.string.hint_transfer_file_notification_done, FileTransferHandler.getInstance().currentFile!!.fileName)
+
+		val builder = NotificationCompat.Builder(context, context.getString(R.string.app_name))
+				.setSmallIcon(R.drawable.ic_send)
+				.setContentTitle(title)
+				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+				.setNumber(number)
+				.setContentIntent(
+						PendingIntent.getActivity(
 								context,
 								0,
-								pauseIntent,
+								Intent(context, FileTransferActivity::class.java),
 								PendingIntent.FLAG_UPDATE_CURRENT))
-						.addAction(
-								R.drawable.ic_cancel,
-								context.resources.getString(R.string.action_cancel),
-								PendingIntent.getService(
-										context,
-										0,
-										cancelIntent,
-										PendingIntent.FLAG_UPDATE_CURRENT))
-			"pause" ->
-				builder.addAction(
-						R.drawable.ic_resume,
-						context.resources.getString(R.string.action_resume),
-						PendingIntent.getService(
-								context,
-								0,
-								resumeIntent,
-								PendingIntent.FLAG_UPDATE_CURRENT))
-						.addAction(
-								R.drawable.ic_cancel,
-								context.resources.getString(R.string.action_cancel),
-								PendingIntent.getService(
-										context,
-										0,
-										cancelIntent,
-										PendingIntent.FLAG_UPDATE_CURRENT))
-		}
+				.setAutoCancel(true)
 
 		notify(context, builder.build())
 	}
