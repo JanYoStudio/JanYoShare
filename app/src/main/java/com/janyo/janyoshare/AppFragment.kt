@@ -46,7 +46,6 @@ class AppFragment : Fragment()
 		super.onCreate(savedInstanceState)
 		type = arguments.getInt("type")
 		settings = Settings(activity)
-		index = settings.sort
 		setHasOptionsMenu(true)
 	}
 
@@ -152,8 +151,7 @@ class AppFragment : Fragment()
 		recyclerView.adapter = appRecyclerViewAdapter
 		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter, swipeRefreshLayout)
 
-		swipeRefreshLayout.isRefreshing = true
-		getCatchList()
+		refreshList()
 
 		swipeRefreshLayout.setOnRefreshListener { refresh() }
 		return view
@@ -187,7 +185,14 @@ class AppFragment : Fragment()
 	{
 		index = settings.sort
 		swipeRefreshLayout.isRefreshing = true
-		refresh()
+		if (JYFileUtil.isCacheAvaliable(activity))
+		{
+			getCatchList()
+		}
+		else
+		{
+			refresh()
+		}
 	}
 
 	fun refresh()

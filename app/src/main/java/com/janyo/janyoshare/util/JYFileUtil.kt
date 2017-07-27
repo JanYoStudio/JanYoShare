@@ -14,6 +14,7 @@ import android.support.graphics.drawable.VectorDrawableCompat
 import com.janyo.janyoshare.classes.InstallApp
 import com.mystery0.tools.Logs.Logs
 import java.io.*
+import java.util.*
 
 object JYFileUtil
 {
@@ -230,5 +231,22 @@ object JYFileUtil
 			e.printStackTrace()
 		}
 		return savedArrayList
+	}
+
+	fun isCacheAvaliable(context: Context): Boolean
+	{
+		val dir = File(context.externalCacheDir!!.absolutePath + File.separator)
+		val files = dir.listFiles()
+		var temp = 0
+		files.forEach {
+			val now = Calendar.getInstance().timeInMillis
+			val modified = it.lastModified()
+			if (now - modified >= 3 * 86400000)
+			{
+				temp++
+				it.delete()
+			}
+		}
+		return temp == 0
 	}
 }
