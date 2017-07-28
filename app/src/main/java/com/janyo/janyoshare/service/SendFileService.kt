@@ -26,6 +26,7 @@ class SendFileService : Service()
 		//传输请求头
 		val transferHeader = TransferHeader()
 		transferHeader.list = FileTransferHandler.getInstance().fileList
+		socketUtil.createServerConnection(FileTransferHandler.getInstance().transferPort)
 		if (socketUtil.sendObject(transferHeader))
 		{
 			Logs.i(TAG, "onCreate: 请求头传输成功")
@@ -45,9 +46,6 @@ class SendFileService : Service()
 		val intentFilter = IntentFilter()
 		intentFilter.addAction(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
 		localBroadcastManager.registerReceiver(FileTransferReceiver(), intentFilter)
-		Thread(Runnable {
-			socketUtil.createServerConnection(FileTransferHandler.getInstance().transferPort)
-		}).start()
 	}
 
 	override fun onBind(intent: Intent): IBinder?
@@ -110,13 +108,13 @@ class SendFileService : Service()
 				FileTransferHandler.getInstance().currentProgress = 100
 //				broadcastIntent.putExtra("index", index)
 //				localBroadcastManager.sendBroadcast(broadcastIntent)
-				TransferFileNotification.done(this@SendFileService,index)
+				TransferFileNotification.done(this@SendFileService, index)
 				val list = FileTransferHandler.getInstance().fileList
 				index++
-				if (index < list.size)
-					sendFile(list[index])
-				else
-					stopSelf()
+//				if (index < list.size)
+//					sendFile(list[index])
+//				else
+				stopSelf()
 			}
 
 			override fun onError(code: Int, e: Exception)

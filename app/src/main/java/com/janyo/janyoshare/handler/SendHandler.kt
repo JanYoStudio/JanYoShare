@@ -41,7 +41,6 @@ class SendHandler : Handler()
 				val intent = Intent(context, SendFileService::class.java)
 				intent.putExtra("action", "start")
 				context.startService(intent)
-				(context as Activity).finish()
 //				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 		}
