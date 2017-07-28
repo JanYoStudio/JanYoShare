@@ -27,12 +27,12 @@ object TransferFileNotification
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setNumber(number)
 				.setProgress(100, FileTransferHandler.getInstance().currentProgress, false)
-				.setContentIntent(
-						PendingIntent.getActivity(
-								context,
-								0,
-								Intent(context, FileTransferActivity::class.java),
-								PendingIntent.FLAG_UPDATE_CURRENT))
+//				.setContentIntent(
+//						PendingIntent.getActivity(
+//								context,
+//								0,
+//								Intent(context, FileTransferActivity::class.java),
+//								PendingIntent.FLAG_UPDATE_CURRENT))
 				.setAutoCancel(true)
 
 //		val pauseIntent = Intent(context, TransferPauseService::class.java)
@@ -89,12 +89,12 @@ object TransferFileNotification
 				.setContentTitle(title)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setNumber(number)
-				.setContentIntent(
-						PendingIntent.getActivity(
-								context,
-								0,
-								Intent(context, FileTransferActivity::class.java),
-								PendingIntent.FLAG_UPDATE_CURRENT))
+//				.setContentIntent(
+//						PendingIntent.getActivity(
+//								context,
+//								0,
+//								Intent(context, FileTransferActivity::class.java),
+//								PendingIntent.FLAG_UPDATE_CURRENT))
 				.setAutoCancel(true)
 
 		notify(context, builder.build())
@@ -102,6 +102,7 @@ object TransferFileNotification
 
 	private fun notify(context: Context, notification: Notification)
 	{
+		notification.flags = Notification.FLAG_NO_CLEAR
 		val notificationManager = context
 				.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 		notificationManager.notify(NOTIFICATION_TAG, 0, notification)

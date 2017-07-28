@@ -79,7 +79,7 @@ class SendFileService : Service()
 
 	override fun onDestroy()
 	{
-		socketUtil.disConnect()
+		socketUtil.clientDisconnect()
 		Logs.i(TAG, "onDestroy: ")
 	}
 

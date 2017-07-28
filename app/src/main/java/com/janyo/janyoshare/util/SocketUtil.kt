@@ -10,7 +10,9 @@ import java.net.Socket
 class SocketUtil
 {
 	private val TAG = "SocketUtil"
+	var isServerClose = false
 	lateinit var socket: Socket
+	lateinit var serverSocket: ServerSocket
 	lateinit var ip: String
 
 	fun tryCreateSocketConnection(host: String, port: Int): Boolean
@@ -60,12 +62,17 @@ class SocketUtil
 	{
 		try
 		{
-			socket = ServerSocket(port).accept()
+			serverSocket = ServerSocket(port)
+			socket = serverSocket.accept()
+			if (isServerClose)
+				return false
 			socket.keepAlive = true
+			this.socket = socket
 		}
 		catch (e: Exception)
 		{
 			Logs.wtf(TAG, "createServerConnection", e)
+			return false
 		}
 		return socket.isConnected
 	}
@@ -99,9 +106,11 @@ class SocketUtil
 		}
 	}
 
-	fun receiveFile(fileSize: Long, path: String, fileTransferListener: FileTransferListener): File?
+	fun receiveFile(fileSize: Long, path: String, host: String,
+					fileTransferListener: FileTransferListener): File?
 	{
 		val file = File(path)
+		var socket: Socket? = null
 		if (file.exists())
 		{
 			fileTransferListener.onError(1, RuntimeException("file is exists!"))
@@ -110,7 +119,25 @@ class SocketUtil
 		try
 		{
 			Logs.i(TAG, "receiveFile: 文件大小" + fileSize)
-			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket.getInputStream()))
+			for (i in 0..19)
+			{
+				try
+				{
+					socket = Socket(host, FileTransferHandler.getInstance().transferPort)
+					if (socket.isConnected)
+					{
+						break
+					}
+				}
+				catch (e: Exception)
+				{
+					Thread.sleep(100)
+					continue
+				}
+				if (i == 19)
+					return null
+			}
+			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket!!.getInputStream()))
 			val bytes = ByteArray(1024 * 1024)
 			var transferredSize = 0L
 			val dataOutputStream = DataOutputStream(BufferedOutputStream(FileOutputStream(file)))
@@ -136,6 +163,9 @@ class SocketUtil
 			fileTransferListener.onError(2, e)
 		}
 		Logs.i(TAG, "receiveFile: 文件完成")
+		socket!!.getOutputStream().close()
+		socket.getInputStream().close()
+		socket.close()
 		fileTransferListener.onFinish()
 		return file
 	}
@@ -150,6 +180,7 @@ class SocketUtil
 		try
 		{
 			Logs.i(TAG, "sendFile: fileSize" + file.length())
+			val socket = ServerSocket(FileTransferHandler.getInstance().transferPort).accept()
 			val dataOutputStream = DataOutputStream(socket.getOutputStream())
 			val dataInputStream = DataInputStream(BufferedInputStream(FileInputStream(file)))
 			var transferredSize = 0L
@@ -170,6 +201,9 @@ class SocketUtil
 			}
 			dataOutputStream.flush()
 			Logs.i(TAG, "sendFile: 推流")
+			socket.getOutputStream().close()
+			socket.getInputStream().close()
+			socket.close()
 			fileTransferListener.onFinish()
 		}
 		catch (e: Exception)
@@ -213,12 +247,17 @@ class SocketUtil
 		return true
 	}
 
-	fun disConnect()
+	fun clientDisconnect()
 	{
-		Logs.i(TAG, "disConnect: 断开Socket连接")
-		socket.getInputStream().close()
-		socket.getOutputStream().close()
+		Logs.i(TAG, "clientDisconnect: 客户端终止连接")
 		socket.close()
+	}
+
+	fun serverDisconnect()
+	{
+		Logs.i(TAG, "serverDisconnect: 服务端终止连接")
+		isServerClose = true
+		serverSocket.close()
 	}
 
 	interface FileTransferListener

@@ -20,11 +20,11 @@
         android:title="@string/action_clear_all"
         app:showAsAction="ifRoom"/>
 
-    <!--<item-->
-        <!--android:id="@+id/action_file_transfer"-->
-        <!--android:title="@string/action_file_transfer"-->
-        <!--android:icon="@drawable/ic_file_transfer"-->
-        <!--app:showAsAction="ifRoom"/>-->
+    <item
+        android:id="@+id/action_file_transfer"
+        android:title="@string/action_file_transfer"
+        android:icon="@drawable/ic_file_transfer"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_settings"
