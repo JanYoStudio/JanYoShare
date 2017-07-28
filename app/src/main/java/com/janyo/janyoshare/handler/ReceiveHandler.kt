@@ -63,7 +63,6 @@ class ReceiveHandler : Handler()
 				val intent = Intent(context, ReceiveFileService::class.java)
 //				intent.putExtra("action", "start")
 				context.startService(intent)
-				(context as Activity).finish()
 //				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 			FileTransferConfigureActivity.SCAN_COMPLETE ->

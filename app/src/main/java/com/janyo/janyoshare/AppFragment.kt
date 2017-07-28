@@ -3,6 +3,7 @@
 package com.janyo.janyoshare
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -17,14 +18,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
+import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.activity.SettingsActivity
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.LoadHandler
-import com.janyo.janyoshare.util.AppManager
-import com.janyo.janyoshare.util.JYFileUtil
-import com.janyo.janyoshare.util.Settings
+import com.janyo.janyoshare.handler.ReceiveHandler
+import com.janyo.janyoshare.util.*
 import com.mystery0.tools.Logs.Logs
 
 import java.util.ArrayList
@@ -131,7 +132,46 @@ class AppFragment : Fragment()
 //			R.id.action_file_transfer -> startActivity(Intent(activity, FileTransferConfigureActivity::class.java))
 			R.id.action_file_transfer ->
 			{
+				val progressDialog = ProgressDialog(activity)
+				val receiveHandler = ReceiveHandler()
+				receiveHandler.progressDialog = progressDialog
+				receiveHandler.context = activity
+				progressDialog.setCancelable(false)
+				progressDialog.setMessage(getString(R.string.hint_socket_wait_client))
+				progressDialog.show()
+				Thread(Runnable {
+					WIFIUtil(activity, FileTransferHandler.getInstance().verifyPort).scanIP(object : WIFIUtil.ScanListener
+					{
+						override fun onScan(ipv4: String, socketUtil: SocketUtil)
+						{
+							val message = Message()
+							message.what = FileTransferConfigureActivity.CREATE_CONNECTION
+							message.obj = ipv4
+							receiveHandler.sendMessage(message)
 
+							val resultMessage = socketUtil.receiveMessage()
+							val message_verify = Message()
+							message_verify.what = FileTransferConfigureActivity.VERIFY_DEVICE
+							val map = HashMap<String, Any>()
+							map.put("message", resultMessage)
+							map.put("socket", socketUtil)
+							message_verify.obj = map
+							receiveHandler.sendMessage(message_verify)
+						}
+
+						override fun onError(e: Exception)
+						{
+						}
+
+						override fun onFinish()
+						{
+							Logs.i(TAG, "onError: 搜索完毕")
+							val message = Message()
+							message.what = FileTransferConfigureActivity.SCAN_COMPLETE
+							receiveHandler.sendMessage(message)
+						}
+					})
+				}).start()
 			}
 			R.id.action_settings -> startActivity(Intent(activity, SettingsActivity::class.java))
 		}

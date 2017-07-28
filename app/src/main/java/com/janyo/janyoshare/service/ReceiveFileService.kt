@@ -67,7 +67,7 @@ class ReceiveFileService : Service()
 	{
 		val path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, getString(R.string.app_name))
 //		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-		socketUtil.receiveFile(transferFile.fileSize, path, FileTransferHandler.getInstance().ip, object : SocketUtil.FileTransferListener
+		socketUtil.receiveFile(transferFile.fileSize, path, object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
 			{
@@ -92,10 +92,10 @@ class ReceiveFileService : Service()
 				TransferFileNotification.done(this@ReceiveFileService, index)
 				val list = FileTransferHandler.getInstance().fileList
 				index++
-				if (index < list.size)
-					receiveFile(list[index])
-				else
-					stopSelf()
+//				if (index < list.size)
+//					receiveFile(list[index])
+//				else
+				stopSelf()
 			}
 
 			override fun onError(code: Int, e: Exception)

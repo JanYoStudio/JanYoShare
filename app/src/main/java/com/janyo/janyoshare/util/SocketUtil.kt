@@ -106,11 +106,9 @@ class SocketUtil
 		}
 	}
 
-	fun receiveFile(fileSize: Long, path: String, host: String,
-					fileTransferListener: FileTransferListener): File?
+	fun receiveFile(fileSize: Long, path: String, fileTransferListener: FileTransferListener): File?
 	{
 		val file = File(path)
-		var socket: Socket? = null
 		if (file.exists())
 		{
 			fileTransferListener.onError(1, RuntimeException("file is exists!"))
@@ -119,24 +117,6 @@ class SocketUtil
 		try
 		{
 			Logs.i(TAG, "receiveFile: 文件大小" + fileSize)
-			for (i in 0..19)
-			{
-				try
-				{
-					socket = Socket(host, FileTransferHandler.getInstance().transferPort)
-					if (socket.isConnected)
-					{
-						break
-					}
-				}
-				catch (e: Exception)
-				{
-					Thread.sleep(100)
-					continue
-				}
-				if (i == 19)
-					return null
-			}
 			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket!!.getInputStream()))
 			val bytes = ByteArray(1024 * 1024)
 			var transferredSize = 0L
@@ -163,9 +143,7 @@ class SocketUtil
 			fileTransferListener.onError(2, e)
 		}
 		Logs.i(TAG, "receiveFile: 文件完成")
-		socket!!.getOutputStream().close()
-		socket.getInputStream().close()
-		socket.close()
+		clientDisconnect()
 		fileTransferListener.onFinish()
 		return file
 	}
@@ -180,7 +158,6 @@ class SocketUtil
 		try
 		{
 			Logs.i(TAG, "sendFile: fileSize" + file.length())
-			val socket = ServerSocket(FileTransferHandler.getInstance().transferPort).accept()
 			val dataOutputStream = DataOutputStream(socket.getOutputStream())
 			val dataInputStream = DataInputStream(BufferedInputStream(FileInputStream(file)))
 			var transferredSize = 0L
@@ -201,9 +178,7 @@ class SocketUtil
 			}
 			dataOutputStream.flush()
 			Logs.i(TAG, "sendFile: 推流")
-			socket.getOutputStream().close()
-			socket.getInputStream().close()
-			socket.close()
+			serverDisconnect()
 			fileTransferListener.onFinish()
 		}
 		catch (e: Exception)
@@ -217,7 +192,7 @@ class SocketUtil
 		var obj: Any? = null
 		try
 		{
-			val objectInputStream = ObjectInputStream(BufferedInputStream(socket.getInputStream()))
+			val objectInputStream = ObjectInputStream(BufferedInputStream(socket!!.getInputStream()))
 			obj = objectInputStream.readObject()
 		}
 		catch (e: Exception)
