@@ -2,13 +2,11 @@ package com.janyo.janyoshare.service
 
 import android.app.Service
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.IBinder
-import android.support.v4.content.LocalBroadcastManager
-import com.janyo.janyoshare.FileTransferReceiver
-import com.janyo.janyoshare.R
+import android.os.Message
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.classes.TransferHeader
+import com.janyo.janyoshare.handler.ErrorHandler
 import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.TransferFileNotification
@@ -18,7 +16,8 @@ import java.io.File
 class SendFileService : Service()
 {
 	private val TAG = "SendFileService"
-	private lateinit var localBroadcastManager: LocalBroadcastManager
+	//	private lateinit var localBroadcastManager: LocalBroadcastManager
+	private lateinit var errorHandler: ErrorHandler
 	private val socketUtil = SocketUtil()
 	private var index = 0
 
@@ -41,11 +40,12 @@ class SendFileService : Service()
 	override fun onCreate()
 	{
 		Logs.i(TAG, "onCreate: 创建传输文件服务")
-		//注册本地广播
-		localBroadcastManager = LocalBroadcastManager.getInstance(this)
-		val intentFilter = IntentFilter()
-		intentFilter.addAction(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-		localBroadcastManager.registerReceiver(FileTransferReceiver(), intentFilter)
+		errorHandler = ErrorHandler(this)
+//		//注册本地广播
+//		localBroadcastManager = LocalBroadcastManager.getInstance(this)
+//		val intentFilter = IntentFilter()
+//		intentFilter.addAction(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
+//		localBroadcastManager.registerReceiver(FileTransferReceiver(), intentFilter)
 	}
 
 	override fun onBind(intent: Intent): IBinder?
@@ -121,6 +121,13 @@ class SendFileService : Service()
 			{
 				Logs.e(TAG, "onError: code: " + code)
 				e.printStackTrace()
+				val message = Message()
+				when (code)
+				{
+					1 -> message.what = ErrorHandler.FILE_NOT_EXISTS
+					else -> message.what = ErrorHandler.UNKNOWN_ERROR
+				}
+				errorHandler.sendMessage(message)
 				TransferFileNotification.cancel(this@SendFileService)
 				index++
 			}

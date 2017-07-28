@@ -163,11 +163,13 @@ class AppFragment : Fragment()
 						{
 						}
 
-						override fun onFinish()
+						override fun onFinish(isDeviceFind: Boolean)
 						{
+							Logs.i(TAG, "onFinish: " + isDeviceFind)
 							Logs.i(TAG, "onError: 搜索完毕")
 							val message = Message()
 							message.what = FileTransferConfigureActivity.SCAN_COMPLETE
+							message.obj = isDeviceFind
 							receiveHandler.sendMessage(message)
 						}
 					})
