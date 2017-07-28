@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity()
 	private var settings: Settings? = null
 	private val PERMISSION_CODE = 233
 	private var oneClickTime: Long = 0
+	private lateinit var currentFragment: AppFragment
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -54,8 +55,11 @@ class MainActivity : AppCompatActivity()
 		setContentView(R.layout.activity_main)
 
 		val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.USER), "User Apps")
-		viewPagerAdapter.addFragment(AppFragment.newInstance(AppManager.SYSTEM), "System Apps")
+		val userFragment = AppFragment.newInstance(AppManager.USER)
+		val systemFragment = AppFragment.newInstance(AppManager.SYSTEM)
+		viewPagerAdapter.addFragment(userFragment, "User Apps")
+		viewPagerAdapter.addFragment(systemFragment, "System Apps")
+		currentFragment = userFragment
 		viewpager.adapter = viewPagerAdapter
 		title_tabs.setupWithViewPager(viewpager)
 		title_tabs.tabMode = TabLayout.MODE_FIXED
@@ -69,8 +73,10 @@ class MainActivity : AppCompatActivity()
 
 			override fun onPageSelected(position: Int)
 			{
-				val list = supportFragmentManager.fragments
-				(list[position] as AppFragment).refreshList()
+				val fragment = viewPagerAdapter.getItem(position) as AppFragment
+				fragment.refreshList()
+				currentFragment = fragment
+				Logs.i(TAG, "onPageSelected: 当前滚动到" + viewPagerAdapter.getPageTitle(position))
 			}
 
 			override fun onPageScrollStateChanged(state: Int)
@@ -196,6 +202,7 @@ class MainActivity : AppCompatActivity()
 
 	override fun onBackPressed()
 	{
+		Logs.i(TAG, "onBackPressed: 返回按键监听")
 		val doubleClickTime = System.currentTimeMillis()
 		if (doubleClickTime - oneClickTime > 2000)
 		{

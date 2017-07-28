@@ -2,10 +2,7 @@ package com.janyo.janyoshare.service
 
 import android.app.Service
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.IBinder
-import android.support.v4.content.LocalBroadcastManager
-import com.janyo.janyoshare.FileTransferReceiver
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.classes.TransferHeader
@@ -18,7 +15,7 @@ import com.mystery0.tools.Logs.Logs
 class ReceiveFileService : Service()
 {
 	private val TAG = "ReceiveFileService"
-//	private lateinit var localBroadcastManager: LocalBroadcastManager
+	//	private lateinit var localBroadcastManager: LocalBroadcastManager
 	private val socketUtil = SocketUtil()
 	private var index = 0
 
@@ -62,7 +59,7 @@ class ReceiveFileService : Service()
 
 	override fun onDestroy()
 	{
-		socketUtil.disConnect()
+		socketUtil.clientDisconnect()
 		Logs.i(TAG, "onDestroy: ")
 	}
 
@@ -70,7 +67,7 @@ class ReceiveFileService : Service()
 	{
 		val path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, getString(R.string.app_name))
 //		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-		socketUtil.receiveFile(transferFile.fileSize, path, object : SocketUtil.FileTransferListener
+		socketUtil.receiveFile(transferFile.fileSize, path, FileTransferHandler.getInstance().ip, object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
 			{
@@ -92,7 +89,7 @@ class ReceiveFileService : Service()
 				FileTransferHandler.getInstance().currentProgress = 100
 //				broadcastIntent.putExtra("index", index)
 //				localBroadcastManager.sendBroadcast(broadcastIntent)
-				TransferFileNotification.done(this@ReceiveFileService,index)
+				TransferFileNotification.done(this@ReceiveFileService, index)
 				val list = FileTransferHandler.getInstance().fileList
 				index++
 				if (index < list.size)

@@ -2,6 +2,7 @@
 
 package com.janyo.janyoshare.handler
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -10,7 +11,6 @@ import android.os.Message
 import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import com.janyo.janyoshare.R
-import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.service.ReceiveFileService
 import com.janyo.janyoshare.util.FileTransferHandler
@@ -48,7 +48,7 @@ class ReceiveHandler : Handler()
 								message.obj = map["message"]
 								sendMessage(message)
 								FileTransferHandler.getInstance().ip = socketUtil.ip
-								socketUtil.disConnect()
+								socketUtil.clientDisconnect()
 							}).start()
 						})
 						.setNegativeButton(R.string.action_cancel, null)
@@ -60,8 +60,11 @@ class ReceiveHandler : Handler()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHandler.getInstance().tag = 2
-				context.startService(Intent(context, ReceiveFileService::class.java))
-				context.startActivity(Intent(context, FileTransferActivity::class.java))
+				val intent = Intent(context, ReceiveFileService::class.java)
+//				intent.putExtra("action", "start")
+				context.startService(intent)
+				(context as Activity).finish()
+//				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 			FileTransferConfigureActivity.SCAN_COMPLETE ->
 			{

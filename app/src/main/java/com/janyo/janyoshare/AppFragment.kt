@@ -17,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
-import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.activity.SettingsActivity
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
@@ -26,11 +25,13 @@ import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
+import com.mystery0.tools.Logs.Logs
 
 import java.util.ArrayList
 
 class AppFragment : Fragment()
 {
+	private val TAG = "AppFragment"
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 	private lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
@@ -128,6 +129,10 @@ class AppFragment : Fragment()
 						.show()
 			}
 //			R.id.action_file_transfer -> startActivity(Intent(activity, FileTransferConfigureActivity::class.java))
+			R.id.action_file_transfer ->
+			{
+
+			}
 			R.id.action_settings -> startActivity(Intent(activity, SettingsActivity::class.java))
 		}
 		return super.onOptionsItemSelected(item)

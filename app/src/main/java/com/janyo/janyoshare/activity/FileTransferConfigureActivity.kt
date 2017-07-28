@@ -42,7 +42,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			val message = Message.obtain()
 			message.what = CONNECTED
 			sendHandler.sendMessage(message)
-			socketUtil.disConnect()
+			socketUtil.clientDisconnect()
 		}
 		else
 		{

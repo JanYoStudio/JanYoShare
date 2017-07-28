@@ -2,6 +2,7 @@
 
 package com.janyo.janyoshare.handler
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -37,8 +38,11 @@ class SendHandler : Handler()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHandler.getInstance().tag = 1
-				context.startService(Intent(context, SendFileService::class.java))
-				context.startActivity(Intent(context, FileTransferActivity::class.java))
+				val intent = Intent(context, SendFileService::class.java)
+				intent.putExtra("action", "start")
+				context.startService(intent)
+				(context as Activity).finish()
+//				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 		}
 	}
