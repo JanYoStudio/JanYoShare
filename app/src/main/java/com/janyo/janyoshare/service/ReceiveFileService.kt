@@ -3,9 +3,11 @@ package com.janyo.janyoshare.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.os.Message
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.classes.TransferHeader
+import com.janyo.janyoshare.handler.ErrorHandler
 import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.SocketUtil
@@ -16,6 +18,7 @@ class ReceiveFileService : Service()
 {
 	private val TAG = "ReceiveFileService"
 	//	private lateinit var localBroadcastManager: LocalBroadcastManager
+	private lateinit var errorHandler: ErrorHandler
 	private val socketUtil = SocketUtil()
 	private var index = 0
 
@@ -39,6 +42,7 @@ class ReceiveFileService : Service()
 	override fun onCreate()
 	{
 		Logs.i(TAG, "onCreate: 创建接收文件服务")
+		errorHandler = ErrorHandler(this)
 //		//注册本地广播
 //		localBroadcastManager = LocalBroadcastManager.getInstance(this)
 //		val intentFilter = IntentFilter()
@@ -102,6 +106,13 @@ class ReceiveFileService : Service()
 			{
 				Logs.e(TAG, "onError: code: " + code)
 				e.printStackTrace()
+				val message = Message()
+				when (code)
+				{
+					1 -> message.what = ErrorHandler.FILE_EXISTS
+					else -> message.what = ErrorHandler.UNKNOWN_ERROR
+				}
+				errorHandler.sendMessage(message)
 				TransferFileNotification.cancel(this@ReceiveFileService)
 				index++
 			}

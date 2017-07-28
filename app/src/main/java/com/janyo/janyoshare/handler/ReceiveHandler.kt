@@ -2,7 +2,6 @@
 
 package com.janyo.janyoshare.handler
 
-import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -68,8 +67,10 @@ class ReceiveHandler : Handler()
 			FileTransferConfigureActivity.SCAN_COMPLETE ->
 			{
 				progressDialog.dismiss()
-				Toast.makeText(context, R.string.hint_socket_scan_complete, Toast.LENGTH_SHORT)
-						.show()
+				val isDeviceFind = msg.obj as Boolean
+				if (!isDeviceFind)
+					Toast.makeText(context, R.string.hint_socket_scan_complete, Toast.LENGTH_SHORT)
+							.show()
 			}
 		}
 	}

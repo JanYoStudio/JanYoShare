@@ -9,7 +9,6 @@ class WIFIUtil(var context: Context, val port: Int)
 {
 	private val TAG = "WIFIUtil"
 	private var localAddress = ""//存储本机ip，例：本地ip ：192.168.1.1
-	private val ping = "ping -c 1 -w 0.5 "//其中 -c 1为发送的次数，-w 表示发送后等待响应的时间
 
 	fun getLocalAddress()
 	{
@@ -41,6 +40,7 @@ class WIFIUtil(var context: Context, val port: Int)
 
 	fun scanIP(scanListener: ScanListener)
 	{
+		var index = 0
 		getLocalAddress()
 		val localAddressIndex = localAddress.substring(0, localAddress.lastIndexOf(".") + 1)
 		if (localAddressIndex == "")
@@ -51,9 +51,7 @@ class WIFIUtil(var context: Context, val port: Int)
 
 		for (i in 0..255)
 		{
-			var tag = false
 			Thread(Runnable {
-				val p = ping + localAddressIndex + i
 				val currentIP = localAddressIndex + i
 				if (currentIP == localAddress)
 				{
@@ -62,24 +60,21 @@ class WIFIUtil(var context: Context, val port: Int)
 				val socketUtil = SocketUtil()
 				try
 				{
-					val result = Runtime.getRuntime().exec(p).waitFor()
-					if (result == 0)
+					Logs.i(TAG, "scanIP: " + currentIP)
+					if (socketUtil.tryCreateSocketConnection(currentIP, port))
 					{
-						Logs.i(TAG, "scanIP: "+currentIP)
-						if (socketUtil.tryCreateSocketConnection(currentIP, port))
-						{
-							tag = true
-							scanListener.onScan(currentIP, socketUtil)
-						}
+						index++
+						scanListener.onScan(currentIP, socketUtil)
 					}
+					if (i == 255)
+						scanListener.onFinish(index != 0)
 				}
 				catch (e: Exception)
 				{
-					socketUtil.clientDisconnect()
 					scanListener.onError(e)
+					if (i == 255)
+						scanListener.onFinish(index != 0)
 				}
-				if (!tag && i == 255)
-					scanListener.onFinish()
 			}).start()
 		}
 	}
@@ -117,7 +112,7 @@ class WIFIUtil(var context: Context, val port: Int)
 	interface ScanListener
 	{
 		fun onScan(ipv4: String, socketUtil: SocketUtil)
-		fun onFinish()
+		fun onFinish(isDeviceFind: Boolean)
 		fun onError(e: Exception)
 	}
 }
