@@ -59,12 +59,12 @@ class WIFIUtil(var context: Context, val port: Int)
 				{
 					return@Runnable
 				}
+				val socketUtil = SocketUtil()
 				try
 				{
 					val result = Runtime.getRuntime().exec(p).waitFor()
 					if (result == 0)
 					{
-						val socketUtil = SocketUtil()
 						Logs.i(TAG, "scanIP: "+currentIP)
 						if (socketUtil.tryCreateSocketConnection(currentIP, port))
 						{
@@ -75,6 +75,7 @@ class WIFIUtil(var context: Context, val port: Int)
 				}
 				catch (e: Exception)
 				{
+					socketUtil.clientDisconnect()
 					scanListener.onError(e)
 				}
 				if (!tag && i == 255)

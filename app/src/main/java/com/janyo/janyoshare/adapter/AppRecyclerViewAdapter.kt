@@ -69,10 +69,12 @@ class AppRecyclerViewAdapter(private val context: Context,
 				message.what = FileTransferConfigureActivity.CONNECTED
 				sendHandler.sendMessage(message)
 				socketUtil.clientDisconnect()
+				socketUtil.serverDisconnect()
 			}
 			else
 			{
 				Logs.e(TAG, "openServer: 连接错误")
+				socketUtil.serverDisconnect()
 				progressDialog.dismiss()
 			}
 		})

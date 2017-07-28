@@ -100,8 +100,9 @@ class ReceiveFileService : Service()
 
 			override fun onError(code: Int, e: Exception)
 			{
-				Logs.e(TAG, "onError: ")
+				Logs.e(TAG, "onError: code: " + code)
 				e.printStackTrace()
+				TransferFileNotification.cancel(this@ReceiveFileService)
 				index++
 			}
 		})
