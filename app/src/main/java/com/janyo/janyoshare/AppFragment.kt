@@ -160,7 +160,7 @@ class AppFragment : Fragment()
 	{
 		index = settings.sort
 		swipeRefreshLayout.isRefreshing = true
-		if (JYFileUtil.isCacheAvaliable(activity))
+		if (JYFileUtil.isCacheAvailable(activity))
 		{
 			getCatchList()
 		}
