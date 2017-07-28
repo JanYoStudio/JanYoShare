@@ -233,7 +233,7 @@ object JYFileUtil
 		return savedArrayList
 	}
 
-	fun isCacheAvaliable(context: Context): Boolean
+	fun isCacheAvailable(context: Context): Boolean
 	{
 		val dir = File(context.externalCacheDir!!.absolutePath + File.separator)
 		val files = dir.listFiles()
