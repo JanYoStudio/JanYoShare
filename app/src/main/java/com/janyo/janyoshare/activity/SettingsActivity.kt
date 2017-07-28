@@ -27,18 +27,19 @@ import kotlin.concurrent.timerTask
 
 class SettingsActivity : PreferenceActivity()
 {
-	private var settings: Settings? = null
-	private var toolbar: Toolbar? = null
-	private var auto_clean: SwitchPreference? = null
-	private var developerMode: PreferenceCategory? = null
-	private var developerModeEnable: SwitchPreference? = null
-	private var autoUploadLog: SwitchPreference? = null
-	private var about: Preference? = null
-	private var howToUse: Preference? = null
-	private var openSourceAddress: Preference? = null
-	private var license: Preference? = null
-	private var checkUpdate: Preference? = null
-	private var versionCode: Preference? = null
+	private lateinit var settings: Settings
+	private lateinit var toolbar: Toolbar
+	private lateinit var auto_clean: SwitchPreference
+	private lateinit var developerMode: PreferenceCategory
+	private lateinit var developerModeEnable: SwitchPreference
+	private lateinit var autoUploadLog: SwitchPreference
+	private lateinit var about: Preference
+	private lateinit var howToUse: Preference
+	private lateinit var openSourceAddress: Preference
+	private lateinit var license: Preference
+	private lateinit var checkUpdate: Preference
+	private lateinit var versionCode: Preference
+	private lateinit var support: Preference
 	private var clickTime = 0
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -48,7 +49,7 @@ class SettingsActivity : PreferenceActivity()
 		addPreferencesFromResource(R.xml.preferences)
 		initialization()
 		monitor()
-		toolbar!!.title = title
+		toolbar.title = title
 	}
 
 	private fun initialization()
@@ -63,21 +64,22 @@ class SettingsActivity : PreferenceActivity()
 		license = findPreference(getString(R.string.key_license))
 		checkUpdate = findPreference(getString(R.string.key_check_update))
 		versionCode = findPreference(getString(R.string.key_version_code))
+		support = findPreference(getString(R.string.key_support))
 
-		auto_clean!!.isChecked = settings!!.isAutoClean
-		developerModeEnable!!.isChecked = settings!!.isDeveloperModeEnable
-		autoUploadLog!!.isChecked = settings!!.isAutoUploadLog
+		auto_clean.isChecked = settings.isAutoClean
+		developerModeEnable.isChecked = settings.isDeveloperModeEnable
+		autoUploadLog.isChecked = settings.isAutoUploadLog
 
-		if (settings!!.isAutoClean)
+		if (settings.isAutoClean)
 		{
-			auto_clean!!.setSummary(R.string.summary_auto_clean_on)
+			auto_clean.setSummary(R.string.summary_auto_clean_on)
 		}
 		else
 		{
-			auto_clean!!.setSummary(R.string.summary_auto_clean_off)
+			auto_clean.setSummary(R.string.summary_auto_clean_off)
 		}
 
-		if (!settings!!.isDeveloperModeEnable)
+		if (!settings.isDeveloperModeEnable)
 		{
 			preferenceScreen.removePreference(developerMode)
 		}
@@ -89,49 +91,49 @@ class SettingsActivity : PreferenceActivity()
 
 	private fun monitor()
 	{
-		auto_clean!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
-			val isAutoClean = !auto_clean!!.isChecked
+		auto_clean.setOnPreferenceChangeListener { _, _ ->
+			val isAutoClean = !auto_clean.isChecked
 			if (isAutoClean)
 			{
 				AlertDialog.Builder(this@SettingsActivity)
 						.setTitle(" ")
 						.setMessage(R.string.autoCleanWarn)
-						.setPositiveButton(R.string.action_open) { _, _ -> settings!!.isAutoClean = true }
+						.setPositiveButton(R.string.action_open) { _, _ -> settings.isAutoClean = true }
 						.setNegativeButton(R.string.action_cancel) { _, _ ->
-							auto_clean!!.isChecked = false
-							settings!!.isAutoClean = false
+							auto_clean.isChecked = false
+							settings.isAutoClean = false
 						}
 						.setOnDismissListener {
-							auto_clean!!.isChecked = settings!!.isAutoClean
-							if (settings!!.isAutoClean)
+							auto_clean.isChecked = settings.isAutoClean
+							if (settings.isAutoClean)
 							{
-								auto_clean!!.setSummary(R.string.summary_auto_clean_on)
+								auto_clean.setSummary(R.string.summary_auto_clean_on)
 							}
 							else
 							{
-								auto_clean!!.setSummary(R.string.summary_auto_clean_off)
+								auto_clean.setSummary(R.string.summary_auto_clean_off)
 							}
 						}
 						.show()
 			}
 			else
 			{
-				settings!!.isAutoClean = false
-				auto_clean!!.setSummary(R.string.summary_auto_clean_off)
+				settings.isAutoClean = false
+				auto_clean.setSummary(R.string.summary_auto_clean_off)
 			}
 			true
 		}
-		developerModeEnable!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
-			val isDeveloperModeEnable = !developerModeEnable!!.isChecked
-			settings!!.isDeveloperModeEnable = isDeveloperModeEnable
+		developerModeEnable.setOnPreferenceChangeListener { _, _ ->
+			val isDeveloperModeEnable = !developerModeEnable.isChecked
+			settings.isDeveloperModeEnable = isDeveloperModeEnable
 			true
 		}
-		autoUploadLog!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, _ ->
-			val isAutoUploadLog = !autoUploadLog!!.isChecked
-			settings!!.isAutoUploadLog = isAutoUploadLog
+		autoUploadLog.setOnPreferenceChangeListener { _, _ ->
+			val isAutoUploadLog = !autoUploadLog.isChecked
+			settings.isAutoUploadLog = isAutoUploadLog
 			true
 		}
-		about!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		about.setOnPreferenceClickListener {
 			AlertDialog.Builder(this@SettingsActivity)
 					.setTitle(" ")
 					.setView(LayoutInflater.from(this@SettingsActivity).inflate(R.layout.dialog_about, LinearLayout(this@SettingsActivity), false))
@@ -139,10 +141,10 @@ class SettingsActivity : PreferenceActivity()
 					.show()
 			false
 		}
-		howToUse!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		howToUse.setOnPreferenceClickListener {
 			val view = LayoutInflater.from(this@SettingsActivity).inflate(R.layout.dialog_help, LinearLayout(this@SettingsActivity), false)
 			val textView = view.findViewById<TextView>(R.id.autoCleanWarn)
-			if (settings!!.isAutoClean)
+			if (settings.isAutoClean)
 			{
 				textView.visibility = View.VISIBLE
 			}
@@ -153,7 +155,7 @@ class SettingsActivity : PreferenceActivity()
 					.show()
 			false
 		}
-		openSourceAddress!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		openSourceAddress.setOnPreferenceClickListener {
 			val intent = Intent()
 			intent.action = "android.intent.action.VIEW"
 			val content_url = Uri.parse(getString(R.string.address_open_source))
@@ -161,7 +163,7 @@ class SettingsActivity : PreferenceActivity()
 			startActivity(intent)
 			false
 		}
-		license!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		license.setOnPreferenceClickListener {
 			val view_license = LayoutInflater.from(this@SettingsActivity).inflate(R.layout.dialog_license, NestedScrollView(this@SettingsActivity), false)
 			val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
 			val text_license_point2 = view_license.findViewById<TextView>(R.id.license_point2)
@@ -175,12 +177,12 @@ class SettingsActivity : PreferenceActivity()
 					.setTitle(" ")
 					.setView(view_license)
 					.setPositiveButton(R.string.action_done, { _, _ ->
-						settings!!.isFirst = false
+						settings.isFirst = false
 					})
 					.show()
 			false
 		}
-		checkUpdate!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		checkUpdate.setOnPreferenceClickListener {
 			val intent = Intent()
 			intent.action = "android.intent.action.VIEW"
 			val content_url = Uri.parse(getString(R.string.address_check_update))
@@ -188,7 +190,7 @@ class SettingsActivity : PreferenceActivity()
 			startActivity(intent)
 			false
 		}
-		versionCode!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+		versionCode.setOnPreferenceClickListener {
 			when
 			{
 				clickTime < 3 ->
@@ -196,7 +198,7 @@ class SettingsActivity : PreferenceActivity()
 				clickTime in 3..6 ->
 				{
 					val hintToast = Toast.makeText(this, String.format(getString(R.string.hint_developer_mode), 7 - clickTime), Toast.LENGTH_SHORT)
-					hintToast!!.show()
+					hintToast.show()
 					Timer().schedule(timerTask {
 						hintToast.cancel()
 					}, 100)
@@ -204,11 +206,11 @@ class SettingsActivity : PreferenceActivity()
 				}
 				clickTime >= 7 ->
 				{
-					if (!settings!!.isDeveloperModeEnable)
+					if (!settings.isDeveloperModeEnable)
 					{
 						preferenceScreen.addPreference(developerMode)
-						settings!!.isDeveloperModeEnable = true
-						developerModeEnable!!.isChecked = true
+						settings.isDeveloperModeEnable = true
+						developerModeEnable.isChecked = true
 					}
 					val hintToast = Toast.makeText(this, R.string.hint_developer_mode_enable, Toast.LENGTH_SHORT)
 					hintToast.show()
@@ -219,13 +221,17 @@ class SettingsActivity : PreferenceActivity()
 			}
 			false
 		}
+		support.setOnPreferenceClickListener {
+			startActivity(Intent(this, PayActivity::class.java))
+			false
+		}
 	}
 
 	override fun setContentView(layoutResID: Int)
 	{
 		val contentView = LayoutInflater.from(this).inflate(R.layout.activity_settings, LinearLayout(this), false) as ViewGroup
 		toolbar = contentView.findViewById<Toolbar>(R.id.toolbar)
-		toolbar!!.setNavigationOnClickListener { finish() }
+		toolbar.setNavigationOnClickListener { finish() }
 
 		val contentWrapper = contentView.findViewById<ViewGroup>(R.id.content_wrapper)
 		LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true)
