@@ -9,8 +9,6 @@ import com.janyo.janyoshare.R
 
 object TransferFileNotification
 {
-	private val NOTIFICATION_TAG = "TransferFile"
-
 	fun notify(context: Context, number: Int, action: String?)
 	{
 		val title = context.getString(R.string.hint_transfer_file_notification_title, FileTransferHandler.getInstance().currentFile!!.fileName)
@@ -100,13 +98,13 @@ object TransferFileNotification
 			notification.flags = Notification.FLAG_NO_CLEAR
 		val notificationManager = context
 				.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-		notificationManager.notify(NOTIFICATION_TAG, 0, notification)
+		notificationManager.notify(FileTransferHandler.getInstance().currentFile!!.fileName, 0, notification)
 	}
 
 	fun cancel(context: Context)
 	{
 		val notificationManager = context
 				.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-		notificationManager.cancel(NOTIFICATION_TAG, 0)
+		notificationManager.cancel(FileTransferHandler.getInstance().currentFile!!.fileName, 0)
 	}
 }
