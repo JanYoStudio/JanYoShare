@@ -43,6 +43,9 @@
     <string name="hint_clear_file">文件清除%1$s！</string>
     <string name="hint_select_sort">请选择排序方式</string>
     <string name="hint_upload_log_done">日志已经成功反馈给开发者！</string>
+    <string name="hint_check_obb_exists">检测到数据包，是否进行分享？</string>
+    <string name="hint_check_obb_not_exists">文件提取完成，该软件不存在数据包！</string>
+    <string name="hint_check_obb_number_warning">文件提取完成，该软件共有%1$d个数据包，是否分享？</string>
     <string name="hint_socket_wait_server">等待设备连接……</string>
     <string name="hint_socket_wait_client">正在搜索设备……</string>
     <string name="hint_socket_connecting">连接中……</string>
@@ -89,6 +92,7 @@
         <item>仅提取</item>
         <item>提取并分享</item>
         <item>重命名并分享</item>
+        <item>提取后伴随数据包一起分享</item>
         <item>面对面分享</item>
     </string-array>
 

@@ -15,6 +15,7 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.mystery0.tools.Logs.Logs
 import java.io.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 object JYFileUtil
 {
@@ -103,7 +104,24 @@ object JYFileUtil
 		val share = Intent(Intent.ACTION_SEND)
 		share.type = "*/*"
 		share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
-		context.startActivity(Intent.createChooser(share, "分享"))
+		context.startActivity(Intent.createChooser(share, "分享" + file.name + "到"))
+	}
+
+	private fun Share(context: Context, uriList: ArrayList<Uri>)
+	{
+		val share = Intent(Intent.ACTION_SEND_MULTIPLE)
+		share.type = "*/*"
+		share.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList)
+		context.startActivity(Intent.createChooser(share, "分享到"))
+	}
+
+	fun doShare(context: Context, files: ArrayList<File>)
+	{
+		val uriList = ArrayList<Uri>()
+		files.forEach {
+			uriList.add(Uri.fromFile(it))
+		}
+		Share(context, uriList)
 	}
 
 	fun doShare(context: Context, name: String, versionName: String, dir: String)
@@ -248,5 +266,14 @@ object JYFileUtil
 			}
 		}
 		return temp == 0
+	}
+
+	fun checkObb(packageName: String): Array<File>?
+	{
+		val dir = File(Environment.getExternalStoragePublicDirectory("Android").absolutePath + File.separator + "obb" + File.separator + packageName + File.separator)
+		Logs.i(TAG, "checkObb: " + dir.absolutePath)
+		if (!dir.exists() || !dir.isDirectory)
+			return null
+		return dir.listFiles()
 	}
 }
