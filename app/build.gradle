@@ -3,10 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.nillith.autoversion'
 apply plugin: 'kotlin-android-extensions'
 
+def a = 2
+def b = 6
+def c = 1
+
 autoVersion {
-    major 2
-    minor 6
-    patch 0
+    major a
+    minor b
+    patch c
 }
 
 android {
@@ -17,12 +21,16 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode autoVersion.code
-        versionName '2.6.0'
+        versionName a + '.' + b + '.' + c
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        debug {
+            resValue "string", "app_version", a + '.' + b + '.' + c
+        }
         release {
+            resValue "string", "app_version", a + '.' + b + '.' + c
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
