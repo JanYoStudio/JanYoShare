@@ -111,13 +111,14 @@ class SocketUtil
 		val file = File(path)
 		if (file.exists())
 		{
+			clientDisconnect()
 			fileTransferListener.onError(1, RuntimeException("file is exists!"))
 			return null
 		}
 		try
 		{
 			Logs.i(TAG, "receiveFile: 文件大小" + fileSize)
-			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket!!.getInputStream()))
+			val dataInputStream: DataInputStream? = DataInputStream(BufferedInputStream(socket.getInputStream()))
 			val bytes = ByteArray(1024 * 1024)
 			var transferredSize = 0L
 			val dataOutputStream = DataOutputStream(BufferedOutputStream(FileOutputStream(file)))
@@ -178,13 +179,13 @@ class SocketUtil
 			}
 			dataOutputStream.flush()
 			Logs.i(TAG, "sendFile: 推流")
-			serverDisconnect()
 			fileTransferListener.onFinish()
 		}
 		catch (e: Exception)
 		{
 			fileTransferListener.onError(2, e)
 		}
+		serverDisconnect()
 	}
 
 	fun receiveObject(): Any?
@@ -192,7 +193,7 @@ class SocketUtil
 		var obj: Any? = null
 		try
 		{
-			val objectInputStream = ObjectInputStream(BufferedInputStream(socket!!.getInputStream()))
+			val objectInputStream = ObjectInputStream(BufferedInputStream(socket.getInputStream()))
 			obj = objectInputStream.readObject()
 		}
 		catch (e: Exception)

@@ -2,16 +2,10 @@ package com.janyo.janyoshare.util
 
 import android.app.Notification
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.support.v4.app.NotificationCompat
 
 import com.janyo.janyoshare.R
-import com.janyo.janyoshare.activity.FileTransferActivity
-import com.janyo.janyoshare.service.TransferCancelService
-import com.janyo.janyoshare.service.TransferPauseService
-import com.janyo.janyoshare.service.TransferResumeService
 
 object TransferFileNotification
 {
@@ -77,7 +71,7 @@ object TransferFileNotification
 //										PendingIntent.FLAG_UPDATE_CURRENT))
 //		}
 
-		notify(context, builder.build())
+		notify(context, builder.build(), false)
 	}
 
 	fun done(context: Context, number: Int)
@@ -97,12 +91,13 @@ object TransferFileNotification
 //								PendingIntent.FLAG_UPDATE_CURRENT))
 				.setAutoCancel(true)
 
-		notify(context, builder.build())
+		notify(context, builder.build(), true)
 	}
 
-	private fun notify(context: Context, notification: Notification)
+	private fun notify(context: Context, notification: Notification, cancelable: Boolean)
 	{
-		notification.flags = Notification.FLAG_NO_CLEAR
+		if (!cancelable)
+			notification.flags = Notification.FLAG_NO_CLEAR
 		val notificationManager = context
 				.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 		notificationManager.notify(NOTIFICATION_TAG, 0, notification)
