@@ -45,6 +45,7 @@
 
         <Preference
             android:key="@string/key_version_code"
+            android:summary="@string/app_version"
             android:title="@string/title_version_code"/>
 
     </PreferenceCategory>

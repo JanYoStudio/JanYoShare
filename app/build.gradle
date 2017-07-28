@@ -5,8 +5,8 @@ apply plugin: 'kotlin-android-extensions'
 
 autoVersion {
     major 2
-    minor 4
-    patch 3
+    minor 6
+    patch 0
 }
 
 android {
@@ -17,7 +17,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode autoVersion.code
-        versionName autoVersion.name
+        versionName '2.6.0'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
