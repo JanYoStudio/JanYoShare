@@ -234,7 +234,7 @@ class SocketUtil
 	fun clientDisconnect()
 	{
 		Logs.i(TAG, "clientDisconnect: 客户端终止连接")
-			socket.close()
+		socket.close()
 	}
 
 	fun serverDisconnect()

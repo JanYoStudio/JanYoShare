@@ -6,7 +6,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
-import android.os.Build
+import android.content.Intent
+import android.os.Bundle
 import android.os.Environment
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
@@ -21,63 +22,27 @@ import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.classes.TransferFile
-import com.janyo.janyoshare.handler.OpenAPHandler
 import com.janyo.janyoshare.handler.RenameHandler
 import com.janyo.janyoshare.handler.SendHandler
-import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.JYFileUtil
-import com.janyo.janyoshare.util.SocketUtil
 import com.mystery0.tools.FileUtil.FileUtil
-import com.mystery0.tools.Logs.Logs
 import java.io.File
 
 class AppRecyclerViewAdapter(private val context: Context,
 							 private val installAppList: List<InstallApp>) : RecyclerView.Adapter<AppRecyclerViewAdapter.ViewHolder>()
 {
-	private val TAG = "AppRecyclerViewAdapter"
 	private val coordinatorLayout: CoordinatorLayout = (context as Activity).findViewById(R.id.coordinatorLayout)
 	private val renameHandler = RenameHandler(context as Activity)
-	var transferThread: Thread
 	var progressDialog = ProgressDialog(context)
 
-	val openAPHandler = OpenAPHandler()
 	val sendHandler = SendHandler()
-	lateinit var socketUtil: SocketUtil
 
 	init
 	{
 		sendHandler.progressDialog = progressDialog
 		sendHandler.context = context
 
-		transferThread = Thread(Runnable {
-			socketUtil = SocketUtil()
-			val message_create = Message()
-			message_create.what = FileTransferConfigureActivity.CREATE_SERVER
-			if (!socketUtil.createServerConnection(FileTransferHandler.getInstance().verifyPort))
-			{
-				return@Runnable
-			}
-			sendHandler.sendMessage(message_create)
-			val message_send = Message()
-			message_send.what = FileTransferConfigureActivity.VERIFY_DEVICE
-			socketUtil.sendMessage(Build.MODEL)
-			sendHandler.sendMessage(message_send)
-			if (socketUtil.receiveMessage() == FileTransferConfigureActivity.VERIFY_DONE)
-			{
-				FileTransferHandler.getInstance().ip = socketUtil.socket.remoteSocketAddress.toString().substring(1)
-				val message = Message.obtain()
-				message.what = FileTransferConfigureActivity.CONNECTED
-				sendHandler.sendMessage(message)
-				socketUtil.clientDisconnect()
-				socketUtil.serverDisconnect()
-			}
-			else
-			{
-				Logs.e(TAG, "openServer: 连接错误")
-				socketUtil.serverDisconnect()
-				progressDialog.dismiss()
-			}
-		})
+
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder
@@ -258,6 +223,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 								{
 									Thread(Runnable {
 										val code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+										progressDialog.dismiss()
 										if (code != -1)
 										{
 											val transferFile = TransferFile()
@@ -265,18 +231,12 @@ class AppRecyclerViewAdapter(private val context: Context,
 											transferFile.filePath = JYFileUtil.getFilePath(installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
 											transferFile.fileIconPath = installApp.iconPath
 											transferFile.fileSize = installApp.size
-//											val intent = Intent(context, FileTransferConfigureActivity::class.java)
-//											val bundle = Bundle()
-//											bundle.putSerializable("app", transferFile)
-//											intent.putExtra("action", 1)
-//											intent.putExtra("app", bundle)
-//											context.startActivity(intent)
-											val message = Message()
-											val map = HashMap<String, Any>()
-											map.put("this", this@AppRecyclerViewAdapter)
-											map.put("transferFile", transferFile)
-											message.obj = map
-											openAPHandler.sendMessage(message)
+											val intent = Intent(context, FileTransferConfigureActivity::class.java)
+											val bundle = Bundle()
+											bundle.putSerializable("app", transferFile)
+											intent.putExtra("action", 1)
+											intent.putExtra("app", bundle)
+											context.startActivity(intent)
 										}
 										else
 										{
@@ -296,24 +256,6 @@ class AppRecyclerViewAdapter(private val context: Context,
 					})
 					.show()
 		}
-	}
-
-	fun openAP(transferFile: TransferFile)
-	{
-		progressDialog.setCancelable(true)
-		progressDialog.setMessage(context.getString(R.string.hint_socket_wait_server))
-		progressDialog.setOnCancelListener {
-			Logs.i(TAG, "openAP: 监听到返回键")
-			Logs.i(TAG, "openAP: " + transferThread.isAlive)
-			if (transferThread.isAlive)
-			{
-				socketUtil.serverDisconnect()
-				transferThread.interrupt()
-			}
-		}
-		FileTransferHandler.getInstance().fileList.add(transferFile)
-
-		transferThread.start()
 	}
 
 	override fun getItemCount(): Int
