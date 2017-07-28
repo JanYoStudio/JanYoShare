@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
 
     <application
         android:name=".APP"
@@ -64,18 +64,23 @@
             android:name=".service.ReceiveFileService"
             android:enabled="true"
             android:exported="true"/>
-        <!--<service-->
-            <!--android:name=".service.TransferPauseService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true"/>-->
-        <!--<service-->
-            <!--android:name=".service.TransferResumeService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true"/>-->
-        <!--<service-->
-            <!--android:name=".service.TransferCancelService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true"/>-->
+        <!-- <service -->
+        <!-- android:name=".service.TransferPauseService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"/> -->
+        <!-- <service -->
+        <!-- android:name=".service.TransferResumeService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"/> -->
+        <!-- <service -->
+        <!-- android:name=".service.TransferCancelService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"/> -->
+        <activity
+            android:name=".activity.PayActivity"
+            android:label="@string/title_activity_pay"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>
