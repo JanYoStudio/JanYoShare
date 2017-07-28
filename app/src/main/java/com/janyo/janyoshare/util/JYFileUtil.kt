@@ -268,12 +268,16 @@ object JYFileUtil
 		return temp == 0
 	}
 
-	fun checkObb(packageName: String): Array<File>?
+	fun checkObb(packageName: String): ArrayList<File>?
 	{
 		val dir = File(Environment.getExternalStoragePublicDirectory("Android").absolutePath + File.separator + "obb" + File.separator + packageName + File.separator)
 		Logs.i(TAG, "checkObb: " + dir.absolutePath)
 		if (!dir.exists() || !dir.isDirectory)
 			return null
-		return dir.listFiles()
+		val list = ArrayList<File>()
+		dir.listFiles()
+				.filter { it.endsWith(".obb") }
+				.forEach { list.add(it) }
+		return list
 	}
 }
