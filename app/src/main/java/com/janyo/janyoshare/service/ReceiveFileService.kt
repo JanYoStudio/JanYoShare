@@ -93,9 +93,10 @@ class ReceiveFileService : Service()
 				FileTransferHandler.getInstance().currentProgress = 100
 //				broadcastIntent.putExtra("index", index)
 //				localBroadcastManager.sendBroadcast(broadcastIntent)
+				FileTransferHandler.getInstance().fileList.clear()
 				TransferFileNotification.done(this@ReceiveFileService, index)
-				val list = FileTransferHandler.getInstance().fileList
-				index++
+//				val list = FileTransferHandler.getInstance().fileList
+//				index++
 //				if (index < list.size)
 //					receiveFile(list[index])
 //				else
@@ -114,7 +115,7 @@ class ReceiveFileService : Service()
 				}
 				errorHandler.sendMessage(message)
 				TransferFileNotification.cancel(this@ReceiveFileService)
-				index++
+//				index++
 			}
 		})
 	}
