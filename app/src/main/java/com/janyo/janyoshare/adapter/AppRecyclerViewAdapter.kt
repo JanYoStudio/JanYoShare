@@ -235,9 +235,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 											{
 												Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_number_warning, files.size), Snackbar.LENGTH_LONG)
 														.setAction(R.string.action_done, {
-															files.forEach {
-																shareList.add(it)
-															}
+															shareList.addAll(files)
 														})
 														.addCallback(object : Snackbar.Callback()
 														{
@@ -262,6 +260,16 @@ class AppRecyclerViewAdapter(private val context: Context,
 											else
 											{
 												Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_not_exists), Snackbar.LENGTH_SHORT)
+														.addCallback(object : Snackbar.Callback()
+														{
+															override fun onDismissed(
+																	transientBottomBar: Snackbar?,
+																	event: Int)
+															{
+																JYFileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+																shareList.clear()
+															}
+														})
 														.show()
 											}
 										}
