@@ -108,13 +108,13 @@ class SendFileService : Service()
 				FileTransferHandler.getInstance().currentProgress = 100
 //				broadcastIntent.putExtra("index", index)
 //				localBroadcastManager.sendBroadcast(broadcastIntent)
-				FileTransferHandler.getInstance().fileList.clear()
 				TransferFileNotification.done(this@SendFileService, index)
 //				val list = FileTransferHandler.getInstance().fileList
 //				index++
 //				if (index < list.size)
 //					sendFile(list[index])
 //				else
+				FileTransferHandler.getInstance().clear()
 				stopSelf()
 			}
 
