@@ -122,7 +122,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 					{
 					}
 
-					override fun onFinish()
+					override fun onFinish(isDeviceFind: Boolean)
 					{
 						Logs.i(TAG, "onError: 搜索完毕")
 						val message = Message()
