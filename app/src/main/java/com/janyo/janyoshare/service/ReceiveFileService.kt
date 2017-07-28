@@ -114,7 +114,6 @@ class ReceiveFileService : Service()
 					else -> message.what = ErrorHandler.UNKNOWN_ERROR
 				}
 				errorHandler.sendMessage(message)
-				TransferFileNotification.cancel(this@ReceiveFileService)
 //				index++
 			}
 		})
