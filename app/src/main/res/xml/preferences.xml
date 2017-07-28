@@ -48,6 +48,10 @@
             android:summary="@string/app_version"
             android:title="@string/title_version_code"/>
 
+        <Preference
+            android:key="@string/key_support"
+            android:title="@string/title_support"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

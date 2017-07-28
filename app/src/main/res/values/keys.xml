@@ -34,4 +34,7 @@
     <string name="key_auto_upload_log">key_auto_upload_log</string>
     <string name="title_auto_upload_log">自动上传日志文件</string>
 
+    <string name="key_support">key_support</string>
+    <string name="title_support">支持我们</string>
+
 </resources>
