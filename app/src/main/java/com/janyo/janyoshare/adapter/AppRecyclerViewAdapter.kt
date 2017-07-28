@@ -26,13 +26,16 @@ import com.janyo.janyoshare.handler.RenameHandler
 import com.janyo.janyoshare.handler.SendHandler
 import com.janyo.janyoshare.util.JYFileUtil
 import com.mystery0.tools.FileUtil.FileUtil
+import com.mystery0.tools.Logs.Logs
 import java.io.File
 
 class AppRecyclerViewAdapter(private val context: Context,
 							 private val installAppList: List<InstallApp>) : RecyclerView.Adapter<AppRecyclerViewAdapter.ViewHolder>()
 {
+	private val TAG = "AppRecyclerViewAdapter"
 	private val coordinatorLayout: CoordinatorLayout = (context as Activity).findViewById(R.id.coordinatorLayout)
 	private val renameHandler = RenameHandler(context as Activity)
+	private val shareList = ArrayList<File>()
 	var progressDialog = ProgressDialog(context)
 
 	val sendHandler = SendHandler()
@@ -217,6 +220,61 @@ class AppRecyclerViewAdapter(private val context: Context,
 								}
 							}
 							3 ->
+							{
+								progressDialog.show()
+								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
+								{
+									Thread(Runnable {
+										val code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+										progressDialog.dismiss()
+										if (code != -1)
+										{
+											shareList.add(File(JYFileUtil.getFilePath(installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))))
+											val files = JYFileUtil.checkObb(installApp.packageName!!)
+											if (files != null)
+											{
+												Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_number_warning, files.size), Snackbar.LENGTH_LONG)
+														.setAction(R.string.action_done, {
+															files.forEach {
+																shareList.add(it)
+															}
+														})
+														.addCallback(object : Snackbar.Callback()
+														{
+															override fun onDismissed(
+																	transientBottomBar: Snackbar?,
+																	event: Int)
+															{
+																Logs.i(TAG, "onDismissed: " + shareList.size)
+																if (shareList.size > 1)
+																{
+																	JYFileUtil.doShare(context, shareList)
+																}
+																else
+																{
+																	JYFileUtil.doShare(context, installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+																}
+																shareList.clear()
+															}
+														})
+														.show()
+											}
+											else
+											{
+												Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_not_exists), Snackbar.LENGTH_SHORT)
+														.show()
+											}
+										}
+									}).start()
+								}
+								else
+								{
+									progressDialog.dismiss()
+									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
+											.show()
+								}
+							}
+							4 ->
 							{
 								progressDialog.show()
 								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
