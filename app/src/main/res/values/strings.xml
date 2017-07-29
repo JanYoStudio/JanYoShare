@@ -25,6 +25,7 @@
     <string name="action_send_files">发送文件</string>
     <string name="action_pause">暂停</string>
     <string name="action_resume">继续</string>
+    <string name="action_pay_sure">支付完成</string>
 
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>
@@ -32,6 +33,7 @@
     <string name="receive_file">接收文件</string>
     <string name="copy_file_loading">提取中……</string>
     <string name="copy_file_selection">请选择操作</string>
+    <string name="pay_method_title">请选择捐赠方式</string>
 
     <string name="hint_copy_error">文件提取失败！</string>
     <string name="hint_copy_exist">文件已经存在！</string>
@@ -63,6 +65,10 @@
     <string name="hint_transfer_file_exists">文件已存在！</string>
     <string name="hint_transfer_file_not_exists">文件不存在！</string>
     <string name="hint_transfer_file_unknown_error">未知错误！</string>
+    <string name="hint_pay_done">感谢您的捐赠</string>
+    <string name="hint_pay_save_img">长按图片保存</string>
+    <string name="hint_pay_save_img_done">二维码已经保存到SD卡根目录下%1$s文件夹!</string>
+    <string name="hint_pay_save_img_error">二维码保存失败！</string>
 
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
@@ -92,8 +98,14 @@
         <item>仅提取</item>
         <item>提取并分享</item>
         <item>重命名并分享</item>
-        <item>提取后伴随数据包一起分享</item>
+        <item>提取后和数据包一起分享</item>
         <item>面对面分享</item>
+    </string-array>
+
+    <string-array name="pay_method">
+        <item>Google Play内购</item>
+        <item>支付宝转账</item>
+        <item>微信转账</item>
     </string-array>
 
     <string name="title_activity_file_transfer">文件传输</string>

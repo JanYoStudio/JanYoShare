@@ -21,7 +21,7 @@ object AppManager
 		val installAppList = ArrayList<InstallApp>()
 		when (appType)
 		{
-			1 -> for (i in packageInfoList.indices)
+			SYSTEM -> for (i in packageInfoList.indices)
 			{
 				val installApp = InstallApp()
 				val packageInfo = packageInfoList[i]
@@ -32,13 +32,20 @@ object AppManager
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
 					val path = context.cacheDir.absolutePath + File.separator + installApp.packageName
-					JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path)
+					if (JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path))
+					{
+						installApp.iconPath = path
+					}
+					else
+					{
+						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
+					}
 					installApp.iconPath = path
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installAppList.add(installApp)
 				}
 			}
-			2 -> for (i in packageInfoList.indices)
+			USER -> for (i in packageInfoList.indices)
 			{
 				val installApp = InstallApp()
 				val packageInfo = packageInfoList[i]
