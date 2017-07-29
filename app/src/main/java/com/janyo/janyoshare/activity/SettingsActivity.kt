@@ -5,6 +5,7 @@ package com.janyo.janyoshare.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Message
 import android.preference.Preference
 import android.preference.PreferenceActivity
 import android.preference.PreferenceCategory
@@ -19,16 +20,21 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.android.volley.toolbox.Volley
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.handler.PayHandler
 
 import com.janyo.janyoshare.util.Settings
+import com.mystery0.tools.Logs.Logs
 import java.util.*
 import kotlin.concurrent.timerTask
 
 class SettingsActivity : PreferenceActivity()
 {
+	private val TAG = "SettingsActivity"
 	private lateinit var settings: Settings
 	private lateinit var toolbar: Toolbar
+	private lateinit var payHandler: PayHandler
 	private lateinit var auto_clean: SwitchPreference
 	private lateinit var developerMode: PreferenceCategory
 	private lateinit var developerModeEnable: SwitchPreference
@@ -41,11 +47,13 @@ class SettingsActivity : PreferenceActivity()
 	private lateinit var versionCode: Preference
 	private lateinit var support: Preference
 	private var clickTime = 0
+	private var isGooglePlayPay = false
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		settings = Settings(this@SettingsActivity)
+		payHandler = PayHandler(this, Volley.newRequestQueue(this))
 		addPreferencesFromResource(R.xml.preferences)
 		initialization()
 		monitor()
@@ -222,7 +230,31 @@ class SettingsActivity : PreferenceActivity()
 			false
 		}
 		support.setOnPreferenceClickListener {
-			startActivity(Intent(this, PayActivity::class.java))
+			AlertDialog.Builder(this)
+					.setTitle(R.string.pay_method_title)
+					.setItems(R.array.pay_method, { _, choose ->
+						val message = Message()
+						when (choose)
+						{
+							0 ->
+							{
+								message.what = PayHandler.PAY_PLAY
+								isGooglePlayPay = true
+							}
+							1 ->
+							{
+								message.what = PayHandler.PAY_ALIPAY
+								isGooglePlayPay = false
+							}
+							2 ->
+							{
+								message.what = PayHandler.PAY_WEIXIN
+								isGooglePlayPay = false
+							}
+						}
+						payHandler.sendMessage(message)
+					})
+					.show()
 			false
 		}
 	}
@@ -237,5 +269,19 @@ class SettingsActivity : PreferenceActivity()
 		LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true)
 
 		window.setContentView(contentView)
+	}
+
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+	{
+		if (!isGooglePlayPay && payHandler.onPayResult(requestCode, resultCode, data))
+			super.onActivityResult(requestCode, resultCode, data)
+		else
+			Logs.i(TAG, "onActivityResult handled by IABUtil.")
+	}
+
+	override fun onDestroy()
+	{
+		payHandler.playDestroy()
+		super.onDestroy()
 	}
 }

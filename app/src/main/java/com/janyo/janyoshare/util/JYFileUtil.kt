@@ -11,6 +11,7 @@ import android.graphics.drawable.VectorDrawable
 import android.net.Uri
 import android.os.Environment
 import android.support.graphics.drawable.VectorDrawableCompat
+import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
 import com.mystery0.tools.Logs.Logs
 import java.io.*
@@ -279,5 +280,14 @@ object JYFileUtil
 				.filter { it.endsWith(".obb") }
 				.forEach { list.add(it) }
 		return list
+	}
+
+	fun saveImage(context: Context, fileName: String): Boolean
+	{
+		val file = File(context.externalCacheDir.absolutePath + File.separator + fileName + ".png")
+		val outFile = File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), fileName + ".png")
+		if (outFile.exists())
+			outFile.delete()
+		return fileCopy(file.absolutePath, outFile.absolutePath) == 1
 	}
 }
