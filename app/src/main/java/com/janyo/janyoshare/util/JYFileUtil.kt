@@ -277,8 +277,10 @@ object JYFileUtil
 			return null
 		val list = ArrayList<File>()
 		dir.listFiles()
-				.filter { it.endsWith(".obb") }
-				.forEach { list.add(it) }
+				.forEach {
+					if (getFileEnd(it.absolutePath).toLowerCase() == "obb")
+						list.add(it)
+				}
 		return list
 	}
 
