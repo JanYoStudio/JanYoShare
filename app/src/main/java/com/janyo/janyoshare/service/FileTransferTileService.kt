@@ -6,7 +6,6 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.support.annotation.RequiresApi
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
-import com.janyo.janyoshare.activity.MainActivity
 
 @RequiresApi(Build.VERSION_CODES.N)
 class FileTransferTileService : TileService()
