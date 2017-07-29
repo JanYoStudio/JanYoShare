@@ -22,6 +22,9 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -85,11 +88,6 @@
         <!-- android:name=".service.TransferCancelService" -->
         <!-- android:enabled="true" -->
         <!-- android:exported="true"/> -->
-        <activity
-            android:name=".activity.PayActivity"
-            android:label="@string/title_activity_pay"
-            android:theme="@style/AppTheme">
-        </activity>
     </application>
 
 </manifest>

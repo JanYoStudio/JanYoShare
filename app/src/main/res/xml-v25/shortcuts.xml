@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_file_transfer"
+        android:shortcutId="file_transfer"
+        android:shortcutLongLabel="@string/title_activity_file_transfer_configure"
+        android:shortcutShortLabel="@string/title_activity_file_transfer_configure">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.janyo.janyoshare.activity.FileTransferConfigureActivity"
+            android:targetPackage="com.janyo.janyoshare"/>
+    </shortcut>
+</shortcuts>
