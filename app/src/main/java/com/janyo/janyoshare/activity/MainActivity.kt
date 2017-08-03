@@ -209,22 +209,6 @@ class MainActivity : AppCompatActivity()
 		if (doubleClickTime - oneClickTime > 2000)
 		{
 			Snackbar.make(coordinatorLayout, R.string.hint_twice_exit, Snackbar.LENGTH_SHORT)
-					.apply {
-						try
-						{
-							val mAccessibilityManagerField = BaseTransientBottomBar::class.java.getDeclaredField("mAccessibilityManager")
-							mAccessibilityManagerField.isAccessible = true
-							val accessibilityManager = mAccessibilityManagerField.get(this)
-							val mIsEnabledField = AccessibilityManager::class.java.getDeclaredField("mIsEnabled")
-							mIsEnabledField.isAccessible = true
-							mIsEnabledField.setBoolean(accessibilityManager, false)
-							mAccessibilityManagerField.set(this, accessibilityManager)
-						}
-						catch (e: Exception)
-						{
-							e.printStackTrace()
-						}
-					}
 					.show()
 			oneClickTime = doubleClickTime
 		}
