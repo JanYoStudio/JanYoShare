@@ -93,7 +93,7 @@ class ReceiveFileService : Service()
 				FileTransferHandler.getInstance().currentProgress = 100
 //				broadcastIntent.putExtra("index", index)
 //				localBroadcastManager.sendBroadcast(broadcastIntent)
-				TransferFileNotification.done(this@ReceiveFileService, index)
+				TransferFileNotification.done(this@ReceiveFileService, index, FileTransferHandler.getInstance().currentFile!!.filePath!!)
 //				val list = FileTransferHandler.getInstance().fileList
 //				index++
 //				if (index < list.size)
