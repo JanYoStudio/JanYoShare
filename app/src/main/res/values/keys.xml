@@ -31,6 +31,32 @@
     <string name="key_developer_mode_enable">key_developer_mode_enable</string>
     <string name="title_developer_mode_enable">启用开发者模式</string>
 
+    <string name="key_enable_exclude_name">key_enable_exclude_name</string>
+    <string name="title_enable_exclude_name">排除包含对应名称的APK</string>
+
+    <string name="key_exclude_name_list">key_exclude_name_list</string>
+    <string name="title_exclude_name_list">关键字列表</string>
+
+    <string name="key_enable_exclude_size">key_enable_exclude_size</string>
+    <string name="title_enable_exclude_size">排除大小低于对应值的APK</string>
+
+    <string name="key_exclude_size">key_exclude_size</string>
+    <string name="title_exclude_size">设定值</string>
+
+    <string name="key_enable_exclude_regular_expression">key_enable_exclude_regular_expression</string>
+    <string name="title_enable_exclude_regular_expression">使用正则表达式匹配</string>
+
+    <string name="key_exclude_regular_expression">key_exclude_regular_expression</string>
+    <string name="title_exclude_regular_expression">正则表达式</string>
+
+    <string name="key_enable_exclude_list">key_enable_exclude_list</string>
+    <string name="title_enable_exclude_list">排除选定的APK</string>
+
+    <string name="key_exclude_list">key_exclude_list</string>
+    <string name="title_exclude_list">排除列表</string>
+    <string name="summary_exclude_list_null">未排除任何APK</string>
+    <string name="summary_exclude_list">已排除%1$d个APK</string>
+
     <string name="key_auto_upload_log">key_auto_upload_log</string>
     <string name="title_auto_upload_log">自动上传日志文件</string>
 

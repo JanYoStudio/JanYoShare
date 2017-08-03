@@ -35,4 +35,20 @@ class Settings(private val context: Context)
 	var isAutoUploadLog: Boolean
 		get() = sharedPreferences.getBoolean("isAutoUploadLog", false)
 		set(isAutoUploadLog) = sharedPreferences.edit().putBoolean("isAutoUploadLog", isAutoUploadLog).apply()
+
+	var excludeList: Set<String>
+		get() = sharedPreferences.getStringSet("excludeList", emptySet())
+		set(excludeList) = sharedPreferences.edit().putStringSet("excludeList", excludeList).apply()
+
+	var excludeNameList: Set<String>
+		get() = sharedPreferences.getStringSet("excludeNameList", emptySet())
+		set(excludeNameList) = sharedPreferences.edit().putStringSet("excludeNameList", excludeNameList).apply()
+
+	var excludeSize: Float
+		get() = sharedPreferences.getFloat("excludeSize", 0f)
+		set(excludeSize) = sharedPreferences.edit().putFloat("excludeSize", excludeSize).apply()
+
+	var excludeRegularExpression: String
+		get() = sharedPreferences.getString("excludeRegularExpression", "")
+		set(excludeRegularExpression) = sharedPreferences.edit().putString("excludeRegularExpression", excludeRegularExpression).apply()
 }
