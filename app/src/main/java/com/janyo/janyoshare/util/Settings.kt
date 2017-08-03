@@ -28,6 +28,10 @@ class Settings(private val context: Context)
 			if (!isDeveloperModeEnable)
 			{
 				isAutoUploadLog = false
+				excludeList = emptySet()
+				excludeNameList = emptySet()
+				excludeSize = 0f
+				excludeRegularExpression = ""
 			}
 			sharedPreferences.edit().putBoolean("isDeveloperModeEnable", isDeveloperModeEnable).apply()
 		}
