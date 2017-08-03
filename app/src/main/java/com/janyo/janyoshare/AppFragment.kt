@@ -29,7 +29,6 @@ import java.util.ArrayList
 
 class AppFragment : Fragment()
 {
-	private val TAG = "AppFragment"
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 	private lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
@@ -197,7 +196,7 @@ class AppFragment : Fragment()
 	fun refresh()
 	{
 		Thread(Runnable {
-			val installAppList = AppManager.getInstallAppList(activity, type, index)
+			val installAppList = AppManager.getInstallAppList(activity, type, index, true)
 			when (type)
 			{
 				AppManager.SYSTEM -> JYFileUtil.saveList(activity, installAppList, "system.list")

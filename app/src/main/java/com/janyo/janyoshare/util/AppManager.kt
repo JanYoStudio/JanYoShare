@@ -8,13 +8,15 @@ import com.janyo.janyoshare.classes.InstallApp
 import java.io.File
 import java.util.ArrayList
 import java.util.Collections
+import java.util.regex.Pattern
 
 object AppManager
 {
 	var SYSTEM = 1
 	var USER = 2
 
-	fun getInstallAppList(context: Context, appType: Int, type: Int): List<InstallApp>
+	fun getInstallAppList(context: Context, appType: Int, type: Int,
+						  isExclude: Boolean): List<InstallApp>
 	{
 		val packageManager = context.packageManager
 		val packageInfoList = packageManager.getInstalledPackages(0)
@@ -42,7 +44,10 @@ object AppManager
 					}
 					installApp.iconPath = path
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
-					installAppList.add(installApp)
+					if (!isExclude || checkExclude(context, installApp))
+					{
+						installAppList.add(installApp)
+					}
 				}
 			}
 			USER -> for (i in packageInfoList.indices)
@@ -65,7 +70,10 @@ object AppManager
 						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
 					}
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
-					installAppList.add(installApp)
+					if (!isExclude || checkExclude(context, installApp))
+					{
+						installAppList.add(installApp)
+					}
 				}
 			}
 		}
@@ -83,9 +91,28 @@ object AppManager
 	fun getAllApps(context: Context): List<InstallApp>
 	{
 		val list = ArrayList<InstallApp>()
-		list.addAll(getInstallAppList(context, SYSTEM, 0))
-		list.addAll(getInstallAppList(context, USER, 0))
+		list.addAll(getInstallAppList(context, SYSTEM, 0, false))
+		list.addAll(getInstallAppList(context, USER, 0, false))
 		return sortList(list, 1)
+	}
+
+	private fun checkExclude(context: Context, installApp: InstallApp): Boolean
+	{
+		val settings = Settings(context)
+		val excludeList = settings.excludeList
+		val excludeNameList = settings.excludeNameList
+		val excludeSize = settings.excludeSize
+		val excludeRegularExpression = settings.excludeRegularExpression
+		if (excludeList.contains(installApp.packageName!!) ||
+				installApp.size < excludeSize)
+			return false
+		excludeNameList.forEach {
+			if (installApp.name!!.contains(it))
+				return false
+		}
+		if (Pattern.matches(excludeRegularExpression, installApp.name) || Pattern.matches(excludeRegularExpression, installApp.packageName))
+			return false
+		return true
 	}
 
 	private fun sortList(list: List<InstallApp>, type: Int): List<InstallApp>
