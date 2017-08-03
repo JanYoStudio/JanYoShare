@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.BaseTransientBottomBar
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.graphics.drawable.VectorDrawableCompat
@@ -14,6 +15,7 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
+import android.view.accessibility.AccessibilityManager
 import android.widget.TextView
 import android.widget.Toast
 import com.janyo.janyoshare.AppFragment
@@ -207,6 +209,22 @@ class MainActivity : AppCompatActivity()
 		if (doubleClickTime - oneClickTime > 2000)
 		{
 			Snackbar.make(coordinatorLayout, R.string.hint_twice_exit, Snackbar.LENGTH_SHORT)
+					.apply {
+						try
+						{
+							val mAccessibilityManagerField = BaseTransientBottomBar::class.java.getDeclaredField("mAccessibilityManager")
+							mAccessibilityManagerField.isAccessible = true
+							val accessibilityManager = mAccessibilityManagerField.get(this)
+							val mIsEnabledField = AccessibilityManager::class.java.getDeclaredField("mIsEnabled")
+							mIsEnabledField.isAccessible = true
+							mIsEnabledField.setBoolean(accessibilityManager, false)
+							mAccessibilityManagerField.set(this, accessibilityManager)
+						}
+						catch (e: Exception)
+						{
+							e.printStackTrace()
+						}
+					}
 					.show()
 			oneClickTime = doubleClickTime
 		}
