@@ -110,5 +110,5 @@
 
     <string name="title_activity_file_transfer">文件传输</string>
     <string name="title_activity_file_transfer_configure">文件传输</string>
-    <string name="title_activity_pay">PayActivity</string>
+    <string name="title_activity_file_transfer_send">通过JY Share面对面分享</string>
 </resources>

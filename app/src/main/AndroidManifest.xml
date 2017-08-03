@@ -47,7 +47,8 @@
             android:label="@string/title_activity_file_transfer_configure"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name=".activity.ShareActivity">
+            android:name=".activity.ShareActivity"
+            android:label="@string/title_activity_file_transfer_send">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
