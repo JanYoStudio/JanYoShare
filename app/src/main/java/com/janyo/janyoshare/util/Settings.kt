@@ -30,7 +30,7 @@ class Settings(private val context: Context)
 				isAutoUploadLog = false
 				excludeList = emptySet()
 				excludeNameList = emptySet()
-				excludeSize = 0f
+				excludeSize = 0L
 				excludeRegularExpression = ""
 			}
 			sharedPreferences.edit().putBoolean("isDeveloperModeEnable", isDeveloperModeEnable).apply()
@@ -48,9 +48,9 @@ class Settings(private val context: Context)
 		get() = sharedPreferences.getStringSet("excludeNameList", emptySet())
 		set(excludeNameList) = sharedPreferences.edit().putStringSet("excludeNameList", excludeNameList).apply()
 
-	var excludeSize: Float
-		get() = sharedPreferences.getFloat("excludeSize", 0f)
-		set(excludeSize) = sharedPreferences.edit().putFloat("excludeSize", excludeSize).apply()
+	var excludeSize: Long
+		get() = sharedPreferences.getLong("excludeSize", 0L)
+		set(excludeSize) = sharedPreferences.edit().putLong("excludeSize", excludeSize).apply()
 
 	var excludeRegularExpression: String
 		get() = sharedPreferences.getString("excludeRegularExpression", "")

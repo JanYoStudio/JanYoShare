@@ -110,7 +110,7 @@ class SettingsActivity : PreferenceActivity()
 		autoUploadLog.isChecked = settings.isAutoUploadLog
 		enableExcludeList.isChecked = settings.excludeList.isNotEmpty()
 		enableExcludeNameList.isChecked = settings.excludeNameList.isNotEmpty()
-		enableExcludeSize.isChecked = settings.excludeSize != 0f
+		enableExcludeSize.isChecked = settings.excludeSize != 0L
 		enableExcludeRegularExpression.isChecked = settings.excludeRegularExpression != ""
 
 		if (settings.excludeList.isEmpty())
@@ -125,9 +125,9 @@ class SettingsActivity : PreferenceActivity()
 		if (settings.excludeNameList.isNotEmpty())
 			excludeNameList.summary = getNameList(settings.excludeNameList)
 		excludeNameList.isEnabled = settings.excludeNameList.isNotEmpty()
-		if (settings.excludeSize != 0f)
-			excludeSize.summary = settings.excludeSize.toString()
-		excludeSize.isEnabled = settings.excludeSize != 0f
+		if (settings.excludeSize != 0L)
+			excludeSize.summary = (settings.excludeSize.toFloat() / 1048576f).toString()
+		excludeSize.isEnabled = settings.excludeSize != 0L
 		if (settings.excludeRegularExpression != "")
 			excludeRegularExpression.summary = settings.excludeRegularExpression
 		excludeRegularExpression.isEnabled = settings.excludeRegularExpression != ""
@@ -243,7 +243,7 @@ class SettingsActivity : PreferenceActivity()
 			val enableExcludeSize = !enableExcludeSize.isChecked
 			if (!enableExcludeSize)
 			{
-				settings.excludeSize = 0f
+				settings.excludeSize = 0L
 			}
 			excludeSize.isEnabled = enableExcludeSize
 			true
@@ -252,7 +252,7 @@ class SettingsActivity : PreferenceActivity()
 			val view = LayoutInflater.from(this).inflate(R.layout.dialog_edit, TextInputLayout(this), false)
 			val text: TextInputLayout = view.findViewById(R.id.layout)
 			text.editText!!.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_CLASS_NUMBER
-			text.editText!!.setText(settings.excludeSize.toString())
+			text.editText!!.setText((settings.excludeSize.toFloat() / 1048576f).toString())
 			AlertDialog.Builder(this)
 					.setTitle(R.string.hint_exclude_size_title)
 					.setView(view)
@@ -260,7 +260,7 @@ class SettingsActivity : PreferenceActivity()
 						val temp = text.editText!!.text.toString().toFloat()
 						if (temp > 0f)
 						{
-							settings.excludeSize = temp
+							settings.excludeSize = (temp * 1048576).toLong()
 							excludeSize.summary = temp.toString()
 						}
 						else
