@@ -6,6 +6,14 @@
         android:key="@string/key_auto_clean"
         android:title="@string/title_auto_clean"/>
 
+    <SwitchPreference
+        android:key="@string/key_enable_exclude_list"
+        android:title="@string/title_enable_exclude_list"/>
+
+    <Preference
+        android:key="@string/key_exclude_list"
+        android:title="@string/title_exclude_list"/>
+
     <PreferenceCategory
         android:key="@string/key_developer_mode"
         android:title="@string/title_developer_mode">
@@ -13,6 +21,30 @@
         <SwitchPreference
             android:key="@string/key_developer_mode_enable"
             android:title="@string/title_developer_mode_enable"/>
+
+        <SwitchPreference
+            android:key="@string/key_enable_exclude_name"
+            android:title="@string/title_enable_exclude_name"/>
+
+        <Preference
+            android:key="@string/key_exclude_name_list"
+            android:title="@string/title_exclude_name_list"/>
+
+        <SwitchPreference
+            android:key="@string/key_enable_exclude_size"
+            android:title="@string/title_enable_exclude_size"/>
+
+        <Preference
+            android:key="@string/key_exclude_size"
+            android:title="@string/title_exclude_size"/>
+
+        <SwitchPreference
+            android:key="@string/key_enable_exclude_regular_expression"
+            android:title="@string/title_enable_exclude_regular_expression"/>
+
+        <Preference
+            android:key="@string/key_exclude_regular_expression"
+            android:title="@string/title_exclude_regular_expression"/>
 
         <SwitchPreference
             android:key="@string/key_auto_upload_log"

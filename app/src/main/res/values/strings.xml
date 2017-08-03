@@ -11,7 +11,7 @@
     <string name="all_right_reserved">All Right Reserved</string>
 
     <string name="action_search">搜索</string>
-    <string name="action_clear_all">清除已复制的包</string>
+    <string name="action_clear_all">清除临时文件</string>
     <string name="action_settings">设置</string>
     <string name="action_sort">排序</string>
     <string name="action_done">确定</string>
@@ -69,6 +69,13 @@
     <string name="hint_pay_save_img">长按图片保存</string>
     <string name="hint_pay_save_img_done">二维码已经保存到SD卡根目录下%1$s文件夹!</string>
     <string name="hint_pay_save_img_error">二维码保存失败！</string>
+    <string name="hint_exclude_list_title">排除列表</string>
+    <string name="hint_exclude_list_loading">请等待……</string>
+    <string name="hint_exclude_name_title">关键字列表（多个关键字使用英文逗号隔开）</string>
+    <string name="hint_exclude_size_title">排除APK大小临界值（单位MB，可使用小数）</string>
+    <string name="hint_exclude_size_error">临界值不能小于或等于0</string>
+    <string name="hint_exclude_regular_expression_title">正则表达式</string>
+    <string name="hint_exclude_regular_expression_error">无效表达式！</string>
 
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>

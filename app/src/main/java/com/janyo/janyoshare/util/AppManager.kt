@@ -80,6 +80,14 @@ object AppManager
 		return list
 	}
 
+	fun getAllApps(context: Context): List<InstallApp>
+	{
+		val list = ArrayList<InstallApp>()
+		list.addAll(getInstallAppList(context, SYSTEM, 0))
+		list.addAll(getInstallAppList(context, USER, 0))
+		return sortList(list, 1)
+	}
+
 	private fun sortList(list: List<InstallApp>, type: Int): List<InstallApp>
 	{
 		val objects = list.toTypedArray()
