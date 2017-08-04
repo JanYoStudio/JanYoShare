@@ -61,6 +61,7 @@ class SettingsActivity : PreferenceActivity()
 	private lateinit var checkUpdate: Preference
 	private lateinit var versionCode: Preference
 	private lateinit var support: Preference
+	private lateinit var joinTest: Preference
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var settingHandler: SettingHandler
 	private lateinit var progressDialog: ProgressDialog
@@ -99,6 +100,7 @@ class SettingsActivity : PreferenceActivity()
 		checkUpdate = findPreference(getString(R.string.key_check_update))
 		versionCode = findPreference(getString(R.string.key_version_code))
 		support = findPreference(getString(R.string.key_support))
+		joinTest = findPreference(getString(R.string.key_join_test))
 
 		progressDialog = ProgressDialog(this)
 		progressDialog.setMessage(getString(R.string.hint_exclude_list_loading))
@@ -339,8 +341,7 @@ class SettingsActivity : PreferenceActivity()
 			false
 		}
 		openSourceAddress.setOnPreferenceClickListener {
-			val intent = Intent()
-			intent.action = "android.intent.action.VIEW"
+			val intent = Intent(Intent.ACTION_VIEW)
 			val content_url = Uri.parse(getString(R.string.address_open_source))
 			intent.data = content_url
 			startActivity(intent)
@@ -366,8 +367,7 @@ class SettingsActivity : PreferenceActivity()
 			false
 		}
 		checkUpdate.setOnPreferenceClickListener {
-			val intent = Intent()
-			intent.action = "android.intent.action.VIEW"
+			val intent = Intent(Intent.ACTION_VIEW)
 			val content_url = Uri.parse(getString(R.string.address_check_update))
 			intent.data = content_url
 			startActivity(intent)
@@ -428,6 +428,26 @@ class SettingsActivity : PreferenceActivity()
 							}
 						}
 						payHandler.sendMessage(message)
+					})
+					.show()
+			false
+		}
+		joinTest.setOnPreferenceClickListener {
+			val intent = Intent(Intent.ACTION_VIEW)
+			AlertDialog.Builder(this)
+					.setItems(R.array.become_test, { _, choose ->
+						when (choose)
+						{
+							0 ->
+							{
+								intent.data = Uri.parse(getString(R.string.address_join_test_group))
+							}
+							1 ->
+							{
+								intent.data = Uri.parse(getString(R.string.address_become_test))
+							}
+						}
+						startActivity(intent)
 					})
 					.show()
 			false

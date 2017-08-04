@@ -63,4 +63,7 @@
     <string name="key_support">key_support</string>
     <string name="title_support">支持我们</string>
 
+    <string name="key_join_test">key_join_test</string>
+    <string name="title_join_test">成为测试人员</string>
+
 </resources>
