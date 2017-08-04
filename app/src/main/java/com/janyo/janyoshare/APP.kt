@@ -1,6 +1,9 @@
 package com.janyo.janyoshare
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.Application
+import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import com.mystery0.tools.CrashHandler.CrashHandler
 import com.mystery0.tools.Logs.Logs
 import com.mystery0.tools.SnackBar.ASnackBar
@@ -18,6 +21,9 @@ class APP : Application()
 				.setExtensionName("log")
 				.isAutoClean(2)
 				.init()
-		ASnackBar.disableAccessibility(this)
+		val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+		val list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
+		if (list.isNotEmpty())
+			ASnackBar.disableAccessibility(this)
 	}
 }
