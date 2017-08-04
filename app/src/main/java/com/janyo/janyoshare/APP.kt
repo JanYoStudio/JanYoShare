@@ -14,7 +14,7 @@ class APP : Application()
 	override fun onCreate()
 	{
 		super.onCreate()
-		Logs.setLevel(Logs.LogLevel.Debug)
+		Logs.setLevel(Logs.LogLevel.Release)
 		CrashHandler.getInstance(applicationContext)
 				.setDirectory(getString(R.string.app_name) + File.separator + "log")
 				.setPrefixName("crash")
