@@ -491,7 +491,14 @@ class SettingsActivity : PreferenceActivity()
 
 	override fun onDestroy()
 	{
-		payHandler.playDestroy()
+		try
+		{
+			payHandler.playDestroy()
+		}
+		catch (e: Exception)
+		{
+			Logs.e(TAG, "onDestroy: 销毁失败")
+		}
 		super.onDestroy()
 	}
 }
