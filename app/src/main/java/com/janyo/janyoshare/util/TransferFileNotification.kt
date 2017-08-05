@@ -23,56 +23,7 @@ object TransferFileNotification
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setNumber(number)
 				.setProgress(100, FileTransferHandler.getInstance().currentProgress, false)
-//				.setContentIntent(
-//						PendingIntent.getActivity(
-//								context,
-//								0,
-//								Intent(context, FileTransferActivity::class.java),
-//								PendingIntent.FLAG_UPDATE_CURRENT))
 				.setAutoCancel(true)
-
-//		val pauseIntent = Intent(context, TransferPauseService::class.java)
-//		val resumeIntent = Intent(context, TransferResumeService::class.java)
-//		val cancelIntent = Intent(context, TransferCancelService::class.java)
-
-//		when (action)
-//		{
-//			"start", "resume" ->
-//				builder.addAction(
-//						R.drawable.ic_pause,
-//						context.resources.getString(R.string.action_pause),
-//						PendingIntent.getService(
-//								context,
-//								0,
-//								pauseIntent,
-//								PendingIntent.FLAG_UPDATE_CURRENT))
-//						.addAction(
-//								R.drawable.ic_cancel,
-//								context.resources.getString(R.string.action_cancel),
-//								PendingIntent.getService(
-//										context,
-//										0,
-//										cancelIntent,
-//										PendingIntent.FLAG_UPDATE_CURRENT))
-//			"pause" ->
-//				builder.addAction(
-//						R.drawable.ic_resume,
-//						context.resources.getString(R.string.action_resume),
-//						PendingIntent.getService(
-//								context,
-//								0,
-//								resumeIntent,
-//								PendingIntent.FLAG_UPDATE_CURRENT))
-//						.addAction(
-//								R.drawable.ic_cancel,
-//								context.resources.getString(R.string.action_cancel),
-//								PendingIntent.getService(
-//										context,
-//										0,
-//										cancelIntent,
-//										PendingIntent.FLAG_UPDATE_CURRENT))
-//		}
-
 		notify(context, builder.build(), false)
 	}
 

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.BaseTransientBottomBar
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.graphics.drawable.VectorDrawableCompat
@@ -15,7 +14,6 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
-import android.view.accessibility.AccessibilityManager
 import android.widget.TextView
 import android.widget.Toast
 import com.janyo.janyoshare.AppFragment
@@ -34,7 +32,6 @@ import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class MainActivity : AppCompatActivity()
 {
