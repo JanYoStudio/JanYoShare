@@ -51,11 +51,12 @@
             android:label="@string/title_activity_file_transfer_send">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
+
                 <data android:mimeType="*/*"/>
             </intent-filter>
         </activity>
-
 
         <service
             android:name=".service.ShareTileService"
@@ -95,6 +96,15 @@
         <!-- android:name=".service.TransferCancelService" -->
         <!-- android:enabled="true" -->
         <!-- android:exported="true"/> -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="janyoshare"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>

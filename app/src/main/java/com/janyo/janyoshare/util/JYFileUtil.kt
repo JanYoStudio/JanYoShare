@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Environment
 import android.support.annotation.RequiresApi
 import android.support.graphics.drawable.VectorDrawableCompat
+import android.support.v4.content.FileProvider
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
 import com.mystery0.tools.Logs.Logs
@@ -104,7 +105,10 @@ object JYFileUtil
 	{
 		val share = Intent(Intent.ACTION_SEND)
 		share.type = "*/*"
-		share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+			share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "janyoshare", file))
+		else
+			share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
 		context.startActivity(Intent.createChooser(share, "分享" + file.name + "到"))
 	}
 
@@ -120,7 +124,10 @@ object JYFileUtil
 	{
 		val uriList = ArrayList<Uri>()
 		files.forEach {
-			uriList.add(Uri.fromFile(it))
+			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+				uriList.add(FileProvider.getUriForFile(context, "janyoshare", it))
+			else
+				uriList.add(Uri.fromFile(it))
 		}
 		Share(context, uriList)
 	}
