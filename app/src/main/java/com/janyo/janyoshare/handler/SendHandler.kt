@@ -10,7 +10,6 @@ import android.os.Handler
 import android.os.Message
 import android.widget.Toast
 import com.janyo.janyoshare.R
-import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHandler

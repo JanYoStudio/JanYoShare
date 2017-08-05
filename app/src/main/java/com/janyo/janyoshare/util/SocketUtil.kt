@@ -1,5 +1,8 @@
 package com.janyo.janyoshare.util
 
+import android.content.Context
+import android.net.Uri
+import com.janyo.janyoshare.classes.TransferFile
 import com.mystery0.tools.Logs.Logs
 import java.io.*
 import java.net.ConnectException
@@ -153,18 +156,16 @@ class SocketUtil
 		return file
 	}
 
-	fun sendFile(file: File, fileTransferListener: FileTransferListener)
+	fun sendFile(context: Context, transferFile: TransferFile,
+				 fileTransferListener: FileTransferListener)
 	{
-		if (!file.exists())
-		{
-			fileTransferListener.onError(1, RuntimeException("file not exists!"))
-			return
-		}
 		try
 		{
-			Logs.i(TAG, "sendFile: fileSize" + file.length())
+			Logs.i(TAG, "sendFile: fileSize" + transferFile.fileSize)
 			val dataOutputStream = DataOutputStream(socket.getOutputStream())
-			val dataInputStream = DataInputStream(BufferedInputStream(FileInputStream(file)))
+			val parcelFileDescriptor = context.contentResolver.openFileDescriptor(Uri.parse(transferFile.fileUri), "r")
+			val fileDescriptor = parcelFileDescriptor.fileDescriptor
+			val dataInputStream = DataInputStream(BufferedInputStream(FileInputStream(fileDescriptor)))
 			var transferredSize = 0L
 			val bytes = ByteArray(1024 * 1024)
 			fileTransferListener.onStart()
@@ -173,7 +174,7 @@ class SocketUtil
 				val read = dataInputStream.read(bytes)
 				Logs.i(TAG, "sendFile: " + read)
 				transferredSize += read
-				fileTransferListener.onProgress((transferredSize * 100 / file.length()).toInt())
+				fileTransferListener.onProgress((transferredSize * 100 / transferFile.fileSize).toInt())
 				if (read <= 0)
 				{
 					Logs.i(TAG, "sendFile: 退出循环")

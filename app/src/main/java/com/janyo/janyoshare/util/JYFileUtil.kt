@@ -105,10 +105,13 @@ object JYFileUtil
 	{
 		val share = Intent(Intent.ACTION_SEND)
 		share.type = "*/*"
+		val uri: Uri
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-			share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "janyoshare", file))
+			uri = FileProvider.getUriForFile(context, context.getString(R.string.authorities), file)
 		else
-			share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
+			uri = Uri.fromFile(file)
+		share.putExtra(Intent.EXTRA_STREAM, uri)
+		grantUriPermission(context, share, uri)
 		context.startActivity(Intent.createChooser(share, "分享" + file.name + "到"))
 	}
 
@@ -125,11 +128,19 @@ object JYFileUtil
 		val uriList = ArrayList<Uri>()
 		files.forEach {
 			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-				uriList.add(FileProvider.getUriForFile(context, "janyoshare", it))
+				uriList.add(FileProvider.getUriForFile(context, context.getString(R.string.authorities), it))
 			else
 				uriList.add(Uri.fromFile(it))
 		}
 		Share(context, uriList)
+	}
+
+	fun grantUriPermission(context: Context, intent: Intent, uri: Uri)
+	{
+		val list = context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+		list.forEach {
+			context.grantUriPermission(it.activityInfo.packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+		}
 	}
 
 	fun doShare(context: Context, name: String, versionName: String, dir: String)

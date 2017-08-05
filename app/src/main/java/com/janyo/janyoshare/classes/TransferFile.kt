@@ -6,6 +6,6 @@ class TransferFile : Serializable
 {
 	var fileIconPath: String? = null
 	var fileName: String? = null
-	var filePath: String? = null
+	var fileUri: String? = null
 	var fileSize: Long = 0
 }
