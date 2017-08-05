@@ -106,10 +106,11 @@ object JYFileUtil
 		val share = Intent(Intent.ACTION_SEND)
 		share.type = "*/*"
 		val uri: Uri
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			uri = FileProvider.getUriForFile(context, context.getString(R.string.authorities), file)
 		else
 			uri = Uri.fromFile(file)
+		Logs.i(TAG, "Share: " + uri)
 		share.putExtra(Intent.EXTRA_STREAM, uri)
 		grantUriPermission(context, share, uri)
 		context.startActivity(Intent.createChooser(share, "分享" + file.name + "到"))
@@ -227,23 +228,6 @@ object JYFileUtil
 	fun getFileEnd(path: String?): String
 	{
 		return path!!.substring(path.lastIndexOf(".") + 1)
-	}
-
-	fun getApkIconPath(context: Context, apkPath: String?): String
-	{
-		val packageManager = context.packageManager
-		val packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES)
-		val path: String
-		if (packageInfo != null)
-		{
-			val applicationInfo = packageInfo.applicationInfo
-			applicationInfo.sourceDir = apkPath
-			applicationInfo.publicSourceDir = apkPath
-			path = context.cacheDir.absolutePath + File.separator + applicationInfo.packageName
-			saveDrawableToSd(applicationInfo.loadIcon(packageManager), path)
-			return path
-		}
-		return "null"
 	}
 
 	fun saveList(context: Context, list: List<InstallApp>, fileName: String)
