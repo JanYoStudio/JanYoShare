@@ -16,14 +16,14 @@
             android:contentDescription="@string/app_name"
             android:src="@mipmap/janyo_studio"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dialog_about_margin_top"
-            android:gravity="center_horizontal"
-            android:text="@string/janyo_studio"
-            android:textSize="@dimen/dialog_help_text_size"
-            android:textStyle="bold"/>
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/dialog_about_margin_top"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="@string/janyo_studio"-->
+        <!--android:textSize="@dimen/dialog_help_text_size"-->
+        <!--android:textStyle="bold"/>-->
 
         <TextView
             android:layout_width="match_parent"
