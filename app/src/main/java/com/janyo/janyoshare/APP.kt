@@ -15,7 +15,7 @@ class APP : Application()
 	{
 		super.onCreate()
 		Logs.setLevel(Logs.LogLevel.Debug)
-		CrashHandler.getInstance(applicationContext)
+		CrashHandler.getInstance(this)
 				.setDirectory(getString(R.string.app_name) + File.separator + "log")
 				.setPrefixName("crash")
 				.setExtensionName("log")

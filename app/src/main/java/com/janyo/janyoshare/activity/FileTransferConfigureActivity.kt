@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Message
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
@@ -92,6 +93,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			progressDialog.show()
 			val transferFile = intent.getBundleExtra("app").getSerializable("app") as TransferFile
 			Logs.i(TAG, "onCreate: " + transferFile.fileName)
+			Logs.i(TAG, "onCreate: " + transferFile.fileUri)
 			openAP(transferFile)
 		}
 
@@ -150,7 +152,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			val file = File(FileUtil.getPath(this, data.data))
 			val transferFile = TransferFile()
 			transferFile.fileName = file.name
-			transferFile.filePath = file.absolutePath
+			transferFile.fileUri = FileProvider.getUriForFile(this, getString(R.string.authorities), file).toString()
 			transferFile.fileSize = file.length()
 			progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
 			progressDialog.show()

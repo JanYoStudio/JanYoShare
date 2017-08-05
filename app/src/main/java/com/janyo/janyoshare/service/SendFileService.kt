@@ -11,7 +11,6 @@ import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.TransferFileNotification
 import com.mystery0.tools.Logs.Logs
-import java.io.File
 
 class SendFileService : Service()
 {
@@ -84,7 +83,7 @@ class SendFileService : Service()
 	private fun sendFile(transferFile: TransferFile)
 	{
 //		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-		socketUtil.sendFile(File(transferFile.filePath), object : SocketUtil.FileTransferListener
+		socketUtil.sendFile(this, transferFile, object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
 			{
@@ -108,7 +107,7 @@ class SendFileService : Service()
 				FileTransferHandler.getInstance().currentProgress = 100
 //				broadcastIntent.putExtra("index", index)
 //				localBroadcastManager.sendBroadcast(broadcastIntent)
-				TransferFileNotification.done(this@SendFileService, index, FileTransferHandler.getInstance().currentFile!!.filePath!!)
+				TransferFileNotification.done(this@SendFileService, index, FileTransferHandler.getInstance().currentFile!!)
 //				val list = FileTransferHandler.getInstance().fileList
 //				index++
 //				if (index < list.size)

@@ -7,10 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.app.NotificationCompat
-import android.webkit.MimeTypeMap
 
 import com.janyo.janyoshare.R
-import java.io.File
+import com.janyo.janyoshare.classes.TransferFile
 
 object TransferFileNotification
 {
@@ -77,13 +76,13 @@ object TransferFileNotification
 		notify(context, builder.build(), false)
 	}
 
-	fun done(context: Context, number: Int, filePath: String)
+	fun done(context: Context, number: Int, transferFile: TransferFile)
 	{
 		val title = context.getString(R.string.hint_transfer_file_notification_done, FileTransferHandler.getInstance().currentFile!!.fileName)
-		val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(File(filePath).extension)
+		val mimeType = context.contentResolver.getType(Uri.parse(transferFile.fileUri))
 		val intent = Intent(Intent.ACTION_VIEW)
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-		intent.setDataAndType(Uri.parse(filePath), mimeType)
+		intent.setDataAndType(Uri.parse(transferFile.fileUri), mimeType)
 		val builder = NotificationCompat.Builder(context, context.getString(R.string.app_name))
 				.setSmallIcon(R.drawable.ic_send)
 				.setContentTitle(title)

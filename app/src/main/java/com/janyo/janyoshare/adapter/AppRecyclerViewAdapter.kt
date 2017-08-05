@@ -12,6 +12,7 @@ import android.os.Environment
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.ImageView
@@ -294,7 +295,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 										{
 											val transferFile = TransferFile()
 											transferFile.fileName = installApp.name + ".apk"
-											transferFile.filePath = JYFileUtil.getFilePath(installApp.name!!, installApp.versionName!!, context.getString(R.string.app_name))
+											transferFile.fileUri = FileProvider.getUriForFile(context,
+													context.getString(R.string.authorities),
+													File(JYFileUtil.getFilePath(installApp.name!!,
+															installApp.versionName!!, context.getString(R.string.app_name)))).toString()
 											transferFile.fileIconPath = installApp.iconPath
 											transferFile.fileSize = installApp.size
 											val intent = Intent(context, FileTransferConfigureActivity::class.java)

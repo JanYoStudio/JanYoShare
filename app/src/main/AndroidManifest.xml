@@ -39,10 +39,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Preference"/>
         <activity
-            android:name=".activity.FileTransferActivity"
-            android:label="@string/title_activity_file_transfer"
-            android:theme="@style/AppTheme"/>
-        <activity
             android:name=".activity.FileTransferConfigureActivity"
             android:label="@string/title_activity_file_transfer_configure"
             android:theme="@style/AppTheme"/>
@@ -98,7 +94,7 @@
         <!-- android:exported="true"/> -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="janyoshare"
+            android:authorities="@string/authorities"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
