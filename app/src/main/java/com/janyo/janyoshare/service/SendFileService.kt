@@ -15,7 +15,6 @@ import com.mystery0.tools.Logs.Logs
 class SendFileService : Service()
 {
 	private val TAG = "SendFileService"
-	//	private lateinit var localBroadcastManager: LocalBroadcastManager
 	private lateinit var errorHandler: ErrorHandler
 	private val socketUtil = SocketUtil()
 	private var index = 0
@@ -40,11 +39,6 @@ class SendFileService : Service()
 	{
 		Logs.i(TAG, "onCreate: 创建传输文件服务")
 		errorHandler = ErrorHandler(this)
-//		//注册本地广播
-//		localBroadcastManager = LocalBroadcastManager.getInstance(this)
-//		val intentFilter = IntentFilter()
-//		intentFilter.addAction(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-//		localBroadcastManager.registerReceiver(FileTransferReceiver(), intentFilter)
 	}
 
 	override fun onBind(intent: Intent): IBinder?
@@ -62,14 +56,6 @@ class SendFileService : Service()
 			{
 				thread.start()
 			}
-//			"pause" ->
-//			{
-//
-//			}
-//			"stop" ->
-//			{
-//
-//			}
 		}
 		return super.onStartCommand(intent, flags, startId)
 	}
@@ -82,7 +68,6 @@ class SendFileService : Service()
 
 	private fun sendFile(transferFile: TransferFile)
 	{
-//		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
 		socketUtil.sendFile(this, transferFile, object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
@@ -96,8 +81,6 @@ class SendFileService : Service()
 			override fun onProgress(progress: Int)
 			{
 				FileTransferHandler.getInstance().currentProgress = progress
-//				broadcastIntent.putExtra("index", index)
-//				localBroadcastManager.sendBroadcast(broadcastIntent)
 				TransferFileNotification.notify(this@SendFileService, index, "start")
 			}
 
@@ -105,14 +88,7 @@ class SendFileService : Service()
 			{
 				Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
 				FileTransferHandler.getInstance().currentProgress = 100
-//				broadcastIntent.putExtra("index", index)
-//				localBroadcastManager.sendBroadcast(broadcastIntent)
 				TransferFileNotification.done(this@SendFileService, index, FileTransferHandler.getInstance().currentFile!!)
-//				val list = FileTransferHandler.getInstance().fileList
-//				index++
-//				if (index < list.size)
-//					sendFile(list[index])
-//				else
 				FileTransferHandler.getInstance().clear()
 				stopSelf()
 			}
@@ -129,7 +105,6 @@ class SendFileService : Service()
 				}
 				errorHandler.sendMessage(message)
 				TransferFileNotification.cancel(this@SendFileService)
-//				index++
 			}
 		})
 	}

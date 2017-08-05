@@ -98,10 +98,19 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		sendFile.setOnClickListener {
-			val intent = Intent(Intent.ACTION_GET_CONTENT)
-			intent.type = "*/*"
-			intent.addCategory(Intent.CATEGORY_OPENABLE)
-			startActivityForResult(intent, CHOOSE_FILE)
+			if (FileTransferHandler.getInstance().fileList.size == 0)
+			{
+				val intent = Intent(Intent.ACTION_GET_CONTENT)
+				intent.type = "*/*"
+				intent.addCategory(Intent.CATEGORY_OPENABLE)
+				startActivityForResult(intent, CHOOSE_FILE)
+			}
+			else
+			{
+				progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
+				progressDialog.show()
+				openAP(FileTransferHandler.getInstance().fileList[0])
+			}
 		}
 
 		receiveFile.setOnClickListener {
@@ -163,7 +172,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 	fun openAP(transferFile: TransferFile)
 	{
 		progressDialog.setCancelable(true)
-		progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
 		progressDialog.setOnCancelListener {
 			Logs.i(TAG, "openAP: 监听到返回键")
 			Logs.i(TAG, "openAP: " + transferThread.isAlive)

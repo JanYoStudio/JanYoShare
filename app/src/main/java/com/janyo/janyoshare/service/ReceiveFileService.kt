@@ -17,7 +17,6 @@ import com.mystery0.tools.Logs.Logs
 class ReceiveFileService : Service()
 {
 	private val TAG = "ReceiveFileService"
-	//	private lateinit var localBroadcastManager: LocalBroadcastManager
 	private lateinit var errorHandler: ErrorHandler
 	private val socketUtil = SocketUtil()
 	private var index = 0
@@ -43,11 +42,6 @@ class ReceiveFileService : Service()
 	{
 		Logs.i(TAG, "onCreate: 创建接收文件服务")
 		errorHandler = ErrorHandler(this)
-//		//注册本地广播
-//		localBroadcastManager = LocalBroadcastManager.getInstance(this)
-//		val intentFilter = IntentFilter()
-//		intentFilter.addAction(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
-//		localBroadcastManager.registerReceiver(FileTransferReceiver(), intentFilter)
 	}
 
 	override fun onBind(intent: Intent): IBinder?
@@ -70,7 +64,6 @@ class ReceiveFileService : Service()
 	private fun receiveFile(transferFile: TransferFile)
 	{
 		val path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, getString(R.string.app_name))
-//		val broadcastIntent = Intent(getString(R.string.com_janyo_janyoshare_UPDATE_PROGRESS))
 		socketUtil.receiveFile(transferFile.fileSize, path, object : SocketUtil.FileTransferListener
 		{
 			override fun onStart()
@@ -91,14 +84,7 @@ class ReceiveFileService : Service()
 			{
 				Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
 				FileTransferHandler.getInstance().currentProgress = 100
-//				broadcastIntent.putExtra("index", index)
-//				localBroadcastManager.sendBroadcast(broadcastIntent)
 				TransferFileNotification.done(this@ReceiveFileService, index, FileTransferHandler.getInstance().currentFile!!)
-//				val list = FileTransferHandler.getInstance().fileList
-//				index++
-//				if (index < list.size)
-//					receiveFile(list[index])
-//				else
 				FileTransferHandler.getInstance().clear()
 				stopSelf()
 			}
@@ -114,7 +100,6 @@ class ReceiveFileService : Service()
 					else -> message.what = ErrorHandler.UNKNOWN_ERROR
 				}
 				errorHandler.sendMessage(message)
-//				index++
 			}
 		})
 	}
