@@ -5,11 +5,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.VectorDrawable
+import android.graphics.drawable.*
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.support.annotation.RequiresApi
 import android.support.graphics.drawable.VectorDrawableCompat
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
@@ -148,6 +148,16 @@ object JYFileUtil
 				(drawable is BitmapDrawable) -> bitmap = drawable.bitmap
 				(drawable is VectorDrawableCompat) -> bitmap = getBitmap(drawable)
 				(drawable is VectorDrawable) -> bitmap = getBitmap(drawable)
+				(drawable is AdaptiveIconDrawable) ->
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+					{
+						bitmap = getBitmap(drawable)
+					}
+					else
+					{
+						Logs.i(TAG, "saveDrawableToSd: SDK版本低于26")
+						return false
+					}
 				else ->
 				{
 					Logs.i(TAG, "saveDrawableToSd: 不支持的drawable类型")
@@ -182,6 +192,17 @@ object JYFileUtil
 		val canvas = Canvas(bitmap)
 		vectorDrawableCompat.setBounds(0, 0, canvas.width, canvas.height)
 		vectorDrawableCompat.draw(canvas)
+		return bitmap
+	}
+
+	@RequiresApi(Build.VERSION_CODES.O)
+	private fun getBitmap(adaptiveIconDrawable: AdaptiveIconDrawable): Bitmap
+	{
+		val layerDrawable = LayerDrawable(arrayOf(adaptiveIconDrawable.background, adaptiveIconDrawable.foreground))
+		val bitmap = Bitmap.createBitmap(layerDrawable.intrinsicWidth, layerDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+		val canvas = Canvas(bitmap)
+		layerDrawable.setBounds(0, 0, canvas.width, canvas.height)
+		layerDrawable.draw(canvas)
 		return bitmap
 	}
 
