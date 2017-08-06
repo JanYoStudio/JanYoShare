@@ -54,6 +54,7 @@ class SettingsActivity : PreferenceActivity()
 	private lateinit var enableExcludeRegularExpression: SwitchPreference
 	private lateinit var excludeRegularExpression: Preference
 	private lateinit var autoUploadLog: SwitchPreference
+	private lateinit var disableAccessibility: SwitchPreference
 	private lateinit var about: Preference
 	private lateinit var howToUse: Preference
 	private lateinit var openSourceAddress: Preference
@@ -93,6 +94,7 @@ class SettingsActivity : PreferenceActivity()
 		enableExcludeRegularExpression = findPreference(getString(R.string.key_enable_exclude_regular_expression)) as SwitchPreference
 		excludeRegularExpression = findPreference(getString(R.string.key_exclude_regular_expression))
 		autoUploadLog = findPreference(getString(R.string.key_auto_upload_log)) as SwitchPreference
+		disableAccessibility = findPreference(getString(R.string.key_disable_accessibility)) as SwitchPreference
 		about = findPreference(getString(R.string.key_about))
 		howToUse = findPreference(getString(R.string.key_how_to_use))
 		openSourceAddress = findPreference(getString(R.string.key_open_source_address))
@@ -110,6 +112,7 @@ class SettingsActivity : PreferenceActivity()
 		auto_clean.isChecked = settings.isAutoClean
 		developerModeEnable.isChecked = settings.isDeveloperModeEnable
 		autoUploadLog.isChecked = settings.isAutoUploadLog
+		disableAccessibility.isChecked = settings.isDisableAccessibility
 		enableExcludeList.isChecked = settings.excludeList.isNotEmpty()
 		enableExcludeNameList.isChecked = settings.excludeNameList.isNotEmpty()
 		enableExcludeSize.isChecked = settings.excludeSize != 0L
@@ -316,6 +319,29 @@ class SettingsActivity : PreferenceActivity()
 		autoUploadLog.setOnPreferenceChangeListener { _, _ ->
 			val isAutoUploadLog = !autoUploadLog.isChecked
 			settings.isAutoUploadLog = isAutoUploadLog
+			true
+		}
+		disableAccessibility.setOnPreferenceChangeListener { _, _ ->
+			val isDisableAccessibility = !disableAccessibility.isChecked
+			if (isDisableAccessibility)
+			{
+				AlertDialog.Builder(this@SettingsActivity)
+						.setTitle(" ")
+						.setMessage(R.string.disableAccessibilityWarn)
+						.setPositiveButton(R.string.action_open) { _, _ -> settings.isDisableAccessibility = true }
+						.setNegativeButton(R.string.action_cancel) { _, _ ->
+							disableAccessibility.isChecked = false
+							settings.isDisableAccessibility = false
+						}
+						.setOnDismissListener {
+							disableAccessibility.isChecked = settings.isDisableAccessibility
+						}
+						.show()
+			}
+			else
+			{
+				settings.isDisableAccessibility = false
+			}
 			true
 		}
 		about.setOnPreferenceClickListener {

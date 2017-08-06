@@ -1,6 +1,8 @@
 package com.janyo.janyoshare.activity
 
 import android.Manifest
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.Context
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +16,7 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
+import android.view.accessibility.AccessibilityManager
 import android.widget.TextView
 import android.widget.Toast
 import com.janyo.janyoshare.AppFragment
@@ -30,13 +33,14 @@ import java.io.File
 import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
+import com.mystery0.tools.SnackBar.ASnackBar
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity()
 {
 	private val TAG = "MainActivity"
-	private var settings: Settings? = null
+	private lateinit var settings: Settings
 	private val PERMISSION_CODE = 233
 	private var oneClickTime: Long = 0
 	private lateinit var currentFragment: AppFragment
@@ -85,7 +89,7 @@ class MainActivity : AppCompatActivity()
 
 		JYFileUtil.isDirExist(getString(R.string.app_name))
 		if (ContextCompat.checkSelfPermission(this,
-				Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && settings!!.isAutoClean)
+				Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && settings.isAutoClean)
 		{
 			Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
 					.show()
@@ -103,7 +107,7 @@ class MainActivity : AppCompatActivity()
 						Logs.i(TAG, "error: " + message)
 					}
 				})
-		if (settings!!.isAutoUploadLog)
+		if (settings.isAutoUploadLog)
 		{
 			CrashHandler.getInstance(this)
 					.sendException(object : CrashHandler.CatchExceptionListener
@@ -154,11 +158,11 @@ class MainActivity : AppCompatActivity()
 
 		setSupportActionBar(toolbar)
 
-		if (settings!!.isFirst)
+		if (settings.isFirst)
 		{
 			val view_howToUse = LayoutInflater.from(this).inflate(R.layout.dialog_help, NestedScrollView(this), false)
 			val textView = view_howToUse.findViewById<TextView>(R.id.autoCleanWarn)
-			if (settings!!.isAutoClean)
+			if (settings.isAutoClean)
 			{
 				textView.visibility = View.VISIBLE
 			}
@@ -180,7 +184,7 @@ class MainActivity : AppCompatActivity()
 								.setTitle(" ")
 								.setView(view_license)
 								.setPositiveButton(R.string.action_done, { _, _ ->
-									settings!!.isFirst = false
+									settings.isFirst = false
 								})
 								.show()
 					}
@@ -238,7 +242,7 @@ class MainActivity : AppCompatActivity()
 			}
 			else
 			{
-				if (settings!!.isAutoClean)
+				if (settings.isAutoClean)
 				{
 					Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
 							.show()

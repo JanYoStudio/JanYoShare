@@ -28,6 +28,7 @@ class Settings(private val context: Context)
 			if (!isDeveloperModeEnable)
 			{
 				isAutoUploadLog = false
+				isDisableAccessibility = false
 				excludeList = emptySet()
 				excludeNameList = emptySet()
 				excludeSize = 0L
@@ -55,4 +56,8 @@ class Settings(private val context: Context)
 	var excludeRegularExpression: String
 		get() = sharedPreferences.getString("excludeRegularExpression", "")
 		set(excludeRegularExpression) = sharedPreferences.edit().putString("excludeRegularExpression", excludeRegularExpression).apply()
+
+	var isDisableAccessibility: Boolean
+		get() = sharedPreferences.getBoolean("isDisableAccessibility", false)
+		set(isDisableAccessibility) = sharedPreferences.edit().putBoolean("isDisableAccessibility", isDisableAccessibility).apply()
 }
