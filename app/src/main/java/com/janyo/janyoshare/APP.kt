@@ -11,6 +11,7 @@ import java.io.File
 
 class APP : Application()
 {
+	private val TAG = "APP"
 	override fun onCreate()
 	{
 		super.onCreate()
@@ -21,9 +22,23 @@ class APP : Application()
 				.setExtensionName("log")
 				.isAutoClean(2)
 				.init()
-		val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-		val list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
-		if (list.isNotEmpty())
-			ASnackBar.disableAccessibility(this)
+		try
+		{
+			val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+			val list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
+			if (list.isNotEmpty())
+			{
+				Logs.i(TAG, "onCreate: 开启无障碍服务，尝试禁用")
+				ASnackBar.disableAccessibility(this)
+			}
+			else
+			{
+				Logs.i(TAG, "onCreate: 未开启无障碍服务")
+			}
+		}
+		catch (e: Exception)
+		{
+			Logs.e(TAG, "onCreate: $e")
+		}
 	}
 }
