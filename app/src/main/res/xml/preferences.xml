@@ -50,6 +50,10 @@
             android:key="@string/key_auto_upload_log"
             android:title="@string/title_auto_upload_log"/>
 
+        <SwitchPreference
+            android:key="@string/key_disable_accessibility"
+            android:title="@string/title_disable_accessibility"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

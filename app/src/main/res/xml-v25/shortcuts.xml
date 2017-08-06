@@ -11,4 +11,15 @@
             android:targetClass="com.janyo.janyoshare.activity.FileTransferConfigureActivity"
             android:targetPackage="com.janyo.janyoshare"/>
     </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_disable_accessibility"
+        android:shortcutId="disable_accessibility"
+        android:shortcutLongLabel="@string/hint_disable_accessibility_text"
+        android:shortcutShortLabel="@string/hint_disable_accessibility_text">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.janyo.janyoshare.activity.DisableAccessibilityActivity"
+            android:targetPackage="com.janyo.janyoshare"/>
+    </shortcut>
 </shortcuts>

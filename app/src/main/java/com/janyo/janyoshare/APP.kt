@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.Application
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
+import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.CrashHandler.CrashHandler
 import com.mystery0.tools.Logs.Logs
 import com.mystery0.tools.SnackBar.ASnackBar
@@ -22,23 +23,16 @@ class APP : Application()
 				.setExtensionName("log")
 				.isAutoClean(2)
 				.init()
-		try
+		val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+		val list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
+		if (Settings(this).isDisableAccessibility && list.isNotEmpty())
 		{
-			val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-			val list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
-			if (list.isNotEmpty())
-			{
-				Logs.i(TAG, "onCreate: 开启无障碍服务，尝试禁用")
-				ASnackBar.disableAccessibility(this)
-			}
-			else
-			{
-				Logs.i(TAG, "onCreate: 未开启无障碍服务")
-			}
+			Logs.i(TAG, "onCreate: 开启无障碍服务，尝试禁用")
+			ASnackBar.disableAccessibility(this)
 		}
-		catch (e: Exception)
+		else
 		{
-			Logs.e(TAG, "onCreate: $e")
+			Logs.i(TAG, "onCreate: 未开启无障碍服务或者关闭强制")
 		}
 	}
 }
