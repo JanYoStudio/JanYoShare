@@ -43,7 +43,7 @@
     <string name="hint_recopy">重新提取</string>
     <string name="hint_copy_done">文件提取成功！存储路径为SD卡根目录下%1$s文件夹。</string>
     <string name="hint_new_name">请输入新的文件名(不包含扩展名)</string>
-    <string name="hint_new_name_extension">请输入新的扩展名名(留空则为默认扩展名)</string>
+    <string name="hint_new_name_extension">请输入新的扩展名名(留空则默认为jys)</string>
     <string name="hint_rename_error">重命名失败，已取消分享！</string>
     <string name="hint_clear_file">文件清除%1$s！</string>
     <string name="hint_select_sort">请选择排序方式</string>
@@ -92,6 +92,7 @@
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
     <string name="address_become_test">https://play.google.com/apps/testing/com.janyo.janyoshare</string>
     <string name="address_join_test_group">https://jq.qq.com/?_wv=1027&amp;k=4Ea0d0A</string>
+    <string name="address_home_page">http://janyo.pw/</string>
 
     <string name="help_text_1">JY Share可以使你快捷 分享/提取 系统预装/用户安装 的应用程序，并且在操作过程中自动重命名文件或者手动重命名，使其具备一个包含意义的文件名。</string>
     <string name="help_text_2">通过单击列表中的应用然后选择对应的操作，这将调用系统分享组件，应用将以附件形式附加到诸如邮件，或者一些支持文件共享的社交工具。此操作将会在SD卡JY Share目录产生临时文件，将在下一次启动程序时自动清理(默认开启)。为保证临时文件不会对你的剩余空间造成不必要的占用，我们建议你在应用设置中开启自动清理临时文件(默认开启) 。</string>

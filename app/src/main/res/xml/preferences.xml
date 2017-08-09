@@ -88,6 +88,10 @@
             android:title="@string/title_join_test"/>
 
         <Preference
+            android:key="@string/key_home_page"
+            android:title="@string/title_home_page"/>
+
+        <Preference
             android:key="@string/key_check_update"
             android:title="@string/title_check_update"/>
 

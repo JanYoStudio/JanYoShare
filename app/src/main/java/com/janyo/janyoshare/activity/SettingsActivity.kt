@@ -69,6 +69,7 @@ class SettingsActivity : PreferenceActivity()
 	private lateinit var versionCode: Preference
 	private lateinit var support: Preference
 	private lateinit var joinTest: Preference
+	private lateinit var homePage: Preference
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var settingHandler: SettingHandler
 	private lateinit var progressDialog: ProgressDialog
@@ -110,6 +111,7 @@ class SettingsActivity : PreferenceActivity()
 		versionCode = findPreference(getString(R.string.key_version_code))
 		support = findPreference(getString(R.string.key_support))
 		joinTest = findPreference(getString(R.string.key_join_test))
+		homePage = findPreference(getString(R.string.key_home_page))
 
 		progressDialog = ProgressDialog(this)
 		progressDialog.setMessage(getString(R.string.hint_exclude_list_loading))
@@ -527,6 +529,13 @@ class SettingsActivity : PreferenceActivity()
 						startActivity(intent)
 					})
 					.show()
+			false
+		}
+		homePage.setOnPreferenceClickListener {
+			val intent = Intent(Intent.ACTION_VIEW)
+			val content_url = Uri.parse(getString(R.string.address_home_page))
+			intent.data = content_url
+			startActivity(intent)
 			false
 		}
 	}
