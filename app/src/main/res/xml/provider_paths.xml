@@ -3,4 +3,7 @@
     <external-path
         name="JYShare"
         path="JY Share/"/>
+    <external-path
+        name="OBB"
+        path="Android/obb/"/>
 </paths>

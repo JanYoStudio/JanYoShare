@@ -9,7 +9,6 @@ import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import com.janyo.janyoshare.R
-import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.util.JYFileUtil
 
 class RenameHandler(private val activity: Activity) : Handler()
@@ -20,16 +19,15 @@ class RenameHandler(private val activity: Activity) : Handler()
 		{
 			1 ->
 			{
-				val installApp = message.obj as InstallApp
+				val oldName = message.obj.toString()
 				val coordinatorLayout: CoordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
 				val view = LayoutInflater.from(activity).inflate(R.layout.dialog_edit, TextInputLayout(activity), false)
 				val text: TextInputLayout = view.findViewById(R.id.layout)
-				text.hint = installApp.name + "_" + installApp.versionName
 				AlertDialog.Builder(activity)
 						.setTitle(R.string.hint_new_name)
 						.setView(view)
 						.setPositiveButton(R.string.action_done, { _, _ ->
-							if (JYFileUtil.fileRename(installApp.name!!, installApp.versionName!!, activity.getString(R.string.app_name), text.editText!!.text.toString()))
+							if (JYFileUtil.fileRename(oldName, activity.getString(R.string.app_name), text.editText!!.text.toString(), "apk"))
 							{
 								JYFileUtil.doShare(activity, text.editText!!.text.toString() + ".apk", activity.getString(R.string.app_name))
 							}

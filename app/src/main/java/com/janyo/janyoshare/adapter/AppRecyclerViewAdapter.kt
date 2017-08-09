@@ -8,7 +8,6 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
@@ -85,9 +84,9 @@ class AppRecyclerViewAdapter(private val context: Context,
 									Thread(Runnable {
 										val code: Int
 										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 										progressDialog.dismiss()
 										when (code)
 										{
@@ -102,12 +101,15 @@ class AppRecyclerViewAdapter(private val context: Context,
 														.setAction(R.string.hint_recopy, {
 															progressDialog.show()
 															Thread(Runnable {
-																JYFileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
+																if (settings.customFileName.format == "")
+																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
+																else
+																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
 																val temp: Int
 																if (settings.customFileName.format == "")
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name))
+																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 																else
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name))
+																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 																progressDialog.dismiss()
 																if (temp == 1)
 																{
@@ -146,9 +148,9 @@ class AppRecyclerViewAdapter(private val context: Context,
 									Thread(Runnable {
 										val code: Int
 										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 										progressDialog.dismiss()
 										when (code)
 										{
@@ -163,19 +165,22 @@ class AppRecyclerViewAdapter(private val context: Context,
 														.setAction(R.string.hint_recopy, {
 															progressDialog.show()
 															Thread(Runnable {
-																JYFileUtil.deleteFile(File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), installApp.name + "_" + installApp.versionName + ".apk"))
+																if (settings.customFileName.format == "")
+																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
+																else
+																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
 																val temp: Int
 																if (settings.customFileName.format == "")
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name))
+																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 																else
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name))
+																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 																progressDialog.dismiss()
 																if (temp == 1)
 																{
 																	if (settings.customFileName.format == "")
-																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name))
+																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
 																	else
-																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name))
+																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 																}
 																else
 																{
@@ -193,9 +198,9 @@ class AppRecyclerViewAdapter(private val context: Context,
 																if (event != DISMISS_EVENT_ACTION)
 																{
 																	if (settings.customFileName.format == "")
-																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name))
+																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
 																	else
-																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name))
+																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 																}
 															}
 														})
@@ -204,9 +209,9 @@ class AppRecyclerViewAdapter(private val context: Context,
 											1 ->
 											{
 												if (settings.customFileName.format == "")
-													JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name))
+													JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
 												else
-													JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name))
+													JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 											}
 										}
 									}).start()
@@ -226,15 +231,19 @@ class AppRecyclerViewAdapter(private val context: Context,
 									Thread(Runnable {
 										val code: Int
 										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 										progressDialog.dismiss()
 										if (code != -1)
 										{
 											val message = Message()
 											message.what = 1
 											message.obj = installApp
+											if (settings.customFileName.format == "")
+												message.obj = installApp.name + "_" + installApp.versionName
+											else
+												message.obj = settings.customFileName.toFormat(installApp)
 											renameHandler.sendMessage(message)
 										}
 										else
@@ -259,16 +268,16 @@ class AppRecyclerViewAdapter(private val context: Context,
 									Thread(Runnable {
 										val code: Int
 										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 										progressDialog.dismiss()
 										if (code != -1)
 										{
 											if (settings.customFileName.format == "")
-												shareList.add(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name)))
+												shareList.add(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
 											else
-												shareList.add(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name)))
+												shareList.add(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
 											val files = JYFileUtil.checkObb(installApp.packageName!!)
 											if (files != null)
 											{
@@ -290,9 +299,9 @@ class AppRecyclerViewAdapter(private val context: Context,
 																else
 																{
 																	if (settings.customFileName.format == "")
-																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name))
+																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
 																	else
-																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name))
+																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 																}
 																shareList.clear()
 															}
@@ -309,9 +318,9 @@ class AppRecyclerViewAdapter(private val context: Context,
 																	event: Int)
 															{
 																if (settings.customFileName.format == "")
-																	JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name))
+																	JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
 																else
-																	JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name))
+																	JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 																shareList.clear()
 															}
 														})
@@ -335,20 +344,23 @@ class AppRecyclerViewAdapter(private val context: Context,
 									Thread(Runnable {
 										val code: Int
 										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name))
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 										progressDialog.dismiss()
 										if (code != -1)
 										{
 											val transferFile = TransferFile()
-											transferFile.fileName = installApp.name + ".apk"
+											if (settings.customFileName.format == "")
+												transferFile.fileName = installApp.name + ".apk"
+											else
+												transferFile.fileName = settings.customFileName.toFormat(installApp) + ".apk"
 											transferFile.fileUri = FileProvider.getUriForFile(context,
 													context.getString(R.string.authorities),
 													if (settings.customFileName.format == "")
-														JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name))
+														JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk")
 													else
-														JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name))
+														JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 											).toString()
 											transferFile.fileIconPath = installApp.iconPath
 											transferFile.fileSize = installApp.size
