@@ -51,29 +51,31 @@ object JYFileUtil
 		return File(Environment.getExternalStoragePublicDirectory(dir), fileName).absolutePath
 	}
 
-	fun getFilePath(format: CustomFormat, installApp: InstallApp, dir: String): File
+	fun getFilePath(format: CustomFormat, installApp: InstallApp, dir: String,
+					extensionName: String): File
 	{
-		return File(Environment.getExternalStoragePublicDirectory(dir), format.toFormat(installApp) + ".apk")
+		return File(Environment.getExternalStoragePublicDirectory(dir), format.toFormat(installApp) + "." + extensionName)
 	}
 
-	fun getFilePath(installApp: InstallApp, dir: String): File
+	fun getFilePath(installApp: InstallApp, dir: String, extensionName: String): File
 	{
-		return File(Environment.getExternalStoragePublicDirectory(dir), installApp.name + "_" + installApp.versionName + ".apk")
+		return File(Environment.getExternalStoragePublicDirectory(dir), installApp.name + "_" + installApp.versionName + "." + extensionName)
 	}
 
-	fun fileToSD(inputPath: String, format: CustomFormat, installApp: InstallApp, dir: String): Int
+	fun fileToSD(inputPath: String, format: CustomFormat, installApp: InstallApp, dir: String,
+				 extensionName: String): Int
 	{
-		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), format.toFormat(installApp)).absolutePath)
+		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), format.toFormat(installApp) + "." + extensionName).absolutePath)
 	}
 
-	fun fileToSD(inputPath: String, fileName: String, dir: String): Int
+	fun fileToSD(inputPath: String, fileName: String, dir: String, extensionName: String): Int
 	{
-		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), fileName).absolutePath)
+		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), fileName + "." + extensionName).absolutePath)
 	}
 
-	fun fileToSD(inputPath: String, installApp: InstallApp, dir: String): Int
+	fun fileToSD(inputPath: String, installApp: InstallApp, dir: String, extensionName: String): Int
 	{
-		return fileToSD(inputPath, installApp.name + "_" + installApp.versionName + ".apk", dir)
+		return fileToSD(inputPath, installApp.name + "_" + installApp.versionName, dir, extensionName)
 	}
 
 	private fun fileCopy(inputPath: String, outPath: String): Int
@@ -99,14 +101,13 @@ object JYFileUtil
 		{
 			e.printStackTrace()
 		}
-
 		return code
 	}
 
-	fun fileRename(name: String, versionName: String, dir: String, newName: String): Boolean
+	fun fileRename(oldName: String, dir: String, newName: String, extensionName: String): Boolean
 	{
-		val file = File(Environment.getExternalStoragePublicDirectory(dir), name + "_" + versionName + ".apk")
-		return file.renameTo(File(Environment.getExternalStoragePublicDirectory(dir), newName + ".apk"))
+		val file = File(Environment.getExternalStoragePublicDirectory(dir), oldName + "." + extensionName)
+		return file.renameTo(File(Environment.getExternalStoragePublicDirectory(dir), newName + "." + extensionName))
 	}
 
 	fun isDirExist(dir: String): Boolean
@@ -143,7 +144,7 @@ object JYFileUtil
 	{
 		val uriList = ArrayList<Uri>()
 		files.forEach {
-			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 				uriList.add(FileProvider.getUriForFile(context, context.getString(R.string.authorities), it))
 			else
 				uriList.add(Uri.fromFile(it))
@@ -159,14 +160,15 @@ object JYFileUtil
 		}
 	}
 
-	fun doShare(context: Context, format: CustomFormat, installApp: InstallApp, dir: String)
+	fun doShare(context: Context, format: CustomFormat, installApp: InstallApp, dir: String,
+				extensionName: String)
 	{
-		doShare(context, format.toFormat(installApp) + ".apk", dir)
+		doShare(context, format.toFormat(installApp) + "." + extensionName, dir)
 	}
 
-	fun doShare(context: Context, installApp: InstallApp, dir: String)
+	fun doShare(context: Context, installApp: InstallApp, dir: String, extensionName: String)
 	{
-		doShare(context, installApp.name + "_" + installApp.versionName + ".apk", dir)
+		doShare(context, installApp.name + "_" + installApp.versionName + "." + extensionName, dir)
 	}
 
 	fun doShare(context: Context, fileName: String, dir: String)
