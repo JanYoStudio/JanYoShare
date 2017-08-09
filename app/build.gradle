@@ -4,8 +4,8 @@ apply plugin: 'com.nillith.autoversion'
 apply plugin: 'kotlin-android-extensions'
 
 def a = 2
-def b = 6
-def c = 5
+def b = 7
+def c = 0
 
 autoVersion {
     major a
