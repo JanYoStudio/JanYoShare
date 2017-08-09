@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.classes.CustomFormat
 
 class Settings(private val context: Context)
 {
@@ -60,4 +61,8 @@ class Settings(private val context: Context)
 	var isDisableAccessibility: Boolean
 		get() = sharedPreferences.getBoolean("isDisableAccessibility", false)
 		set(isDisableAccessibility) = sharedPreferences.edit().putBoolean("isDisableAccessibility", isDisableAccessibility).apply()
+
+	var customFileName: CustomFormat
+		get() = CustomFormat(sharedPreferences.getString("customFileName", ""))
+		set(customFileName) = sharedPreferences.edit().putString("customFileName", customFileName.format).apply()
 }

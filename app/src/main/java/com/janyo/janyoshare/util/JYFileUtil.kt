@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.FileProvider
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
 import com.mystery0.tools.Logs.Logs
 import java.io.*
@@ -50,15 +51,29 @@ object JYFileUtil
 		return File(Environment.getExternalStoragePublicDirectory(dir), fileName).absolutePath
 	}
 
-	fun getFilePath(fileName: String, version: String, dir: String): String
+	fun getFilePath(format: CustomFormat, installApp: InstallApp, dir: String): File
 	{
-		return File(Environment.getExternalStoragePublicDirectory(dir), fileName).absolutePath + "_" + version + ".apk"
+		return File(Environment.getExternalStoragePublicDirectory(dir), format.toFormat(installApp) + ".apk")
 	}
 
-	fun fileToSD(inputPath: String, fileName: String, version: String, dir: String): Int
+	fun getFilePath(installApp: InstallApp, dir: String): File
 	{
-		val outFile = File(Environment.getExternalStoragePublicDirectory(dir), fileName)
-		return fileCopy(inputPath, outFile.absolutePath + "_" + version + ".apk")
+		return File(Environment.getExternalStoragePublicDirectory(dir), installApp.name + "_" + installApp.versionName + ".apk")
+	}
+
+	fun fileToSD(inputPath: String, format: CustomFormat, installApp: InstallApp, dir: String): Int
+	{
+		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), format.toFormat(installApp)).absolutePath)
+	}
+
+	fun fileToSD(inputPath: String, fileName: String, dir: String): Int
+	{
+		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), fileName).absolutePath)
+	}
+
+	fun fileToSD(inputPath: String, installApp: InstallApp, dir: String): Int
+	{
+		return fileToSD(inputPath, installApp.name + "_" + installApp.versionName + ".apk", dir)
 	}
 
 	private fun fileCopy(inputPath: String, outPath: String): Int
@@ -144,9 +159,14 @@ object JYFileUtil
 		}
 	}
 
-	fun doShare(context: Context, name: String, versionName: String, dir: String)
+	fun doShare(context: Context, format: CustomFormat, installApp: InstallApp, dir: String)
 	{
-		doShare(context, name + "_" + versionName + ".apk", dir)
+		doShare(context, format.toFormat(installApp) + ".apk", dir)
+	}
+
+	fun doShare(context: Context, installApp: InstallApp, dir: String)
+	{
+		doShare(context, installApp.name + "_" + installApp.versionName + ".apk", dir)
 	}
 
 	fun doShare(context: Context, fileName: String, dir: String)
