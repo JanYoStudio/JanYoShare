@@ -15,7 +15,9 @@ import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,12 +26,15 @@ import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.toolbox.Volley
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.classes.CustomFormat
+import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.PayHandler
 import com.janyo.janyoshare.handler.SettingHandler
 import com.janyo.janyoshare.util.AppManager
 
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.Logs.Logs
+import kotlinx.android.synthetic.main.dialog_custom_name_format.*
 import java.util.*
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
@@ -45,6 +50,7 @@ class SettingsActivity : PreferenceActivity()
 	private lateinit var auto_clean: SwitchPreference
 	private lateinit var enableExcludeList: SwitchPreference
 	private lateinit var excludeList: Preference
+	private lateinit var customNameFormat: Preference
 	private lateinit var developerMode: PreferenceCategory
 	private lateinit var developerModeEnable: SwitchPreference
 	private lateinit var enableExcludeNameList: SwitchPreference
@@ -85,6 +91,7 @@ class SettingsActivity : PreferenceActivity()
 		auto_clean = findPreference(getString(R.string.key_auto_clean)) as SwitchPreference
 		enableExcludeList = findPreference(getString(R.string.key_enable_exclude_list)) as SwitchPreference
 		excludeList = findPreference(getString(R.string.key_exclude_list))
+		customNameFormat = findPreference(getString(R.string.key_custom_name_format))
 		developerMode = findPreference(getString(R.string.key_developer_mode)) as PreferenceCategory
 		developerModeEnable = findPreference(getString(R.string.key_developer_mode_enable)) as SwitchPreference
 		enableExcludeNameList = findPreference(getString(R.string.key_enable_exclude_name)) as SwitchPreference
@@ -130,6 +137,7 @@ class SettingsActivity : PreferenceActivity()
 		if (settings.excludeNameList.isNotEmpty())
 			excludeNameList.summary = getNameList(settings.excludeNameList)
 		excludeNameList.isEnabled = settings.excludeNameList.isNotEmpty()
+		customNameFormat.summary = settings.customFileName.format
 		if (settings.excludeSize != 0L)
 			excludeSize.summary = (settings.excludeSize.toFloat() / 1048576f).toString()
 		excludeSize.isEnabled = settings.excludeSize != 0L
@@ -212,6 +220,43 @@ class SettingsActivity : PreferenceActivity()
 				message.obj = allApp
 				settingHandler.sendMessage(message)
 			}).start()
+			false
+		}
+		customNameFormat.setOnPreferenceClickListener {
+			val view = LayoutInflater.from(this).inflate(R.layout.dialog_custom_name_format, LinearLayout(this), false)
+			val textInputLayout: TextInputLayout = view.findViewById(R.id.textInputLayout)
+			val showText: TextView = view.findViewById(R.id.show)
+			showText.text = getString(R.string.hint_custom_name_format_show, "")
+			val testApp = InstallApp()
+			testApp.name = getString(R.string.app_name)
+			testApp.versionName = getString(R.string.app_version)
+			testApp.versionCode = getString(R.string.app_version_code).toInt()
+			testApp.packageName = getString(R.string.app_package_name)
+			textInputLayout.editText!!.addTextChangedListener(object : TextWatcher
+			{
+				override fun afterTextChanged(p0: Editable)
+				{
+					val format = CustomFormat(p0.toString())
+					showText.text = getString(R.string.hint_custom_name_format_show, format.toFormat(testApp))
+				}
+
+				override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int)
+				{
+				}
+
+				override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int)
+				{
+				}
+			})
+			AlertDialog.Builder(this)
+					.setTitle(R.string.hint_custom_name_format_title)
+					.setView(view)
+					.setPositiveButton(R.string.action_done, { _, _ ->
+						val temp = textInputLayout.editText!!.text.toString()
+						settings.customFileName = CustomFormat(temp)
+					})
+					.setNegativeButton(R.string.action_cancel, null)
+					.show()
 			false
 		}
 		enableExcludeNameList.setOnPreferenceChangeListener { _, _ ->

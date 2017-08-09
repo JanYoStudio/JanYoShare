@@ -31,6 +31,7 @@ object AppManager
 				{
 					installApp.name = packageInfo.applicationInfo.loadLabel(packageManager).toString()
 					installApp.versionName = packageInfo.versionName
+					installApp.versionCode = packageInfo.versionCode
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
 					val path = context.cacheDir.absolutePath + File.separator + installApp.packageName
@@ -59,6 +60,7 @@ object AppManager
 				{
 					installApp.name = packageInfo.applicationInfo.loadLabel(packageManager).toString()
 					installApp.versionName = packageInfo.versionName
+					installApp.versionCode = packageInfo.versionCode
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
 					val path = context.cacheDir.absolutePath + File.separator + installApp.packageName

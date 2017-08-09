@@ -28,11 +28,13 @@ android {
     buildTypes {
         debug {
             resValue "string", "app_version", a + '.' + b + '.' + c
+            resValue "string", "app_version_code", autoVersion.code + ''
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
             resValue "string", "app_version", a + '.' + b + '.' + c
+            resValue "string", "app_version_code", autoVersion.code + ''
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

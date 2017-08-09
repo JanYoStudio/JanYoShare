@@ -69,4 +69,7 @@
     <string name="key_disable_accessibility">key_disable_accessibility</string>
     <string name="title_disable_accessibility">强行打开SnackBar动画（开启无障碍服务情况下）</string>
 
+    <string name="key_custom_name_format">key_custom_name_format</string>
+    <string name="title_custom_name_format">自定义文件名格式</string>
+
 </resources>
