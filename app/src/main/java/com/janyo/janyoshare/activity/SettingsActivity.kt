@@ -34,7 +34,6 @@ import com.janyo.janyoshare.util.AppManager
 
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.Logs.Logs
-import kotlinx.android.synthetic.main.dialog_custom_name_format.*
 import java.util.*
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
@@ -254,6 +253,7 @@ class SettingsActivity : PreferenceActivity()
 					.setPositiveButton(R.string.action_done, { _, _ ->
 						val temp = textInputLayout.editText!!.text.toString()
 						settings.customFileName = CustomFormat(temp)
+						customNameFormat.summary = temp
 					})
 					.setNegativeButton(R.string.action_cancel, null)
 					.show()
