@@ -180,19 +180,19 @@ object AppManager
 			}
 			4 -> while (low < high)
 			{
-				while (low < high && A[high]!!.installTime >= pivot!!.installTime)
+				while (low < high && A[high]!!.installTime <= pivot!!.installTime)
 					--high
 				A[low] = A[high]
-				while (low < high && A[low]!!.installTime <= pivot!!.installTime)
+				while (low < high && A[low]!!.installTime >= pivot!!.installTime)
 					++low
 				A[high] = A[low]
 			}
 			5 -> while (low < high)
 			{
-				while (low < high && A[high]!!.updateTime >= pivot!!.updateTime)
+				while (low < high && A[high]!!.updateTime <= pivot!!.updateTime)
 					--high
 				A[low] = A[high]
-				while (low < high && A[low]!!.updateTime <= pivot!!.updateTime)
+				while (low < high && A[low]!!.updateTime >= pivot!!.updateTime)
 					++low
 				A[high] = A[low]
 			}
