@@ -72,4 +72,7 @@
     <string name="key_custom_name_format">key_custom_name_format</string>
     <string name="title_custom_name_format">自定义文件名格式</string>
 
+    <string name="key_home_page">key_home_page</string>
+    <string name="title_home_page">应用官网（提供历史版本下载）</string>
+
 </resources>
