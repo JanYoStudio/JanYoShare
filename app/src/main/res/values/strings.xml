@@ -43,6 +43,7 @@
     <string name="hint_recopy">重新提取</string>
     <string name="hint_copy_done">文件提取成功！存储路径为SD卡根目录下%1$s文件夹。</string>
     <string name="hint_new_name">请输入新的文件名(不包含扩展名)</string>
+    <string name="hint_new_name_extension">请输入新的扩展名名(留空则为默认扩展名)</string>
     <string name="hint_rename_error">重命名失败，已取消分享！</string>
     <string name="hint_clear_file">文件清除%1$s！</string>
     <string name="hint_select_sort">请选择排序方式</string>
@@ -85,6 +86,7 @@
     <string name="hint_custom_name_format_title">自定义命名格式</string>
     <string name="hint_custom_name_format_text">%N代表应用名称，\n%V代表应用的版本名称，\n%W代表应用的版本号，\n%P代表应用的包名</string>
     <string name="hint_custom_name_format_show">当前格式示例：%1$s</string>
+    <string name="hint_jys_rename_error">重命名失败！</string>
 
     <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
@@ -119,6 +121,7 @@
         <item>仅提取</item>
         <item>提取并分享</item>
         <item>重命名并分享</item>
+        <item>修改扩展名后分享</item>
         <item>提取后和数据包一起分享</item>
         <item>面对面分享</item>
     </string-array>

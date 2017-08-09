@@ -27,9 +27,34 @@ class RenameHandler(private val activity: Activity) : Handler()
 						.setTitle(R.string.hint_new_name)
 						.setView(view)
 						.setPositiveButton(R.string.action_done, { _, _ ->
-							if (JYFileUtil.fileRename(oldName, activity.getString(R.string.app_name), text.editText!!.text.toString(), "apk"))
+							if (JYFileUtil.fileRename(oldName, activity.getString(R.string.app_name), text.editText!!.text.toString(), "apk", "apk"))
 							{
 								JYFileUtil.doShare(activity, text.editText!!.text.toString() + ".apk", activity.getString(R.string.app_name))
+							}
+							else
+							{
+								Snackbar.make(coordinatorLayout, R.string.hint_rename_error, Snackbar.LENGTH_SHORT)
+										.show()
+							}
+						})
+						.show()
+			}
+			2 ->
+			{
+				val oldName = message.obj.toString()
+				val coordinatorLayout: CoordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
+				val view = LayoutInflater.from(activity).inflate(R.layout.dialog_edit, TextInputLayout(activity), false)
+				val text: TextInputLayout = view.findViewById(R.id.layout)
+				AlertDialog.Builder(activity)
+						.setTitle(R.string.hint_new_name_extension)
+						.setView(view)
+						.setPositiveButton(R.string.action_done, { _, _ ->
+							var temp = text.editText!!.text.toString()
+							if (temp == "")
+								temp = "jys"
+							if (JYFileUtil.fileRename(oldName, activity.getString(R.string.app_name), oldName, "apk", temp))
+							{
+								JYFileUtil.doShare(activity, oldName + "." + temp, activity.getString(R.string.app_name))
 							}
 							else
 							{

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorAccent">#ff4081</color>
+    <color name="ic_disable_accessibility_background">#FFFFFF</color>
     <color name="textColorBlack">#000000</color>
     <color name="textColorBlue">#66CCFF</color>
     <color name="textColorWhite">#FFFFFF</color>

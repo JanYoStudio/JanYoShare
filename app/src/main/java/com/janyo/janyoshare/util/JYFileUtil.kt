@@ -104,10 +104,11 @@ object JYFileUtil
 		return code
 	}
 
-	fun fileRename(oldName: String, dir: String, newName: String, extensionName: String): Boolean
+	fun fileRename(oldName: String, dir: String, newName: String, oldExtensionName: String,
+				   newExtensionName: String): Boolean
 	{
-		val file = File(Environment.getExternalStoragePublicDirectory(dir), oldName + "." + extensionName)
-		return file.renameTo(File(Environment.getExternalStoragePublicDirectory(dir), newName + "." + extensionName))
+		val file = File(Environment.getExternalStoragePublicDirectory(dir), oldName + "." + oldExtensionName)
+		return file.renameTo(File(Environment.getExternalStoragePublicDirectory(dir), newName + "." + newExtensionName))
 	}
 
 	fun isDirExist(dir: String): Boolean

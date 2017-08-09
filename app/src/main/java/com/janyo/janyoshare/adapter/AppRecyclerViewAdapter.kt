@@ -274,6 +274,43 @@ class AppRecyclerViewAdapter(private val context: Context,
 										progressDialog.dismiss()
 										if (code != -1)
 										{
+											val message = Message()
+											message.what = 2
+											message.obj = installApp
+											if (settings.customFileName.format == "")
+												message.obj = installApp.name + "_" + installApp.versionName
+											else
+												message.obj = settings.customFileName.toFormat(installApp)
+											renameHandler.sendMessage(message)
+										}
+										else
+										{
+											Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
+													.show()
+										}
+									}).start()
+								}
+								else
+								{
+									progressDialog.dismiss()
+									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
+											.show()
+								}
+							}
+							4 ->
+							{
+								progressDialog.show()
+								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
+								{
+									Thread(Runnable {
+										val code: Int
+										if (settings.customFileName.format == "")
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
+										else
+											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+										progressDialog.dismiss()
+										if (code != -1)
+										{
 											if (settings.customFileName.format == "")
 												shareList.add(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
 											else
@@ -336,7 +373,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 											.show()
 								}
 							}
-							4 ->
+							5 ->
 							{
 								progressDialog.show()
 								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
