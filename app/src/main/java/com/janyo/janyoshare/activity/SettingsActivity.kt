@@ -34,6 +34,7 @@ import com.janyo.janyoshare.util.AppManager
 
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.Logs.Logs
+import com.mystery0.tools.SnackBar.ASnackBar
 import java.util.*
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
@@ -225,6 +226,7 @@ class SettingsActivity : PreferenceActivity()
 			val view = LayoutInflater.from(this).inflate(R.layout.dialog_custom_name_format, LinearLayout(this), false)
 			val textInputLayout: TextInputLayout = view.findViewById(R.id.textInputLayout)
 			val showText: TextView = view.findViewById(R.id.show)
+			textInputLayout.editText!!.setText(settings.customFileName.format)
 			showText.text = getString(R.string.hint_custom_name_format_show, "")
 			val testApp = InstallApp()
 			testApp.name = getString(R.string.app_name)
@@ -380,6 +382,10 @@ class SettingsActivity : PreferenceActivity()
 						}
 						.setOnDismissListener {
 							disableAccessibility.isChecked = settings.isDisableAccessibility
+							if (settings.isDisableAccessibility)
+							{
+								ASnackBar.disableAccessibility(this)
+							}
 						}
 						.show()
 			}
