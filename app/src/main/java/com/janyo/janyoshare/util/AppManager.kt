@@ -42,8 +42,9 @@ object AppManager
 					{
 						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
 					}
-					installApp.iconPath = path
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
+					installApp.installTime = packageInfo.firstInstallTime
+					installApp.updateTime = packageInfo.lastUpdateTime
 					if (!isExclude || checkExclude(context, installApp))
 					{
 						installAppList.add(installApp)
@@ -70,6 +71,8 @@ object AppManager
 						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
 					}
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
+					installApp.installTime = packageInfo.firstInstallTime
+					installApp.updateTime = packageInfo.lastUpdateTime
 					if (!isExclude || checkExclude(context, installApp))
 					{
 						installAppList.add(installApp)
@@ -170,6 +173,24 @@ object AppManager
 					--high
 				A[low] = A[high]
 				while (low < high && A[low]!!.packageName!!.compareTo(pivot!!.packageName!!, ignoreCase = true) <= 0)
+					++low
+				A[high] = A[low]
+			}
+			4 -> while (low < high)
+			{
+				while (low < high && A[high]!!.installTime >= pivot!!.installTime)
+					--high
+				A[low] = A[high]
+				while (low < high && A[low]!!.installTime <= pivot!!.installTime)
+					++low
+				A[high] = A[low]
+			}
+			5 -> while (low < high)
+			{
+				while (low < high && A[high]!!.updateTime >= pivot!!.updateTime)
+					--high
+				A[low] = A[high]
+				while (low < high && A[low]!!.updateTime <= pivot!!.updateTime)
 					++low
 				A[high] = A[low]
 			}
