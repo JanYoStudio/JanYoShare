@@ -46,14 +46,13 @@ class AppRecyclerViewAdapter(private val context: Context,
 	{
 		sendHandler.progressDialog = progressDialog
 		sendHandler.context = context
-
-
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder
 	{
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_app, parent, false)
-		return ViewHolder(view)
+		val holder = ViewHolder(view)
+		return holder
 	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int)

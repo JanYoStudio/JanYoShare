@@ -206,7 +206,7 @@ object JYFileUtil
 					return false
 				}
 			}
-			bitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+			bitmap.compress(Bitmap.CompressFormat.PNG, 10, out)
 			out.close()
 		}
 		catch (e: IOException)
