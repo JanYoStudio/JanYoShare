@@ -22,7 +22,7 @@ class ReceiveFileService : Service()
 	private var index = 0
 
 	private val thread = Thread(Runnable {
-		socketUtil.createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort)
+		socketUtil.createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort1)
 		//获取请求头
 		val obj = socketUtil.receiveObject()
 		if (obj != null)

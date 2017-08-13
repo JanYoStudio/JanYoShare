@@ -3,7 +3,7 @@ package com.janyo.janyoshare.util
 import android.content.Context
 import com.mystery0.tools.Logs.Logs
 import java.net.NetworkInterface
-import java.net.SocketException
+import java.util.concurrent.Executors
 
 class WIFIUtil(var context: Context, val port: Int)
 {
@@ -32,7 +32,7 @@ class WIFIUtil(var context: Context, val port: Int)
 				}
 			}
 		}
-		catch (e: SocketException)
+		catch (e: Exception)
 		{
 			e.printStackTrace()
 		}
@@ -49,13 +49,14 @@ class WIFIUtil(var context: Context, val port: Int)
 			return
 		}
 
+		val cacheThreadPool = Executors.newCachedThreadPool()//创建线程池
 		for (i in 0..255)
 		{
-			Thread(Runnable {
+			cacheThreadPool.execute {
 				val currentIP = localAddressIndex + i
 				if (currentIP == localAddress)
 				{
-					return@Runnable
+					return@execute
 				}
 				val socketUtil = SocketUtil()
 				try
@@ -75,7 +76,7 @@ class WIFIUtil(var context: Context, val port: Int)
 					if (i == 255)
 						scanListener.onFinish(index != 0)
 				}
-			}).start()
+			}
 		}
 	}
 

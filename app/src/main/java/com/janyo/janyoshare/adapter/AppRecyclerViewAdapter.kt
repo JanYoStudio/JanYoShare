@@ -29,6 +29,7 @@ import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 import java.io.File
+import java.util.concurrent.Executors
 
 class AppRecyclerViewAdapter(private val context: Context,
 							 private val installAppList: List<InstallApp>) : RecyclerView.Adapter<AppRecyclerViewAdapter.ViewHolder>()
@@ -69,361 +70,197 @@ class AppRecyclerViewAdapter(private val context: Context,
 		else
 			holder.imageView.setImageDrawable(installApp.icon)
 		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
+
+		val singleThreadPool = Executors.newSingleThreadExecutor()
 		holder.fullView.setOnClickListener {
 			AlertDialog.Builder(context)
 					.setTitle(R.string.copy_file_selection)
 					.setItems(R.array.copy_do, { _, choose ->
-						when (choose)
+						progressDialog.show()
+						if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
 						{
-							0 ->
-							{
-								progressDialog.show()
-								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
-								{
-									Thread(Runnable {
-										val code: Int
-										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-										progressDialog.dismiss()
-										when (code)
-										{
-											-1 ->
-											{
-												Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-														.show()
-											}
-											0 ->
-											{
-												Snackbar.make(coordinatorLayout, R.string.hint_copy_exist, Snackbar.LENGTH_SHORT)
-														.setAction(R.string.hint_recopy, {
-															progressDialog.show()
-															Thread(Runnable {
-																if (settings.customFileName.format == "")
-																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
-																else
-																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
-																val temp: Int
-																if (settings.customFileName.format == "")
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-																else
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-																progressDialog.dismiss()
-																if (temp == 1)
-																{
-																	Snackbar.make(coordinatorLayout, String.format(context.getString(R.string.hint_copy_done), context.getString(R.string.app_name)), Snackbar.LENGTH_SHORT)
-																			.show()
-																}
-																else
-																{
-																	Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-																			.show()
-																}
-															}).start()
-														})
-														.show()
-											}
-											1 ->
-											{
-												Snackbar.make(coordinatorLayout, String.format(context.getString(R.string.hint_copy_done), context.getString(R.string.app_name)), Snackbar.LENGTH_SHORT)
-														.show()
-											}
-										}
-									}).start()
-								}
+							singleThreadPool.execute {
+								val code: Int
+								if (settings.customFileName.format == "")
+									code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 								else
+									code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+								progressDialog.dismiss()
+								when
 								{
-									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
-											.show()
-								}
-							}
-							1 ->
-							{
-								progressDialog.show()
-								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
-								{
-									Thread(Runnable {
-										val code: Int
-										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-										progressDialog.dismiss()
-										when (code)
-										{
-											-1 ->
-											{
-												Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-														.show()
-											}
-											0 ->
-											{
-												Snackbar.make(coordinatorLayout, R.string.hint_copy_exist, Snackbar.LENGTH_SHORT)
-														.setAction(R.string.hint_recopy, {
-															progressDialog.show()
-															Thread(Runnable {
-																if (settings.customFileName.format == "")
-																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
-																else
-																	JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
-																val temp: Int
-																if (settings.customFileName.format == "")
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-																else
-																	temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-																progressDialog.dismiss()
-																if (temp == 1)
-																{
-																	if (settings.customFileName.format == "")
-																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
-																	else
-																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-																}
-																else
-																{
-																	Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-																			.show()
-																}
-															}).start()
-														})
-														.addCallback(object : Snackbar.Callback()
+									code == -1 ->
+									{
+										Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
+												.show()
+									}
+									code == 1 || choose == 2 || choose == 3 || choose == 5 ->
+										doChoose(choose, installApp)
+									code == 0 ->
+									{
+										Snackbar.make(coordinatorLayout, R.string.hint_copy_exist, Snackbar.LENGTH_SHORT)
+												.setAction(R.string.hint_recopy, {
+													progressDialog.show()
+													singleThreadPool.execute {
+														if (settings.customFileName.format == "")
+															JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
+														else
+															JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
+														val temp: Int
+														if (settings.customFileName.format == "")
+															temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
+														else
+															temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+														progressDialog.dismiss()
+														if (temp == 1)
 														{
-															override fun onDismissed(
-																	transientBottomBar: Snackbar?,
-																	event: Int)
-															{
-																if (event != DISMISS_EVENT_ACTION)
-																{
-																	if (settings.customFileName.format == "")
-																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
-																	else
-																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-																}
-															}
-														})
-														.show()
-											}
-											1 ->
-											{
-												if (settings.customFileName.format == "")
-													JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
-												else
-													JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-											}
-										}
-									}).start()
-								}
-								else
-								{
-									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
-											.show()
-								}
-							}
-							2 ->
-							{
-								progressDialog.show()
-								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
-								{
-									Thread(Runnable {
-										val code: Int
-										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-										progressDialog.dismiss()
-										if (code != -1)
-										{
-											val message = Message()
-											message.what = 1
-											message.obj = installApp
-											if (settings.customFileName.format == "")
-												message.obj = installApp.name + "_" + installApp.versionName
-											else
-												message.obj = settings.customFileName.toFormat(installApp)
-											renameHandler.sendMessage(message)
-										}
-										else
-										{
-											Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-													.show()
-										}
-									}).start()
-								}
-								else
-								{
-									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
-											.show()
-								}
-							}
-							3 ->
-							{
-								progressDialog.show()
-								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
-								{
-									Thread(Runnable {
-										val code: Int
-										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-										progressDialog.dismiss()
-										if (code != -1)
-										{
-											val message = Message()
-											message.what = 2
-											message.obj = installApp
-											if (settings.customFileName.format == "")
-												message.obj = installApp.name + "_" + installApp.versionName
-											else
-												message.obj = settings.customFileName.toFormat(installApp)
-											renameHandler.sendMessage(message)
-										}
-										else
-										{
-											Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-													.show()
-										}
-									}).start()
-								}
-								else
-								{
-									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
-											.show()
-								}
-							}
-							4 ->
-							{
-								progressDialog.show()
-								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
-								{
-									Thread(Runnable {
-										val code: Int
-										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-										progressDialog.dismiss()
-										if (code != -1)
-										{
-											if (settings.customFileName.format == "")
-												shareList.add(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
-											else
-												shareList.add(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
-											val files = JYFileUtil.checkObb(installApp.packageName!!)
-											if (files != null)
-											{
-												Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_number_warning, files.size), Snackbar.LENGTH_LONG)
-														.setAction(R.string.action_done, {
-															shareList.addAll(files)
-														})
-														.addCallback(object : Snackbar.Callback()
+															doChoose(choose, installApp)
+														}
+														else
 														{
-															override fun onDismissed(
-																	transientBottomBar: Snackbar?,
-																	event: Int)
-															{
-																Logs.i(TAG, "onDismissed: " + shareList.size)
-																if (shareList.size > 1)
-																{
-																	JYFileUtil.doShare(context, shareList)
-																}
-																else
-																{
-																	if (settings.customFileName.format == "")
-																		JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
-																	else
-																		JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-																}
-																shareList.clear()
-															}
-														})
-														.show()
-											}
-											else
-											{
-												Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_not_exists), Snackbar.LENGTH_SHORT)
-														.addCallback(object : Snackbar.Callback()
+															Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
+																	.show()
+														}
+													}
+												})
+												.addCallback(object : Snackbar.Callback()
+												{
+													override fun onDismissed(
+															transientBottomBar: Snackbar?,
+															event: Int)
+													{
+														if (event != DISMISS_EVENT_ACTION)
 														{
-															override fun onDismissed(
-																	transientBottomBar: Snackbar?,
-																	event: Int)
-															{
-																if (settings.customFileName.format == "")
-																	JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
-																else
-																	JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-																shareList.clear()
-															}
-														})
-														.show()
-											}
-										}
-									}).start()
-								}
-								else
-								{
-									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
-											.show()
-								}
-							}
-							5 ->
-							{
-								progressDialog.show()
-								if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
-								{
-									Thread(Runnable {
-										val code: Int
-										if (settings.customFileName.format == "")
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-										else
-											code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-										progressDialog.dismiss()
-										if (code != -1)
-										{
-											val transferFile = TransferFile()
-											if (settings.customFileName.format == "")
-												transferFile.fileName = installApp.name + ".apk"
-											else
-												transferFile.fileName = settings.customFileName.toFormat(installApp) + ".apk"
-											transferFile.fileUri = FileProvider.getUriForFile(context,
-													context.getString(R.string.authorities),
-													if (settings.customFileName.format == "")
-														JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk")
-													else
-														JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-											).toString()
-											transferFile.fileIconPath = installApp.iconPath
-											transferFile.fileSize = installApp.size
-											val intent = Intent(context, FileTransferConfigureActivity::class.java)
-											val bundle = Bundle()
-											bundle.putSerializable("app", transferFile)
-											intent.putExtra("action", 1)
-											intent.putExtra("app", bundle)
-											context.startActivity(intent)
-										}
-										else
-										{
-											Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-													.show()
-										}
-									}).start()
-								}
-								else
-								{
-									progressDialog.dismiss()
-									Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
-											.show()
+															doChoose(choose, installApp)
+														}
+													}
+												})
+												.show()
+									}
 								}
 							}
 						}
+						else
+						{
+							progressDialog.dismiss()
+							Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
+									.show()
+						}
 					})
 					.show()
+		}
+	}
+
+	private fun doChoose(choose: Int, installApp: InstallApp)
+	{
+		when (choose)
+		{
+			0 -> Snackbar.make(coordinatorLayout, String.format(context.getString(R.string.hint_copy_done), context.getString(R.string.app_name)), Snackbar.LENGTH_SHORT)
+					.show()
+			1 ->
+				if (settings.customFileName.format == "")
+					JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
+				else
+					JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+			2 ->
+			{
+				val message = Message()
+				message.what = 1
+				message.obj = installApp
+				if (settings.customFileName.format == "")
+					message.obj = installApp.name + "_" + installApp.versionName
+				else
+					message.obj = settings.customFileName.toFormat(installApp)
+				renameHandler.sendMessage(message)
+			}
+			3 ->
+			{
+				val message = Message()
+				message.what = 2
+				message.obj = installApp
+				if (settings.customFileName.format == "")
+					message.obj = installApp.name + "_" + installApp.versionName
+				else
+					message.obj = settings.customFileName.toFormat(installApp)
+				renameHandler.sendMessage(message)
+			}
+			4 ->
+			{
+				if (settings.customFileName.format == "")
+					shareList.add(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
+				else
+					shareList.add(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
+				val files = JYFileUtil.checkObb(installApp.packageName!!)
+				if (files != null)
+				{
+					Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_number_warning, files.size), Snackbar.LENGTH_LONG)
+							.setAction(R.string.action_done, {
+								shareList.addAll(files)
+							})
+							.addCallback(object : Snackbar.Callback()
+							{
+								override fun onDismissed(
+										transientBottomBar: Snackbar?,
+										event: Int)
+								{
+									Logs.i(TAG, "onDismissed: " + shareList.size)
+									if (shareList.size > 1)
+									{
+										JYFileUtil.doShare(context, shareList)
+									}
+									else
+									{
+										if (settings.customFileName.format == "")
+											JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
+										else
+											JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+									}
+									shareList.clear()
+								}
+							})
+							.show()
+				}
+				else
+				{
+					Snackbar.make(coordinatorLayout, context.getString(R.string.hint_check_obb_not_exists), Snackbar.LENGTH_SHORT)
+							.addCallback(object : Snackbar.Callback()
+							{
+								override fun onDismissed(
+										transientBottomBar: Snackbar?,
+										event: Int)
+								{
+									if (settings.customFileName.format == "")
+										JYFileUtil.doShare(context, installApp, context.getString(R.string.app_name), "apk")
+									else
+										JYFileUtil.doShare(context, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+									shareList.clear()
+								}
+							})
+							.show()
+				}
+			}
+			5 ->
+			{
+				val transferFile = TransferFile()
+				if (settings.customFileName.format == "")
+					transferFile.fileName = installApp.name + ".apk"
+				else
+					transferFile.fileName = settings.customFileName.toFormat(installApp) + ".apk"
+				transferFile.fileUri = FileProvider.getUriForFile(context,
+						context.getString(R.string.authorities),
+						if (settings.customFileName.format == "")
+							JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk")
+						else
+							JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+				).toString()
+				transferFile.fileIconPath = installApp.iconPath
+				transferFile.fileSize = installApp.size
+				val intent = Intent(context, FileTransferConfigureActivity::class.java)
+				val bundle = Bundle()
+				bundle.putSerializable("app", transferFile)
+				intent.putExtra("action", 1)
+				intent.putExtra("app", bundle)
+				context.startActivity(intent)
+			}
 		}
 	}
 
