@@ -269,7 +269,6 @@ object JYFileUtil
 		}
 		catch (e: Exception)
 		{
-			e.printStackTrace()
 			if (file.exists())
 				file.delete()
 		}
@@ -291,9 +290,8 @@ object JYFileUtil
 				objectInputStream.close()
 			}
 		}
-		catch (e: Exception)
+		catch (ignore: Exception)
 		{
-			e.printStackTrace()
 		}
 		return savedArrayList
 	}
