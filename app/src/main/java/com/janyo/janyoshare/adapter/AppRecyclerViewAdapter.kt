@@ -24,6 +24,7 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.handler.RenameHandler
 import com.janyo.janyoshare.handler.SendHandler
+import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.FileUtil.FileUtil
@@ -254,11 +255,12 @@ class AppRecyclerViewAdapter(private val context: Context,
 				).toString()
 				transferFile.fileIconPath = installApp.iconPath
 				transferFile.fileSize = installApp.size
+				FileTransferHandler.getInstance().fileList.add(transferFile)
 				val intent = Intent(context, FileTransferConfigureActivity::class.java)
-				val bundle = Bundle()
-				bundle.putSerializable("app", transferFile)
+//				val bundle = Bundle()
+//				bundle.putSerializable("app", transferFile)
 				intent.putExtra("action", 1)
-				intent.putExtra("app", bundle)
+//				intent.putExtra("app", bundle)
 				context.startActivity(intent)
 			}
 		}
