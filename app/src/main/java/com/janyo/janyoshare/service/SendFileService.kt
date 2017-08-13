@@ -23,7 +23,7 @@ class SendFileService : Service()
 		//传输请求头
 		val transferHeader = TransferHeader()
 		transferHeader.list = FileTransferHandler.getInstance().fileList
-		socketUtil.createServerConnection(FileTransferHandler.getInstance().transferPort)
+		socketUtil.createServerConnection(FileTransferHandler.getInstance().transferPort1)
 		if (socketUtil.sendObject(transferHeader))
 		{
 			Logs.i(TAG, "onCreate: 请求头传输成功")
