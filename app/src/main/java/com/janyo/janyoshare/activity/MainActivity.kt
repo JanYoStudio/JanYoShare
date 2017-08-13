@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		settings = Settings(this)
+		settings = Settings.getInstance(this)
 		checkPermission()
 		initialization()
 	}

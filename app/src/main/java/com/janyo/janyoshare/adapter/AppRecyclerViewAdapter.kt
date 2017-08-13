@@ -38,7 +38,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 	private val coordinatorLayout: CoordinatorLayout = (context as Activity).findViewById(R.id.coordinatorLayout)
 	private val renameHandler = RenameHandler(context as Activity)
 	private val shareList = ArrayList<File>()
-	private val settings = Settings(context)
+	private val settings = Settings.getInstance(context)
 	var progressDialog = ProgressDialog(context)
 
 	val sendHandler = SendHandler()

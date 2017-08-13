@@ -183,6 +183,10 @@ object JYFileUtil
 		try
 		{
 			val file = File(path)
+			if (!file.parentFile.exists())
+			{
+				file.parentFile.mkdirs()
+			}
 			val out = FileOutputStream(file)
 			val bitmap: Bitmap
 			when

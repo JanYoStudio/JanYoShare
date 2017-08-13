@@ -20,7 +20,7 @@ class SettingHandler(private val context: Context,
 	{
 		@Suppress("UNCHECKED_CAST")
 		val list = msg.obj as List<InstallApp>
-		val settings = Settings(context)
+		val settings = Settings.getInstance(context)
 		val arrays = Array(list.size, { i -> list[i].name })
 		val checkedItems = BooleanArray(list.size)
 		val saved = settings.excludeList

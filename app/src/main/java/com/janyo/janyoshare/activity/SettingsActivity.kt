@@ -79,7 +79,7 @@ class SettingsActivity : PreferenceActivity()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		settings = Settings(this@SettingsActivity)
+		settings = Settings.getInstance(this)
 		payHandler = PayHandler(this, Volley.newRequestQueue(this))
 		addPreferencesFromResource(R.xml.preferences)
 		initialization()

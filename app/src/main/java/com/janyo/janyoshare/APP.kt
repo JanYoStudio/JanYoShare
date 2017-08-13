@@ -25,7 +25,7 @@ class APP : Application()
 				.init()
 		val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
 		val list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
-		if (Settings(this).isDisableAccessibility && list.isNotEmpty())
+		if (Settings.getInstance(this).isDisableAccessibility && list.isNotEmpty())
 		{
 			Logs.i(TAG, "onCreate: 开启无障碍服务，尝试禁用")
 			ASnackBar.disableAccessibility(this)

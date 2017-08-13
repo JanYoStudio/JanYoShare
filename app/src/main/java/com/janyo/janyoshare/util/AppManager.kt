@@ -34,7 +34,7 @@ object AppManager
 					installApp.versionCode = packageInfo.versionCode
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
-					val path = context.cacheDir.absolutePath + File.separator + "cache" + File.separator + installApp.packageName
+					val path = context.cacheDir.absolutePath + File.separator + "icon" + File.separator + installApp.packageName
 					if (JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path))
 					{
 						installApp.iconPath = path
@@ -63,7 +63,7 @@ object AppManager
 					installApp.versionCode = packageInfo.versionCode
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
-					val path = context.cacheDir.absolutePath + File.separator + "cache" + File.separator + installApp.packageName
+					val path = context.cacheDir.absolutePath + File.separator + "icon" + File.separator + installApp.packageName
 					if (JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path))
 					{
 						installApp.iconPath = path
@@ -103,7 +103,7 @@ object AppManager
 
 	private fun checkExclude(context: Context, installApp: InstallApp): Boolean
 	{
-		val settings = Settings(context)
+		val settings = Settings.getInstance(context)
 		val excludeList = settings.excludeList
 		val excludeNameList = settings.excludeNameList
 		val excludeSize = settings.excludeSize

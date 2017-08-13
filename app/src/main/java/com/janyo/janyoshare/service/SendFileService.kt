@@ -11,6 +11,7 @@ import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.TransferFileNotification
 import com.mystery0.tools.Logs.Logs
+import java.util.concurrent.Executors
 
 class SendFileService : Service()
 {
@@ -18,8 +19,9 @@ class SendFileService : Service()
 	private lateinit var errorHandler: ErrorHandler
 	private val socketUtil = SocketUtil()
 	private var index = 0
+	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
-	private val thread = Thread(Runnable {
+	private val runnable = Runnable {
 		//传输请求头
 		val transferHeader = TransferHeader()
 		transferHeader.list = FileTransferHandler.getInstance().fileList
@@ -33,7 +35,7 @@ class SendFileService : Service()
 		{
 			Logs.e(TAG, "onCreate: 请求头传输失败")
 		}
-	})
+	}
 
 	override fun onCreate()
 	{
@@ -54,7 +56,7 @@ class SendFileService : Service()
 		{
 			"start" ->
 			{
-				thread.start()
+//				thread.start()
 			}
 		}
 		return super.onStartCommand(intent, flags, startId)
