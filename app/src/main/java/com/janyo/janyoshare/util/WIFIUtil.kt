@@ -40,8 +40,8 @@ class WIFIUtil(var context: Context, val port: Int)
 
 	fun scanIP(scanListener: ScanListener)
 	{
-		var index = 0
 		getLocalAddress()
+		var isDeviceFind = false
 		val localAddressIndex = localAddress.substring(0, localAddress.lastIndexOf(".") + 1)
 		if (localAddressIndex == "")
 		{
@@ -64,19 +64,26 @@ class WIFIUtil(var context: Context, val port: Int)
 					Logs.i(TAG, "scanIP: " + currentIP)
 					if (socketUtil.tryCreateSocketConnection(currentIP, port))
 					{
-						index++
+						isDeviceFind = true
 						scanListener.onScan(currentIP, socketUtil)
 					}
-					if (i == 255)
-						scanListener.onFinish(index != 0)
 				}
 				catch (e: Exception)
 				{
 					scanListener.onError(e)
-					if (i == 255)
-						scanListener.onFinish(index != 0)
 				}
 			}
+		}
+		cacheThreadPool.shutdown()
+		while (true)
+		{
+			if (cacheThreadPool.isTerminated)
+			{
+				Logs.i(TAG, "scanIP: 所有线程已结束")
+				scanListener.onFinish(isDeviceFind)
+				break
+			}
+			Thread.sleep(100)
 		}
 	}
 

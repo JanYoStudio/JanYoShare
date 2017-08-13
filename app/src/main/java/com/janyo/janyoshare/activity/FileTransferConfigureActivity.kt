@@ -21,6 +21,8 @@ import com.mystery0.tools.Logs.Logs
 
 import kotlinx.android.synthetic.main.content_file_transfer_configure.*
 import java.io.File
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 
 class FileTransferConfigureActivity : AppCompatActivity()
 {
@@ -30,35 +32,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 	private val receiveHandler = ReceiveHandler()
 	private lateinit var progressDialog: ProgressDialog
 	private val socketUtil = SocketUtil()
-
-	private val transferThread = Thread(Runnable {
-		val message_create = Message()
-		message_create.what = FileTransferConfigureActivity.CREATE_SERVER
-		if (!socketUtil.createServerConnection(FileTransferHandler.getInstance().verifyPort))
-		{
-			return@Runnable
-		}
-		sendHandler.sendMessage(message_create)
-		val message_send = Message()
-		message_send.what = FileTransferConfigureActivity.VERIFY_DEVICE
-		socketUtil.sendMessage(Build.MODEL)
-		sendHandler.sendMessage(message_send)
-		if (socketUtil.receiveMessage() == FileTransferConfigureActivity.VERIFY_DONE)
-		{
-			FileTransferHandler.getInstance().ip = socketUtil.socket.remoteSocketAddress.toString().substring(1)
-			val message = Message.obtain()
-			message.what = FileTransferConfigureActivity.CONNECTED
-			sendHandler.sendMessage(message)
-			socketUtil.clientDisconnect()
-			socketUtil.serverDisconnect()
-		}
-		else
-		{
-			Logs.e(TAG, "openServer: 连接错误")
-			socketUtil.serverDisconnect()
-			progressDialog.dismiss()
-		}
-	})
+	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
 	companion object
 	{
@@ -68,6 +42,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		val VERIFY_DEVICE = 4
 		val SCAN_COMPLETE = 5
 		val VERIFY_DONE = "VERIFY_DONE"
+		val VERIFY_CANCEL = "VERIFY_CANCEL"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -89,34 +64,30 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 		if (intent.getIntExtra("action", 0) == 1)
 		{
-			progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
-			progressDialog.show()
-			val transferFile = intent.getBundleExtra("app").getSerializable("app") as TransferFile
-			Logs.i(TAG, "onCreate: " + transferFile.fileName)
-			Logs.i(TAG, "onCreate: " + transferFile.fileUri)
-			openAP(transferFile)
+//			val transferFile = intent.getBundleExtra("app").getSerializable("app") as TransferFile
+//			Logs.i(TAG, "onCreate: " + transferFile.fileName)
+//			Logs.i(TAG, "onCreate: " + transferFile.fileUri)
+			openAP()
 		}
 
 		sendFile.setOnClickListener {
-			if (FileTransferHandler.getInstance().fileList.size == 0)
-			{
-				val intent = Intent(Intent.ACTION_GET_CONTENT)
-				intent.type = "*/*"
-				intent.addCategory(Intent.CATEGORY_OPENABLE)
-				startActivityForResult(intent, CHOOSE_FILE)
-			}
-			else
-			{
-				progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
-				progressDialog.show()
-				openAP(FileTransferHandler.getInstance().fileList[0])
-			}
+			//			if (FileTransferHandler.getInstance().fileList.size == 0)
+//			{
+//				val intent = Intent(Intent.ACTION_GET_CONTENT)
+//				intent.type = "*/*"
+//				intent.addCategory(Intent.CATEGORY_OPENABLE)
+//				startActivityForResult(intent, CHOOSE_FILE)
+//			}
+//			else
+//			{
+			openAP()
+//			}
 		}
 
 		receiveFile.setOnClickListener {
 			progressDialog.setMessage(getString(R.string.hint_socket_wait_client))
 			progressDialog.show()
-			Thread(Runnable {
+			singleThreadPool.execute {
 				WIFIUtil(this, FileTransferHandler.getInstance().verifyPort).scanIP(object : WIFIUtil.ScanListener
 				{
 					override fun onScan(ipv4: String, socketUtil: SocketUtil)
@@ -143,47 +114,73 @@ class FileTransferConfigureActivity : AppCompatActivity()
 					override fun onFinish(isDeviceFind: Boolean)
 					{
 						Logs.i(TAG, "onFinish: " + isDeviceFind)
-						Logs.i(TAG, "onError: 搜索完毕")
 						val message = Message()
 						message.what = SCAN_COMPLETE
 						message.obj = isDeviceFind
 						receiveHandler.sendMessage(message)
 					}
 				})
-			}).start()
-		}
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-	{
-		if (requestCode == CHOOSE_FILE && data != null)
-		{
-			val file = File(FileUtil.getPath(this, data.data))
-			val transferFile = TransferFile()
-			transferFile.fileName = file.name
-			transferFile.fileUri = FileProvider.getUriForFile(this, getString(R.string.authorities), file).toString()
-			transferFile.fileSize = file.length()
-			progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
-			progressDialog.show()
-			openAP(transferFile)
-		}
-	}
-
-	fun openAP(transferFile: TransferFile)
-	{
-		progressDialog.setCancelable(true)
-		progressDialog.setOnCancelListener {
-			Logs.i(TAG, "openAP: 监听到返回键")
-			Logs.i(TAG, "openAP: " + transferThread.isAlive)
-			if (transferThread.isAlive)
-			{
-				socketUtil.serverDisconnect()
-				transferThread.interrupt()
 			}
 		}
-		FileTransferHandler.getInstance().fileList.add(transferFile)
+	}
 
-		transferThread.start()
+//	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+//	{
+//		if (requestCode == CHOOSE_FILE && data != null)
+//		{
+//			val file = File(FileUtil.getPath(this, data.data))
+//			val transferFile = TransferFile()
+//			transferFile.fileName = file.name
+//			transferFile.fileUri = FileProvider.getUriForFile(this, getString(R.string.authorities), file).toString()
+//			transferFile.fileSize = file.length()
+//			progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
+//			progressDialog.show()
+//			openAP()
+//		}
+//	}
+
+	fun openAP()
+	{
+		progressDialog.setCancelable(true)
+		progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
+		progressDialog.show()
+		val task = singleThreadPool.submit(Runnable {
+			Logs.i(TAG, "openAP: 创建服务端")
+			val message_create = Message()
+			message_create.what = FileTransferConfigureActivity.CREATE_SERVER
+			if (!socketUtil.createServerConnection(FileTransferHandler.getInstance().verifyPort))
+			{
+				Logs.i(TAG, "openAP: 创建服务端失败")
+				return@Runnable
+			}
+			sendHandler.sendMessage(message_create)
+			Logs.i(TAG, "openAP: 验证设备")
+			val message_send = Message()
+			message_send.what = FileTransferConfigureActivity.VERIFY_DEVICE
+			socketUtil.sendMessage(Build.MODEL)
+			sendHandler.sendMessage(message_send)
+			if (socketUtil.receiveMessage() == FileTransferConfigureActivity.VERIFY_DONE)
+			{
+				Logs.i(TAG, "openAP: 验证完成")
+				FileTransferHandler.getInstance().ip = socketUtil.socket.remoteSocketAddress.toString().substring(1)
+				val message = Message.obtain()
+				message.what = FileTransferConfigureActivity.CONNECTED
+				sendHandler.sendMessage(message)
+				Logs.i(TAG, "openAP: 断开验证连接")
+				socketUtil.clientDisconnect()
+				socketUtil.serverDisconnect()
+			}
+			else
+			{
+				Logs.e(TAG, "openServer: 连接错误")
+				socketUtil.serverDisconnect()
+				progressDialog.dismiss()
+			}
+		})
+		progressDialog.setOnCancelListener {
+			Logs.i(TAG, "openAP: 监听到返回键")
+			task.cancel(true)
+		}
 	}
 }
 

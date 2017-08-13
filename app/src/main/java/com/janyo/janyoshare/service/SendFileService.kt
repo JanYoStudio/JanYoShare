@@ -57,6 +57,7 @@ class SendFileService : Service()
 			"start" ->
 			{
 //				thread.start()
+
 			}
 		}
 		return super.onStartCommand(intent, flags, startId)
