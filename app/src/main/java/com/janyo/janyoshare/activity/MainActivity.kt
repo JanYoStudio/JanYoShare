@@ -1,8 +1,6 @@
 package com.janyo.janyoshare.activity
 
 import android.Manifest
-import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.Context
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -16,7 +14,6 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
-import android.view.accessibility.AccessibilityManager
 import android.widget.TextView
 import android.widget.Toast
 import com.janyo.janyoshare.AppFragment
@@ -33,7 +30,6 @@ import java.io.File
 import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
-import com.mystery0.tools.SnackBar.ASnackBar
 import java.text.SimpleDateFormat
 import java.util.*
 
