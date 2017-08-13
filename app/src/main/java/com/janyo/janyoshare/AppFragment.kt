@@ -26,6 +26,7 @@ import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
 
 import java.util.ArrayList
+import java.util.concurrent.Executors
 
 class AppFragment : Fragment()
 {
@@ -38,6 +39,7 @@ class AppFragment : Fragment()
 	private lateinit var settings: Settings
 	private var index = 0
 	private lateinit var loadHandler: LoadHandler
+	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -195,7 +197,7 @@ class AppFragment : Fragment()
 
 	fun refresh()
 	{
-		Thread(Runnable {
+		singleThreadPool.execute {
 			val installAppList = AppManager.getInstallAppList(activity, type, index, true)
 			when (type)
 			{
@@ -206,7 +208,7 @@ class AppFragment : Fragment()
 			message.obj = installAppList
 			message.what = 1
 			loadHandler.sendMessage(message)
-		}).start()
+		}
 	}
 
 	companion object
