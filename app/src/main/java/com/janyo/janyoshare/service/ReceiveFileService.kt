@@ -13,6 +13,7 @@ import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.TransferFileNotification
 import com.mystery0.tools.Logs.Logs
+import java.util.concurrent.Executors
 
 class ReceiveFileService : Service()
 {
@@ -20,8 +21,9 @@ class ReceiveFileService : Service()
 	private lateinit var errorHandler: ErrorHandler
 	private val socketUtil = SocketUtil()
 	private var index = 0
+	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
-	private val thread = Thread(Runnable {
+	private val runnale = Runnable {
 		socketUtil.createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort1)
 		//获取请求头
 		val obj = socketUtil.receiveObject()
@@ -36,7 +38,7 @@ class ReceiveFileService : Service()
 		{
 			Logs.e(TAG, "onCreate: 获取请求头失败")
 		}
-	})
+	}
 
 	override fun onCreate()
 	{
@@ -51,7 +53,7 @@ class ReceiveFileService : Service()
 
 	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int
 	{
-		thread.start()
+//		thread.start()
 		return super.onStartCommand(intent, flags, startId)
 	}
 

@@ -45,7 +45,7 @@ class AppFragment : Fragment()
 	{
 		super.onCreate(savedInstanceState)
 		type = arguments.getInt("type")
-		settings = Settings(activity)
+		settings = Settings.getInstance(activity)
 		setHasOptionsMenu(true)
 	}
 

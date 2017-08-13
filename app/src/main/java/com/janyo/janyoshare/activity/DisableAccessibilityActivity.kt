@@ -11,7 +11,7 @@ class DisableAccessibilityActivity : Activity()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		val settings = Settings(this)
+		val settings = Settings.getInstance(this)
 		if (settings.isDisableAccessibility)
 		{
 			settings.isDisableAccessibility = false
