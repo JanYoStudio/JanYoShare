@@ -7,7 +7,7 @@ import android.os.Message
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferHeader
 import com.janyo.janyoshare.handler.ErrorHandler
-import com.janyo.janyoshare.util.FileTransferHandler
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.TransferFileNotification
@@ -36,16 +36,16 @@ class ReceiveFileService : Service()
 	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int
 	{
 		singleHeaderThreadPool.execute {
-			socketUtil.createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort)
+			socketUtil.createSocketConnection(FileTransferHelper.getInstance().ip, FileTransferHelper.getInstance().transferPort)
 			//获取请求头
 			val obj = socketUtil.receiveObject()
 			if (obj != null)
 			{
 				val transferHeader = obj as TransferHeader
-				FileTransferHandler.getInstance().fileList = transferHeader.list
+				FileTransferHelper.getInstance().fileList = transferHeader.list
 				Logs.i(TAG, "onCreate: 获取请求头成功")
 				Logs.i(TAG, "onStartCommand: " + transferHeader.list.size)
-				FileTransferHandler.getInstance().fileList.forEachIndexed { index, transferFile ->
+				FileTransferHelper.getInstance().fileList.forEachIndexed { index, transferFile ->
 					singleFileThreadPool.execute {
 						Logs.i(TAG, "onStartCommand: " + transferFile.fileName)
 						val path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, getString(R.string.app_name))
@@ -54,22 +54,23 @@ class ReceiveFileService : Service()
 							override fun onStart()
 							{
 								Logs.i(TAG, "onStart: ")
-								FileTransferHandler.getInstance().currentFile = transferFile
-								FileTransferHandler.getInstance().currentProgress = 0
+								FileTransferHelper.getInstance().currentFileIndex = index
+								FileTransferHelper.getInstance().fileList[index].transferProgress = 0
 								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
 							}
 
 							override fun onProgress(progress: Int)
 							{
-								FileTransferHandler.getInstance().currentProgress = progress
+								Logs.i(TAG, "onProgress: " + progress)
+								FileTransferHelper.getInstance().fileList[index].transferProgress = progress
 								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
 							}
 
 							override fun onFinish()
 							{
-								Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
-								FileTransferHandler.getInstance().currentProgress = 100
-								TransferFileNotification.done(this@ReceiveFileService, index, FileTransferHandler.getInstance().currentFile!!)
+								Logs.i(TAG, "onFinish: " + FileTransferHelper.getInstance().fileList[index].fileName)
+								FileTransferHelper.getInstance().fileList[index].transferProgress = 100
+								TransferFileNotification.done(this@ReceiveFileService, index, FileTransferHelper.getInstance().fileList[index])
 							}
 
 							override fun onError(code: Int, e: Exception)
@@ -94,7 +95,7 @@ class ReceiveFileService : Service()
 					if (singleFileThreadPool.isTerminated)
 					{
 						Logs.i(TAG, "onStartCommand: 传输完成")
-						FileTransferHandler.getInstance().clear()
+						FileTransferHelper.getInstance().clear()
 						stopSelf()
 						break
 					}

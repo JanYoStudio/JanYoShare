@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
+import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.activity.SettingsActivity
 
@@ -128,7 +129,8 @@ class AppFragment : Fragment()
 						.show()
 			}
 			R.id.action_file_transfer -> startActivity(Intent(activity, FileTransferConfigureActivity::class.java))
-			R.id.action_settings -> startActivity(Intent(activity, SettingsActivity::class.java))
+//			R.id.action_settings -> startActivity(Intent(activity, SettingsActivity::class.java))
+			R.id.action_settings -> startActivity(Intent(activity, FileTransferActivity::class.java))
 		}
 		return super.onOptionsItemSelected(item)
 	}

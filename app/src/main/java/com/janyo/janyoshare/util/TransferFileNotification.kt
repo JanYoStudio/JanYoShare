@@ -13,23 +13,24 @@ import com.janyo.janyoshare.classes.TransferFile
 
 object TransferFileNotification
 {
-	fun notify(context: Context, number: Int, action: String?)
+	fun notify(context: Context, id: Int, action: String?)
 	{
-		val title = context.getString(R.string.hint_transfer_file_notification_title, FileTransferHandler.getInstance().currentFile!!.fileName)
+		val index = FileTransferHelper.getInstance().currentFileIndex
+		val transferFile = FileTransferHelper.getInstance().fileList[index]
+		val title = context.getString(R.string.hint_transfer_file_notification_title, transferFile.fileName)
 
 		val builder = NotificationCompat.Builder(context, context.getString(R.string.app_name))
 				.setSmallIcon(R.drawable.ic_send)
 				.setContentTitle(title)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-				.setNumber(number)
-				.setProgress(100, FileTransferHandler.getInstance().currentProgress, false)
+				.setProgress(100, transferFile.transferProgress, false)
 				.setAutoCancel(true)
-		notify(context, builder.build(), false)
+		notify(context, id, builder.build(), false)
 	}
 
-	fun done(context: Context, number: Int, transferFile: TransferFile)
+	fun done(context: Context, id: Int, transferFile: TransferFile)
 	{
-		val title = context.getString(R.string.hint_transfer_file_notification_done, FileTransferHandler.getInstance().currentFile!!.fileName)
+		val title = context.getString(R.string.hint_transfer_file_notification_done, transferFile.fileName)
 		val mimeType = context.contentResolver.getType(Uri.parse(transferFile.fileUri))
 		val intent = Intent(Intent.ACTION_VIEW)
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -38,7 +39,6 @@ object TransferFileNotification
 				.setSmallIcon(R.drawable.ic_send)
 				.setContentTitle(title)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-				.setNumber(number)
 				.setContentIntent(
 						PendingIntent.getActivity(
 								context,
@@ -47,22 +47,26 @@ object TransferFileNotification
 								PendingIntent.FLAG_UPDATE_CURRENT))
 				.setAutoCancel(true)
 
-		notify(context, builder.build(), true)
+		notify(context, id, builder.build(), true)
 	}
 
-	private fun notify(context: Context, notification: Notification, cancelable: Boolean)
+	private fun notify(context: Context, id: Int, notification: Notification, cancelable: Boolean)
 	{
+		val index = FileTransferHelper.getInstance().currentFileIndex
+		val transferFile = FileTransferHelper.getInstance().fileList[index]
 		if (!cancelable)
 			notification.flags = Notification.FLAG_NO_CLEAR
 		val notificationManager = context
 				.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-		notificationManager.notify(FileTransferHandler.getInstance().currentFile!!.fileName, 0, notification)
+		notificationManager.notify(transferFile.fileName, id, notification)
 	}
 
-	fun cancel(context: Context)
+	fun cancel(context: Context, id: Int)
 	{
+		val index = FileTransferHelper.getInstance().currentFileIndex
+		val transferFile = FileTransferHelper.getInstance().fileList[index]
 		val notificationManager = context
 				.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-		notificationManager.cancel(FileTransferHandler.getInstance().currentFile!!.fileName, 0)
+		notificationManager.cancel(transferFile.fileName, id)
 	}
 }

@@ -111,7 +111,7 @@ class SocketUtil
 
 	fun receiveFile(fileSize: Long, path: String, fileTransferListener: FileTransferListener): File?
 	{
-		createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort)
+		createSocketConnection(FileTransferHelper.getInstance().ip, FileTransferHelper.getInstance().transferPort)
 		val file = File(path)
 		if (file.exists())
 		{
@@ -165,7 +165,7 @@ class SocketUtil
 	fun sendFile(context: Context, transferFile: TransferFile,
 				 fileTransferListener: FileTransferListener)
 	{
-		createServerConnection(FileTransferHandler.getInstance().transferPort)
+		createServerConnection(FileTransferHelper.getInstance().transferPort)
 		try
 		{
 			Logs.i(TAG, "sendFile: fileSize" + transferFile.fileSize)

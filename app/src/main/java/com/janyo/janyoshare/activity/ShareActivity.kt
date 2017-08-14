@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.janyo.janyoshare.classes.TransferFile
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.mystery0.tools.Logs.Logs
 import java.io.File
 
@@ -26,11 +27,9 @@ class ShareActivity : AppCompatActivity()
 			val file = File(uri.path)
 			transferFile.fileName = file.name
 			transferFile.fileSize = file.length()
+			FileTransferHelper.getInstance().fileList.add(transferFile)
 			val intent = Intent(this, FileTransferConfigureActivity::class.java)
-			val bundle = Bundle()
-			bundle.putSerializable("app", transferFile)
 			intent.putExtra("action", 1)
-			intent.putExtra("app", bundle)
 			startActivity(intent)
 			finish()
 		}
