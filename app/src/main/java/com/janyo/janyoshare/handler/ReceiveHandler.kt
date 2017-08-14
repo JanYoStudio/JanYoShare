@@ -64,10 +64,9 @@ class ReceiveHandler : Handler()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHelper.getInstance().tag = 2
-				val intent = Intent(context, ReceiveFileService::class.java)
-				context.startService(intent)
 				(context as Activity).finish()
 				context.startActivity(Intent(context, FileTransferActivity::class.java))
+				context.startService(Intent(context, ReceiveFileService::class.java))
 			}
 			FileTransferConfigureActivity.SCAN_COMPLETE ->
 			{

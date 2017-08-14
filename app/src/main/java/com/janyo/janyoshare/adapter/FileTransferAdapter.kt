@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
@@ -26,29 +27,44 @@ class FileTransferAdapter(val context: Context,
 	{
 		val transferFile = list[position]
 		holder.fileName.text = transferFile.fileName
-		holder.filePath.text = transferFile.filePath
 		holder.fileSize.text = FileUtil.FormatFileSize(transferFile.fileSize)
 		holder.progressBar.max = 100
 		holder.progressBar.progress = transferFile.transferProgress
-		when (File(transferFile.filePath).extension)
+		var path = ""
+		when (FileTransferHelper.getInstance().tag)
 		{
-			"png", "jpg", "jpeg" ->
+			1 ->
 			{
-				Glide.with(context)
-						.load(transferFile.filePath)
-						.into(holder.fileImg)
+				path = transferFile.filePath!!
 			}
-			"apk" ->
+			2 ->
 			{
-				Glide.with(context)
-						.load(JYFileUtil.getApkIconPath(context, transferFile.filePath))
-						.into(holder.fileImg)
-			}
-			else ->
-			{
-				holder.fileImg.setImageResource(R.mipmap.ic_file)
+				path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, "JY Share")
 			}
 		}
+		holder.filePath.text = path
+		if (transferFile.transferProgress == 100 || FileTransferHelper.getInstance().tag == 1)
+			when (File(path).extension)
+			{
+				"png", "jpg", "jpeg" ->
+				{
+					Glide.with(context)
+							.load(path)
+							.into(holder.fileImg)
+				}
+				"apk" ->
+				{
+					Glide.with(context)
+							.load(JYFileUtil.getApkIconPath(context, path))
+							.into(holder.fileImg)
+				}
+				else ->
+				{
+					holder.fileImg.setImageResource(R.mipmap.ic_file)
+				}
+			}
+		else
+			holder.fileImg.setImageResource(R.mipmap.ic_file)
 	}
 
 	override fun getItemCount(): Int

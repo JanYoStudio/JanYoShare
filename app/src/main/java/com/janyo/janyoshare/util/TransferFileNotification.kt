@@ -25,7 +25,7 @@ object TransferFileNotification
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setProgress(100, transferFile.transferProgress, false)
 				.setAutoCancel(true)
-		notify(context, id, builder.build(), false)
+		notify(context, id, builder.build())
 	}
 
 	fun done(context: Context, id: Int, transferFile: TransferFile)
@@ -47,15 +47,13 @@ object TransferFileNotification
 								PendingIntent.FLAG_UPDATE_CURRENT))
 				.setAutoCancel(true)
 
-		notify(context, id, builder.build(), true)
+		notify(context, id, builder.build())
 	}
 
-	private fun notify(context: Context, id: Int, notification: Notification, cancelable: Boolean)
+	private fun notify(context: Context, id: Int, notification: Notification)
 	{
 		val index = FileTransferHelper.getInstance().currentFileIndex
 		val transferFile = FileTransferHelper.getInstance().fileList[index]
-		if (!cancelable)
-			notification.flags = Notification.FLAG_NO_CLEAR
 		val notificationManager = context
 				.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 		notificationManager.notify(transferFile.fileName, id, notification)
