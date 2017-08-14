@@ -6,7 +6,8 @@ import android.os.IBinder
 import android.os.Message
 import com.janyo.janyoshare.classes.TransferHeader
 import com.janyo.janyoshare.handler.ErrorHandler
-import com.janyo.janyoshare.util.FileTransferHandler
+import com.janyo.janyoshare.handler.TransferHelperHandler
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.TransferFileNotification
 import com.mystery0.tools.Logs.Logs
@@ -16,6 +17,7 @@ class SendFileService : Service()
 {
 	private val TAG = "SendFileService"
 	private lateinit var errorHandler: ErrorHandler
+	private lateinit var transferHelperHandler: TransferHelperHandler
 	private val socketUtil = SocketUtil()
 	private val singleHeaderThreadPool = Executors.newSingleThreadExecutor()
 	private val singleFileThreadPool = Executors.newSingleThreadExecutor()
@@ -24,6 +26,8 @@ class SendFileService : Service()
 	{
 		Logs.i(TAG, "onCreate: 创建传输文件服务")
 		errorHandler = ErrorHandler(this)
+		if (FileTransferHelper.getInstance().transferHelperHandler != null)
+			transferHelperHandler = FileTransferHelper.getInstance().transferHelperHandler!!
 	}
 
 	override fun onBind(intent: Intent): IBinder?
@@ -42,12 +46,12 @@ class SendFileService : Service()
 				singleHeaderThreadPool.execute {
 					//传输请求头
 					val transferHeader = TransferHeader()
-					transferHeader.list = FileTransferHandler.getInstance().fileList
-					socketUtil.createServerConnection(FileTransferHandler.getInstance().transferPort)
+					transferHeader.list = FileTransferHelper.getInstance().fileList
+					socketUtil.createServerConnection(FileTransferHelper.getInstance().transferPort)
 					if (socketUtil.sendObject(transferHeader))
 					{
 						Logs.i(TAG, "onCreate: 请求头传输成功")
-						FileTransferHandler.getInstance().fileList.forEachIndexed { index, transferFile ->
+						FileTransferHelper.getInstance().fileList.forEachIndexed { index, transferFile ->
 							Logs.i(TAG, "onStartCommand: " + transferFile.fileName)
 							singleFileThreadPool.execute {
 								socketUtil.sendFile(this, transferFile, object : SocketUtil.FileTransferListener
@@ -55,22 +59,32 @@ class SendFileService : Service()
 									override fun onStart()
 									{
 										Logs.i(TAG, "onStart: ")
-										FileTransferHandler.getInstance().currentProgress = 0
-										FileTransferHandler.getInstance().currentFile = transferFile
+										FileTransferHelper.getInstance().currentFileIndex = index
+										FileTransferHelper.getInstance().fileList[index].transferProgress = 0
 										TransferFileNotification.notify(this@SendFileService, index, "start")
+										val message = Message()
+										message.what = TransferHelperHandler.UPDATE_UI
+										transferHelperHandler.sendMessage(message)
 									}
 
 									override fun onProgress(progress: Int)
 									{
-										FileTransferHandler.getInstance().currentProgress = progress
+										Logs.i(TAG, "onProgress: " + progress)
+										FileTransferHelper.getInstance().fileList[index].transferProgress = progress
 										TransferFileNotification.notify(this@SendFileService, index, "start")
+										val message = Message()
+										message.what = TransferHelperHandler.UPDATE_UI
+										transferHelperHandler.sendMessage(message)
 									}
 
 									override fun onFinish()
 									{
-										Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
-										FileTransferHandler.getInstance().currentProgress = 100
-										TransferFileNotification.done(this@SendFileService, index, FileTransferHandler.getInstance().currentFile!!)
+										Logs.i(TAG, "onFinish: " + FileTransferHelper.getInstance().fileList[index].fileName)
+										FileTransferHelper.getInstance().fileList[index].transferProgress = 100
+										TransferFileNotification.done(this@SendFileService, index, FileTransferHelper.getInstance().fileList[index])
+										val message = Message()
+										message.what = TransferHelperHandler.UPDATE_UI
+										transferHelperHandler.sendMessage(message)
 									}
 
 									override fun onError(code: Int, e: Exception)
@@ -84,7 +98,7 @@ class SendFileService : Service()
 											else -> message.what = ErrorHandler.UNKNOWN_ERROR
 										}
 										errorHandler.sendMessage(message)
-										TransferFileNotification.cancel(this@SendFileService)
+										TransferFileNotification.cancel(this@SendFileService, index)
 									}
 								})
 							}
@@ -96,7 +110,7 @@ class SendFileService : Service()
 							if (singleFileThreadPool.isTerminated)
 							{
 								Logs.i(TAG, "onStartCommand: 执行完毕")
-								FileTransferHandler.getInstance().clear()
+								FileTransferHelper.getInstance().clear()
 								stopSelf()
 								break
 							}

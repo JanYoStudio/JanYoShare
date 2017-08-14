@@ -14,7 +14,7 @@ import com.janyo.janyoshare.R
 import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.service.ReceiveFileService
-import com.janyo.janyoshare.util.FileTransferHandler
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.SocketUtil
 
 class ReceiveHandler : Handler()
@@ -47,7 +47,7 @@ class ReceiveHandler : Handler()
 								message.what = FileTransferConfigureActivity.CONNECTED
 								message.obj = map["message"]
 								sendMessage(message)
-								FileTransferHandler.getInstance().ip = socketUtil.ip
+								FileTransferHelper.getInstance().ip = socketUtil.ip
 								socketUtil.clientDisconnect()
 							}).start()
 						})
@@ -63,7 +63,7 @@ class ReceiveHandler : Handler()
 				progressDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
-				FileTransferHandler.getInstance().tag = 2
+				FileTransferHelper.getInstance().tag = 2
 				val intent = Intent(context, ReceiveFileService::class.java)
 				context.startService(intent)
 				(context as Activity).finish()

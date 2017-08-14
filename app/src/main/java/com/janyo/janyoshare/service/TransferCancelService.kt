@@ -17,7 +17,7 @@ class TransferCancelService : Service()
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int
 	{
-		TransferFileNotification.cancel(this)
+		TransferFileNotification.cancel(this, 0)
 		Logs.i(TAG, "onStartCommand: 退出所有服务")
 		stopSelf()
 		return super.onStartCommand(intent, flags, startId)

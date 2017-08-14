@@ -340,4 +340,21 @@ object JYFileUtil
 			outFile.delete()
 		return fileCopy(file.absolutePath, outFile.absolutePath) == 1
 	}
+
+	fun getApkIconPath(context: Context, apkPath: String?): String
+	{
+		val packageManager = context.packageManager
+		val packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES)
+		val path: String
+		if (packageInfo != null)
+		{
+			val applicationInfo = packageInfo.applicationInfo
+			applicationInfo.sourceDir = apkPath
+			applicationInfo.publicSourceDir = apkPath
+			path = context.cacheDir.absolutePath + File.separator + applicationInfo.packageName
+			saveDrawableToSd(applicationInfo.loadIcon(packageManager), path)
+			return path
+		}
+		return "null"
+	}
 }

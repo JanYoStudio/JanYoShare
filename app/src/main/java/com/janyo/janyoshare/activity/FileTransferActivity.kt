@@ -10,8 +10,9 @@ import android.view.MenuItem
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.FileTransferAdapter
 import com.janyo.janyoshare.classes.TransferFile
+import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.service.SendFileService
-import com.janyo.janyoshare.util.FileTransferHandler
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.mystery0.tools.FileUtil.FileUtil
 
 import kotlinx.android.synthetic.main.activity_file_transfer.*
@@ -28,9 +29,11 @@ class FileTransferActivity : AppCompatActivity()
 		setContentView(R.layout.activity_file_transfer)
 		setSupportActionBar(toolbar)
 
-		adapter = FileTransferAdapter(this, FileTransferHandler.getInstance().fileList)
+		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().fileList)
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
+		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
+		FileTransferHelper.getInstance().transferHelperHandler!!.adapter = adapter
 
 		fab.setOnClickListener {
 			val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -69,7 +72,8 @@ class FileTransferActivity : AppCompatActivity()
 			transferFile.fileName = file.name
 			transferFile.fileUri = FileProvider.getUriForFile(this, getString(R.string.authorities), file).toString()
 			transferFile.fileSize = file.length()
-			FileTransferHandler.getInstance().fileList.add(transferFile)
+			transferFile.filePath = data.data.path
+			FileTransferHelper.getInstance().fileList.add(transferFile)
 			adapter.notifyDataSetChanged()
 		}
 	}

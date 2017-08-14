@@ -12,8 +12,7 @@ import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
-import com.janyo.janyoshare.service.SendFileService
-import com.janyo.janyoshare.util.FileTransferHandler
+import com.janyo.janyoshare.util.FileTransferHelper
 
 class SendHandler : Handler()
 {
@@ -37,7 +36,7 @@ class SendHandler : Handler()
 				progressDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
-				FileTransferHandler.getInstance().tag = 1
+				FileTransferHelper.getInstance().tag = 1
 				(context as Activity).finish()
 				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}

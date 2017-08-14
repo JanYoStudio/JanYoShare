@@ -23,7 +23,7 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.handler.RenameHandler
 import com.janyo.janyoshare.handler.SendHandler
-import com.janyo.janyoshare.util.FileTransferHandler
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.FileUtil.FileUtil
@@ -245,21 +245,18 @@ class AppRecyclerViewAdapter(private val context: Context,
 					transferFile.fileName = installApp.name + ".apk"
 				else
 					transferFile.fileName = settings.customFileName.toFormat(installApp) + ".apk"
+				val file = if (settings.customFileName.format == "")
+					JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk")
+				else
+					JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 				transferFile.fileUri = FileProvider.getUriForFile(context,
 						context.getString(R.string.authorities),
-						if (settings.customFileName.format == "")
-							JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk")
-						else
-							JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-				).toString()
-				transferFile.fileIconPath = installApp.iconPath
+						file).toString()
+				transferFile.filePath = file.absolutePath
 				transferFile.fileSize = installApp.size
-				FileTransferHandler.getInstance().fileList.add(transferFile)
+				FileTransferHelper.getInstance().fileList.add(transferFile)
 				val intent = Intent(context, FileTransferConfigureActivity::class.java)
-//				val bundle = Bundle()
-//				bundle.putSerializable("app", transferFile)
 				intent.putExtra("action", 1)
-//				intent.putExtra("app", bundle)
 				context.startActivity(intent)
 			}
 		}

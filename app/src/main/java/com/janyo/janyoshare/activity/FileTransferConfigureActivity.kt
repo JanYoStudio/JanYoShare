@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.handler.ReceiveHandler
 import com.janyo.janyoshare.handler.SendHandler
-import com.janyo.janyoshare.util.FileTransferHandler
+import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
 import com.mystery0.tools.Logs.Logs
@@ -68,7 +68,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			progressDialog.setMessage(getString(R.string.hint_socket_wait_client))
 			progressDialog.show()
 			singleThreadPool.execute {
-				WIFIUtil(this, FileTransferHandler.getInstance().verifyPort).scanIP(object : WIFIUtil.ScanListener
+				WIFIUtil(this, FileTransferHelper.getInstance().verifyPort).scanIP(object : WIFIUtil.ScanListener
 				{
 					override fun onScan(ipv4: String, socketUtil: SocketUtil)
 					{
@@ -113,7 +113,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			Logs.i(TAG, "openAP: 创建服务端")
 			val message_create = Message()
 			message_create.what = FileTransferConfigureActivity.CREATE_SERVER
-			if (!socketUtil.createServerConnection(FileTransferHandler.getInstance().verifyPort))
+			if (!socketUtil.createServerConnection(FileTransferHelper.getInstance().verifyPort))
 			{
 				Logs.i(TAG, "openAP: 创建服务端失败")
 				return@submit
@@ -127,7 +127,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			if (socketUtil.receiveMessage() == FileTransferConfigureActivity.VERIFY_DONE)
 			{
 				Logs.i(TAG, "openAP: 验证完成")
-				FileTransferHandler.getInstance().ip = socketUtil.socket.remoteSocketAddress.toString().substring(1)
+				FileTransferHelper.getInstance().ip = socketUtil.socket.remoteSocketAddress.toString().substring(1)
 				val message = Message.obtain()
 				message.what = FileTransferConfigureActivity.CONNECTED
 				sendHandler.sendMessage(message)
