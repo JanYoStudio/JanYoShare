@@ -3,31 +3,24 @@
 package com.janyo.janyoshare.activity
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Message
-import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import com.janyo.janyoshare.R
-import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.handler.ReceiveHandler
 import com.janyo.janyoshare.handler.SendHandler
 import com.janyo.janyoshare.util.FileTransferHandler
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
-import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 
 import kotlinx.android.synthetic.main.content_file_transfer_configure.*
-import java.io.File
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 
 class FileTransferConfigureActivity : AppCompatActivity()
 {
 	private val TAG = "FileTransferConfigureActivity"
-	private val CHOOSE_FILE = 233
 	private val sendHandler = SendHandler()
 	private val receiveHandler = ReceiveHandler()
 	private lateinit var progressDialog: ProgressDialog
@@ -64,24 +57,11 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 		if (intent.getIntExtra("action", 0) == 1)
 		{
-//			val transferFile = intent.getBundleExtra("app").getSerializable("app") as TransferFile
-//			Logs.i(TAG, "onCreate: " + transferFile.fileName)
-//			Logs.i(TAG, "onCreate: " + transferFile.fileUri)
 			openAP()
 		}
 
 		sendFile.setOnClickListener {
-			//			if (FileTransferHandler.getInstance().fileList.size == 0)
-//			{
-//				val intent = Intent(Intent.ACTION_GET_CONTENT)
-//				intent.type = "*/*"
-//				intent.addCategory(Intent.CATEGORY_OPENABLE)
-//				startActivityForResult(intent, CHOOSE_FILE)
-//			}
-//			else
-//			{
 			openAP()
-//			}
 		}
 
 		receiveFile.setOnClickListener {
@@ -124,34 +104,19 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 	}
 
-//	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-//	{
-//		if (requestCode == CHOOSE_FILE && data != null)
-//		{
-//			val file = File(FileUtil.getPath(this, data.data))
-//			val transferFile = TransferFile()
-//			transferFile.fileName = file.name
-//			transferFile.fileUri = FileProvider.getUriForFile(this, getString(R.string.authorities), file).toString()
-//			transferFile.fileSize = file.length()
-//			progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
-//			progressDialog.show()
-//			openAP()
-//		}
-//	}
-
 	fun openAP()
 	{
 		progressDialog.setCancelable(true)
 		progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
 		progressDialog.show()
-		val task = singleThreadPool.submit(Runnable {
+		val task = singleThreadPool.submit {
 			Logs.i(TAG, "openAP: 创建服务端")
 			val message_create = Message()
 			message_create.what = FileTransferConfigureActivity.CREATE_SERVER
 			if (!socketUtil.createServerConnection(FileTransferHandler.getInstance().verifyPort))
 			{
 				Logs.i(TAG, "openAP: 创建服务端失败")
-				return@Runnable
+				return@submit
 			}
 			sendHandler.sendMessage(message_create)
 			Logs.i(TAG, "openAP: 验证设备")
@@ -176,7 +141,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 				socketUtil.serverDisconnect()
 				progressDialog.dismiss()
 			}
-		})
+		}
 		progressDialog.setOnCancelListener {
 			Logs.i(TAG, "openAP: 监听到返回键")
 			task.cancel(true)

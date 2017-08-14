@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.Message
 import com.janyo.janyoshare.R
-import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.classes.TransferHeader
 import com.janyo.janyoshare.handler.ErrorHandler
 import com.janyo.janyoshare.util.FileTransferHandler
@@ -20,25 +19,8 @@ class ReceiveFileService : Service()
 	private val TAG = "ReceiveFileService"
 	private lateinit var errorHandler: ErrorHandler
 	private val socketUtil = SocketUtil()
-	private var index = 0
-	private val singleThreadPool = Executors.newSingleThreadExecutor()
-
-	private val runnale = Runnable {
-		socketUtil.createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort1)
-		//获取请求头
-		val obj = socketUtil.receiveObject()
-		if (obj != null)
-		{
-			val transferHeader = obj as TransferHeader
-			FileTransferHandler.getInstance().fileList = transferHeader.list
-			Logs.i(TAG, "onCreate: 获取请求头成功")
-			receiveFile(FileTransferHandler.getInstance().fileList[index])
-		}
-		else
-		{
-			Logs.e(TAG, "onCreate: 获取请求头失败")
-		}
-	}
+	private val singleHeaderThreadPool = Executors.newSingleThreadExecutor()
+	private val singleFileThreadPool = Executors.newSingleThreadExecutor()
 
 	override fun onCreate()
 	{
@@ -53,7 +35,78 @@ class ReceiveFileService : Service()
 
 	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int
 	{
-//		thread.start()
+		singleHeaderThreadPool.execute {
+			socketUtil.createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort)
+			//获取请求头
+			val obj = socketUtil.receiveObject()
+			if (obj != null)
+			{
+				val transferHeader = obj as TransferHeader
+				FileTransferHandler.getInstance().fileList = transferHeader.list
+				Logs.i(TAG, "onCreate: 获取请求头成功")
+				Logs.i(TAG, "onStartCommand: " + transferHeader.list.size)
+				FileTransferHandler.getInstance().fileList.forEachIndexed { index, transferFile ->
+					singleFileThreadPool.execute {
+						Logs.i(TAG, "onStartCommand: " + transferFile.fileName)
+						val path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, getString(R.string.app_name))
+						socketUtil.receiveFile(transferFile.fileSize, path, object : SocketUtil.FileTransferListener
+						{
+							override fun onStart()
+							{
+								Logs.i(TAG, "onStart: ")
+								FileTransferHandler.getInstance().currentFile = transferFile
+								FileTransferHandler.getInstance().currentProgress = 0
+								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
+							}
+
+							override fun onProgress(progress: Int)
+							{
+								FileTransferHandler.getInstance().currentProgress = progress
+								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
+							}
+
+							override fun onFinish()
+							{
+								Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
+								FileTransferHandler.getInstance().currentProgress = 100
+								TransferFileNotification.done(this@ReceiveFileService, index, FileTransferHandler.getInstance().currentFile!!)
+							}
+
+							override fun onError(code: Int, e: Exception)
+							{
+								Logs.e(TAG, "onError: code: " + code)
+								e.printStackTrace()
+								val message = Message()
+								when (code)
+								{
+									1 -> message.what = ErrorHandler.FILE_EXISTS
+									else -> message.what = ErrorHandler.UNKNOWN_ERROR
+								}
+								errorHandler.sendMessage(message)
+							}
+						})
+					}
+					Thread.sleep(1000)
+				}
+				singleFileThreadPool.shutdown()
+				while (true)
+				{
+					if (singleFileThreadPool.isTerminated)
+					{
+						Logs.i(TAG, "onStartCommand: 传输完成")
+						FileTransferHandler.getInstance().clear()
+						stopSelf()
+						break
+					}
+					Thread.sleep(500)
+				}
+			}
+			else
+			{
+				Logs.e(TAG, "onCreate: 获取请求头失败")
+				stopSelf()
+			}
+		}
 		return super.onStartCommand(intent, flags, startId)
 	}
 
@@ -61,48 +114,5 @@ class ReceiveFileService : Service()
 	{
 		socketUtil.clientDisconnect()
 		Logs.i(TAG, "onDestroy: ")
-	}
-
-	private fun receiveFile(transferFile: TransferFile)
-	{
-		val path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, getString(R.string.app_name))
-		socketUtil.receiveFile(transferFile.fileSize, path, object : SocketUtil.FileTransferListener
-		{
-			override fun onStart()
-			{
-				Logs.i(TAG, "onStart: ")
-				FileTransferHandler.getInstance().currentFile = transferFile
-				FileTransferHandler.getInstance().currentProgress = 0
-				TransferFileNotification.notify(this@ReceiveFileService, index, "start")
-			}
-
-			override fun onProgress(progress: Int)
-			{
-				FileTransferHandler.getInstance().currentProgress = progress
-				TransferFileNotification.notify(this@ReceiveFileService, index, "start")
-			}
-
-			override fun onFinish()
-			{
-				Logs.i(TAG, "onFinish: " + FileTransferHandler.getInstance().currentFile!!.fileName)
-				FileTransferHandler.getInstance().currentProgress = 100
-				TransferFileNotification.done(this@ReceiveFileService, index, FileTransferHandler.getInstance().currentFile!!)
-				FileTransferHandler.getInstance().clear()
-				stopSelf()
-			}
-
-			override fun onError(code: Int, e: Exception)
-			{
-				Logs.e(TAG, "onError: code: " + code)
-				e.printStackTrace()
-				val message = Message()
-				when (code)
-				{
-					1 -> message.what = ErrorHandler.FILE_EXISTS
-					else -> message.what = ErrorHandler.UNKNOWN_ERROR
-				}
-				errorHandler.sendMessage(message)
-			}
-		})
 	}
 }

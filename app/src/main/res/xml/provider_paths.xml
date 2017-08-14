@@ -6,4 +6,7 @@
     <external-path
         name="OBB"
         path="Android/obb/"/>
+    <external-path
+        name="external"
+        path="/"/>
 </paths>
