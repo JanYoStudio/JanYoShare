@@ -332,15 +332,6 @@ object JYFileUtil
 		return list
 	}
 
-	fun saveImage(context: Context, fileName: String): Boolean
-	{
-		val file = File(context.externalCacheDir.absolutePath + File.separator + fileName + ".png")
-		val outFile = File(Environment.getExternalStoragePublicDirectory(context.getString(R.string.app_name)), fileName + ".png")
-		if (outFile.exists())
-			outFile.delete()
-		return fileCopy(file.absolutePath, outFile.absolutePath) == 1
-	}
-
 	fun getApkIconPath(context: Context, apkPath: String?): String
 	{
 		val packageManager = context.packageManager
