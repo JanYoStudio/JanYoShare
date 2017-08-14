@@ -7,7 +7,6 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar

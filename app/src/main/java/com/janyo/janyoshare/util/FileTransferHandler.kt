@@ -10,8 +10,7 @@ class FileTransferHandler private constructor()
 	var currentProgress = 0
 	var ip: String = "null"
 	val verifyPort = 8989
-	val transferPort1 = 2333
-	val transferPort2 = 3222
+	val transferPort = 2333
 
 	private object instance
 	{

@@ -39,7 +39,7 @@ class SocketUtil
 
 	fun createSocketConnection(host: String, port: Int): Boolean
 	{
-		for (i in 0..19)
+		while (true)
 		{
 			try
 			{
@@ -111,6 +111,7 @@ class SocketUtil
 
 	fun receiveFile(fileSize: Long, path: String, fileTransferListener: FileTransferListener): File?
 	{
+		createSocketConnection(FileTransferHandler.getInstance().ip, FileTransferHandler.getInstance().transferPort)
 		val file = File(path)
 		if (file.exists())
 		{
@@ -131,7 +132,7 @@ class SocketUtil
 				val read = dataInputStream!!.read(bytes)
 				transferredSize += read
 				Logs.i(TAG, "receiveFile: " + read)
-				if (read == -1)
+				if (read <= 0)
 				{
 					Logs.i(TAG, "receiveFile: 退出循环")
 					break
@@ -139,6 +140,11 @@ class SocketUtil
 				fileTransferListener.onProgress((transferredSize * 100 / fileSize).toInt())
 				dataOutputStream.write(bytes, 0, read)
 				Logs.i(TAG, "receiveFile: 写入" + read + "个数据")
+				if (fileSize == transferredSize)
+				{
+					Logs.i(TAG, "receiveFile: 退出循环")
+					break
+				}
 				Thread.sleep(100)
 				if (socket.isClosed)
 				{
@@ -159,6 +165,7 @@ class SocketUtil
 	fun sendFile(context: Context, transferFile: TransferFile,
 				 fileTransferListener: FileTransferListener)
 	{
+		createServerConnection(FileTransferHandler.getInstance().transferPort)
 		try
 		{
 			Logs.i(TAG, "sendFile: fileSize" + transferFile.fileSize)
@@ -209,6 +216,7 @@ class SocketUtil
 		{
 			Logs.wtf(TAG, "receiveObject", e)
 		}
+		clientDisconnect()
 		return obj
 	}
 
@@ -229,6 +237,7 @@ class SocketUtil
 			Logs.wtf(TAG, "sendObject", e)
 			return false
 		}
+		serverDisconnect()
 		return true
 	}
 

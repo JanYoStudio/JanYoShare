@@ -11,6 +11,7 @@ import android.os.Message
 import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.service.ReceiveFileService
 import com.janyo.janyoshare.util.FileTransferHandler
@@ -33,14 +34,13 @@ class ReceiveHandler : Handler()
 			{
 				@Suppress("UNCHECKED_CAST")
 				val map = msg.obj as HashMap<String, Any>
+				val socketUtil = map["socket"] as SocketUtil
 				AlertDialog.Builder(context)
 						.setCancelable(false)
 						.setTitle(R.string.hint_socket_verify_device_title)
 						.setMessage(String.format(context.getString(R.string.hint_socket_verify_device_message), map["message"]))
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							Thread(Runnable {
-								val socketUtil = map["socket"] as SocketUtil
-
 								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_DONE)
 
 								val message = Message()
@@ -51,7 +51,11 @@ class ReceiveHandler : Handler()
 								socketUtil.clientDisconnect()
 							}).start()
 						})
-						.setNegativeButton(R.string.action_cancel, null)
+						.setNegativeButton(R.string.action_cancel, { _, _ ->
+							Thread(Runnable {
+								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_CANCEL)
+							}).start()
+						})
 						.show()
 			}
 			FileTransferConfigureActivity.CONNECTED ->
@@ -61,10 +65,9 @@ class ReceiveHandler : Handler()
 						.show()
 				FileTransferHandler.getInstance().tag = 2
 				val intent = Intent(context, ReceiveFileService::class.java)
-//				intent.putExtra("action", "start")
 				context.startService(intent)
 				(context as Activity).finish()
-//				context.startActivity(Intent(context, FileTransferActivity::class.java))
+				context.startActivity(Intent(context, FileTransferActivity::class.java))
 			}
 			FileTransferConfigureActivity.SCAN_COMPLETE ->
 			{
