@@ -17,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
-import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.activity.SettingsActivity
 
