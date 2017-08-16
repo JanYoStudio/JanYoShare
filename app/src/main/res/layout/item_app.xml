@@ -2,8 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/item_app_height"
-    android:layout_marginTop="@dimen/item_app_margin">
+    android:layout_height="@dimen/item_app_height">
 
     <View
         android:layout_width="match_parent"
@@ -11,22 +10,40 @@
         android:layout_alignParentBottom="true"
         android:background="@color/textColorBlack"/>
 
-    <ImageView
-        android:id="@+id/app_icon"
-        android:layout_width="@dimen/item_app_height"
-        android:layout_height="@dimen/item_app_height"
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="@dimen/item_app_img_height"
+        android:layout_height="@dimen/item_app_img_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="@dimen/item_app_margin"
-        android:contentDescription="@string/app_name"/>
+        android:layout_marginTop="@dimen/item_app_margin">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="@dimen/item_app_img_height"
+            android:layout_height="@dimen/item_app_img_height"
+            android:contentDescription="@string/app_name"/>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="@dimen/item_app_img_height"
+            android:layout_height="@dimen/item_app_img_height"
+            android:layout_gravity="center"
+            android:background="?android:attr/listChoiceIndicatorMultiple"
+            android:button="@null"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_app_height"
         android:layout_marginBottom="@dimen/item_app_margin"
-        android:layout_toEndOf="@id/app_icon"
+        android:layout_marginTop="@dimen/item_app_margin"
+        android:layout_toEndOf="@id/frameLayout"
         android:layout_toLeftOf="@id/app_size"
-        android:layout_toRightOf="@id/app_icon"
+        android:layout_toRightOf="@id/frameLayout"
         android:layout_toStartOf="@id/app_size"
         android:orientation="vertical">
 
@@ -66,6 +83,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/item_app_margin"
+        android:layout_marginTop="@dimen/item_app_margin"
         android:gravity="center_vertical"/>
 
 </RelativeLayout>

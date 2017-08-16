@@ -18,6 +18,10 @@
         android:key="@string/key_custom_name_format"
         android:title="@string/title_custom_name_format"/>
 
+    <Preference
+        android:key="@string/key_long_click_do"
+        android:title="@string/title_long_click_do"/>
+
     <PreferenceCategory
         android:key="@string/key_developer_mode"
         android:title="@string/title_developer_mode">
