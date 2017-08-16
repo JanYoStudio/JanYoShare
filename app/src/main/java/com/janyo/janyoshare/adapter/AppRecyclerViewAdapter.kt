@@ -39,9 +39,9 @@ class AppRecyclerViewAdapter(private val context: Context,
 	private val renameHandler = RenameHandler(context as Activity)
 	private val shareList = ArrayList<File>()
 	private val settings = Settings.getInstance(context)
-	var progressDialog = ProgressDialog(context)
+	private var progressDialog = ProgressDialog(context)
 
-	val sendHandler = SendHandler()
+	private val sendHandler = SendHandler()
 
 	init
 	{
@@ -52,8 +52,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 	override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder
 	{
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_app, parent, false)
-		val holder = ViewHolder(view)
-		return holder
+		return ViewHolder(view)
 	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int)
@@ -80,11 +79,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 						if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
 						{
 							singleThreadPool.execute {
-								val code: Int
-								if (settings.customFileName.format == "")
-									code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
+								val code: Int = if (settings.customFileName.format == "")
+									JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 								else
-									code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+									JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 								progressDialog.dismiss()
 								when
 								{
@@ -93,7 +91,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 										Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
 												.show()
 									}
-									code == 1 || choose == 2 || choose == 3 || choose == 5 ->
+									code == 1 || choose != 0 ->
 										doChoose(choose, installApp)
 									code == 0 ->
 									{
@@ -105,11 +103,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 															JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
 														else
 															JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
-														val temp: Int
-														if (settings.customFileName.format == "")
-															temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
+														val temp: Int = if (settings.customFileName.format == "")
+															JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
 														else
-															temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+															JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
 														progressDialog.dismiss()
 														if (temp == 1)
 														{
@@ -269,10 +266,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 
 	class ViewHolder(var fullView: View) : RecyclerView.ViewHolder(fullView)
 	{
-		var imageView: ImageView = fullView.findViewById<ImageView>(R.id.app_icon)
-		var textView_name: TextView = fullView.findViewById<TextView>(R.id.app_name)
-		var textView_packageName: TextView = fullView.findViewById<TextView>(R.id.app_package_name)
-		var textView_versionName: TextView = fullView.findViewById<TextView>(R.id.app_version_name)
-		var textView_size: TextView = fullView.findViewById<TextView>(R.id.app_size)
+		var imageView: ImageView = fullView.findViewById(R.id.app_icon)
+		var textView_name: TextView = fullView.findViewById(R.id.app_name)
+		var textView_packageName: TextView = fullView.findViewById(R.id.app_package_name)
+		var textView_versionName: TextView = fullView.findViewById(R.id.app_version_name)
+		var textView_size: TextView = fullView.findViewById(R.id.app_size)
 	}
 }
