@@ -8,19 +8,21 @@ import java.io.*
 import java.net.ConnectException
 import java.net.ServerSocket
 import java.net.Socket
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 
 class SocketUtil
 {
 	private val TAG = "SocketUtil"
-	var isServerClose = false
 	lateinit var socket: Socket
-	lateinit var serverSocket: ServerSocket
+	private lateinit var serverSocket: ServerSocket
 	lateinit var ip: String
 
 	fun tryCreateSocketConnection(host: String, port: Int): Boolean
 	{
-		try
+		return try
 		{
 			val socket = Socket(host, port)
 			if (socket.isConnected)
@@ -29,11 +31,11 @@ class SocketUtil
 				ip = host
 				this.socket = socket
 			}
-			return socket.isConnected
+			socket.isConnected
 		}
 		catch (e: ConnectException)
 		{
-			return false
+			false
 		}
 	}
 
@@ -65,15 +67,31 @@ class SocketUtil
 	{
 		try
 		{
-			serverSocket = ServerSocket(port)
-			socket = serverSocket.accept()
-			if (isServerClose)
+			val singleThreadPool = Executors.newSingleThreadExecutor()
+			val task = singleThreadPool.submit {
+				serverSocket = ServerSocket(port)
+				socket = serverSocket.accept()
+			}
+			try
+			{
+				task.get(20, TimeUnit.SECONDS)
+			}
+			catch (e: TimeoutException)
+			{
+				serverDisconnect()
+				Logs.wtf(TAG, "createServerConnection: 超时", e)
 				return false
+			}
+			finally
+			{
+				task.cancel(true)
+			}
 			socket.keepAlive = true
 			this.socket = socket
 		}
 		catch (e: Exception)
 		{
+			serverDisconnect()
 			Logs.wtf(TAG, "createServerConnection", e)
 			return false
 		}
@@ -83,14 +101,22 @@ class SocketUtil
 	fun receiveMessage(): String
 	{
 		var response = "null"
-		try
-		{
+		val executorService = Executors.newSingleThreadExecutor()
+		val task = executorService.submit {
 			val inputStream = socket.getInputStream()
 			response = BufferedReader(InputStreamReader(inputStream)).readLine()
 		}
-		catch (e: Exception)
+		try
 		{
-			Logs.wtf(TAG, "receiveMessage", e)
+			task.get(20, TimeUnit.SECONDS)
+		}
+		catch (e: TimeoutException)
+		{
+			Logs.wtf(TAG, "receiveMessage: 超时", e)
+		}
+		finally
+		{
+			task.cancel(true)
 		}
 		return response
 	}
@@ -249,9 +275,15 @@ class SocketUtil
 
 	fun serverDisconnect()
 	{
-		Logs.i(TAG, "serverDisconnect: 服务端终止连接")
-		isServerClose = true
-		serverSocket.close()
+		try
+		{
+			Logs.i(TAG, "serverDisconnect: 服务端终止连接")
+			serverSocket.close()
+		}
+		catch (e: Exception)
+		{
+			Logs.wtf(TAG, "serverDisconnect: ", e)
+		}
 	}
 
 	interface FileTransferListener
