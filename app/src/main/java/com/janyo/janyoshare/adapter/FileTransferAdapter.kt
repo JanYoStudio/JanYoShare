@@ -18,15 +18,12 @@ import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
 import com.mystery0.tools.FileUtil.FileUtil
-import com.mystery0.tools.Logs.Logs
 import java.io.File
 import java.io.Serializable
 
 class FileTransferAdapter(val context: Context,
 						  val list: List<TransferFile>) : RecyclerView.Adapter<FileTransferAdapter.ViewHolder>(), Serializable
 {
-	private val TAG = "FileTransferAdapter"
-
 	override fun onBindViewHolder(holder: ViewHolder, position: Int)
 	{
 		val transferFile = list[position]
