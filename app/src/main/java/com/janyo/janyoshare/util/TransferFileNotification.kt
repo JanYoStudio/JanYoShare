@@ -58,6 +58,7 @@ object TransferFileNotification
 		val builder = NotificationCompat.Builder(context, context.getString(R.string.app_name))
 				.setSmallIcon(R.drawable.ic_send)
 				.setContentTitle(title)
+				.setContentText(context.getString(R.string.hint_transfer_file_notification_message))
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setContentIntent(
 						PendingIntent.getActivity(

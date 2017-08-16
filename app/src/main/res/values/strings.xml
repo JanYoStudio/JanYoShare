@@ -65,6 +65,7 @@
     <string name="hint_developer_mode">还差%1$d步启用开发者模式</string>
     <string name="hint_developer_mode_enable">已启用开发者模式！</string>
     <string name="hint_transfer_file_notification_title">正在传输： %1$s</string>
+    <string name="hint_transfer_file_notification_message">点击打开文件</string>
     <string name="hint_transfer_file_notification_done">传输完成： %1$s</string>
     <string name="hint_transfer_file_exists">文件已存在！</string>
     <string name="hint_transfer_file_not_exists">文件不存在！</string>
