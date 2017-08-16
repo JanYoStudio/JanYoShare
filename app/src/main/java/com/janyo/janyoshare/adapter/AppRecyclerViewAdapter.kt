@@ -316,6 +316,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 				transferFile.filePath = file.absolutePath
 				transferFile.fileSize = installApp.size
 				FileTransferHelper.getInstance().fileList.add(transferFile)
+				FileTransferHelper.getInstance().transferHelperHandler!!.list.add(transferFile)
 				val intent = Intent(context, FileTransferConfigureActivity::class.java)
 				intent.putExtra("action", 1)
 				context.startActivity(intent)
