@@ -4,8 +4,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.os.Message
-import android.widget.Toast
-import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferHeader
 import com.janyo.janyoshare.handler.ErrorHandler
 import com.janyo.janyoshare.handler.TransferHelperHandler
@@ -116,6 +114,11 @@ class SendFileService : Service()
 							if (singleFileThreadPool.isTerminated)
 							{
 								Logs.i(TAG, "onStartCommand: 执行完毕")
+								FileTransferHelper.getInstance().fileList
+										.filter { it.transferProgress == 100 }
+										.forEachIndexed { index, transferFile ->
+											TransferFileNotification.done(this@SendFileService, index, transferFile)
+										}
 								FileTransferHelper.getInstance().clear()
 								stopSelf()
 								break
