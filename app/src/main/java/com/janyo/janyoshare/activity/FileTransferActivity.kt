@@ -74,6 +74,7 @@ class FileTransferActivity : AppCompatActivity()
 			transferFile.fileSize = file.length()
 			transferFile.filePath = data.data.path
 			FileTransferHelper.getInstance().fileList.add(transferFile)
+			FileTransferHelper.getInstance().transferHelperHandler!!.list.add(transferFile)
 			adapter.notifyDataSetChanged()
 		}
 	}

@@ -122,11 +122,10 @@ object JYFileUtil
 	{
 		val share = Intent(Intent.ACTION_SEND)
 		share.type = "*/*"
-		val uri: Uri
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-			uri = FileProvider.getUriForFile(context, context.getString(R.string.authorities), file)
+		val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			FileProvider.getUriForFile(context, context.getString(R.string.authorities), file)
 		else
-			uri = Uri.fromFile(file)
+			Uri.fromFile(file)
 		Logs.i(TAG, "Share: " + uri)
 		share.putExtra(Intent.EXTRA_STREAM, uri)
 		grantUriPermission(context, share, uri)
@@ -252,7 +251,7 @@ object JYFileUtil
 		return bitmap
 	}
 
-	fun getFileEnd(path: String?): String
+	private fun getFileEnd(path: String?): String
 	{
 		return path!!.substring(path.lastIndexOf(".") + 1)
 	}

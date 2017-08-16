@@ -1,6 +1,10 @@
 package com.janyo.janyoshare.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -65,6 +69,18 @@ class FileTransferAdapter(val context: Context,
 			}
 		else
 			holder.fileImg.setImageResource(R.mipmap.ic_file)
+		holder.itemView.setOnClickListener {
+			val uri: Uri = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+				FileProvider.getUriForFile(context, context.getString(R.string.authorities), File(path))
+			else
+				Uri.fromFile(File(path))
+			val mimeType = context.contentResolver.getType(uri)
+			val intent = Intent(Intent.ACTION_VIEW)
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+			intent.setDataAndType(uri, mimeType)
+			JYFileUtil.grantUriPermission(context, intent, uri)
+			context.startActivity(intent)
+		}
 	}
 
 	override fun getItemCount(): Int
