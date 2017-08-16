@@ -29,10 +29,10 @@ class FileTransferActivity : AppCompatActivity()
 		setContentView(R.layout.activity_file_transfer)
 		setSupportActionBar(toolbar)
 
-		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().fileList)
+		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
+		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().transferHelperHandler!!.list)
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		recycler_view.adapter = adapter
-		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
 		FileTransferHelper.getInstance().transferHelperHandler!!.adapter = adapter
 
 		fab.setOnClickListener {
