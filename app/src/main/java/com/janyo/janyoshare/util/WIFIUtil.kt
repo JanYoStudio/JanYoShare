@@ -5,12 +5,12 @@ import com.mystery0.tools.Logs.Logs
 import java.net.NetworkInterface
 import java.util.concurrent.Executors
 
-class WIFIUtil(var context: Context, val port: Int)
+class WIFIUtil(var context: Context, private val port: Int)
 {
 	private val TAG = "WIFIUtil"
 	private var localAddress = ""//存储本机ip，例：本地ip ：192.168.1.1
 
-	fun getLocalAddress()
+	private fun getLocalAddress()
 	{
 		try
 		{
@@ -52,16 +52,15 @@ class WIFIUtil(var context: Context, val port: Int)
 		val cacheThreadPool = Executors.newCachedThreadPool()//创建线程池
 		for (i in 0..255)
 		{
-			cacheThreadPool.execute {
+			cacheThreadPool.submit {
 				val currentIP = localAddressIndex + i
 				if (currentIP == localAddress)
 				{
-					return@execute
+					return@submit
 				}
 				val socketUtil = SocketUtil()
 				try
 				{
-					Logs.i(TAG, "scanIP: " + currentIP)
 					if (socketUtil.tryCreateSocketConnection(currentIP, port))
 					{
 						isDeviceFind = true
@@ -87,7 +86,7 @@ class WIFIUtil(var context: Context, val port: Int)
 		}
 	}
 
-	fun isIpv4(ipv4: String): Boolean
+	private fun isIpv4(ipv4: String): Boolean
 	{
 		if (ipv4.isEmpty())
 		{
