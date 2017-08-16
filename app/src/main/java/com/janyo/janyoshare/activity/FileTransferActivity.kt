@@ -2,6 +2,7 @@ package com.janyo.janyoshare.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -48,6 +49,7 @@ class FileTransferActivity : AppCompatActivity()
 			{
 				val position = viewHolder.adapterPosition
 				Logs.i(TAG, "onSwiped: " + position)
+				FileTransferHelper.getInstance().fileList.removeAt(position)
 				FileTransferHelper.getInstance().transferHelperHandler!!.list.removeAt(position)
 				adapter.notifyItemRemoved(position)
 			}
@@ -76,9 +78,17 @@ class FileTransferActivity : AppCompatActivity()
 		{
 			R.id.action_send_files ->
 			{
-				val intent = Intent(this, SendFileService::class.java)
-				intent.putExtra("action", "start")
-				startService(intent)
+				if (FileTransferHelper.getInstance().fileList.size == 0)
+				{
+					Snackbar.make(coordinatorLayout, R.string.hint_transfer_file_not_exists, Snackbar.LENGTH_SHORT)
+							.show()
+				}
+				else
+				{
+					val intent = Intent(this, SendFileService::class.java)
+					intent.putExtra("action", "start")
+					startService(intent)
+				}
 			}
 		}
 		return super.onOptionsItemSelected(item)

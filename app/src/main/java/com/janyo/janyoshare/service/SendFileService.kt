@@ -4,6 +4,8 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.os.Message
+import android.widget.Toast
+import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferHeader
 import com.janyo.janyoshare.handler.ErrorHandler
 import com.janyo.janyoshare.handler.TransferHelperHandler
@@ -60,7 +62,7 @@ class SendFileService : Service()
 									{
 										Logs.i(TAG, "onStart: ")
 										FileTransferHelper.getInstance().currentFileIndex = index
-										FileTransferHelper.getInstance().fileList[index].transferProgress = 0
+										transferFile.transferProgress = 0
 										TransferFileNotification.notify(this@SendFileService, index, "start")
 										val message = Message()
 										message.what = TransferHelperHandler.UPDATE_UI
@@ -70,7 +72,7 @@ class SendFileService : Service()
 									override fun onProgress(progress: Int)
 									{
 										Logs.i(TAG, "onProgress: " + progress)
-										FileTransferHelper.getInstance().fileList[index].transferProgress = progress
+										transferFile.transferProgress = progress
 										TransferFileNotification.notify(this@SendFileService, index, "start")
 										val message = Message()
 										message.what = TransferHelperHandler.UPDATE_UI
@@ -79,11 +81,15 @@ class SendFileService : Service()
 
 									override fun onFinish()
 									{
-										Logs.i(TAG, "onFinish: " + FileTransferHelper.getInstance().fileList[index].fileName)
-										FileTransferHelper.getInstance().fileList[index].transferProgress = 100
-										TransferFileNotification.done(this@SendFileService, index, FileTransferHelper.getInstance().fileList[index])
+										Logs.i(TAG, "onFinish: " + transferFile.fileName)
+										transferFile.transferProgress = 100
+										TransferFileNotification.done(this@SendFileService, index, transferFile)
+										val map = HashMap<String, Any>()
+										map.put("context", this@SendFileService)
+										map.put("fileName", transferFile.fileName!!)
 										val message = Message()
-										message.what = TransferHelperHandler.UPDATE_UI
+										message.obj = map
+										message.what = TransferHelperHandler.UPDATE_TOAST
 										transferHelperHandler.sendMessage(message)
 									}
 
