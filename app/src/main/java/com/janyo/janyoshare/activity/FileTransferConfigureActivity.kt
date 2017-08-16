@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.handler.ReceiveHandler
 import com.janyo.janyoshare.handler.SendHandler
@@ -136,6 +137,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 				Thread.sleep(100)
 				Logs.i(TAG, "openAP: 创建服务端失败")
 				progressDialog.dismiss()
+				Toast.makeText(this, R.string.hint_socket_timeout, Toast.LENGTH_SHORT)
+						.show()
 				return@submit
 			}
 			Thread.sleep(100)

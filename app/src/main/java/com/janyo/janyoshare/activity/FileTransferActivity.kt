@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import com.janyo.janyoshare.R
@@ -14,12 +16,14 @@ import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.mystery0.tools.FileUtil.FileUtil
+import com.mystery0.tools.Logs.Logs
 
 import kotlinx.android.synthetic.main.activity_file_transfer.*
 import java.io.File
 
 class FileTransferActivity : AppCompatActivity()
 {
+	private val TAG = "FileTransferActivity"
 	private val CHOOSE_FILE = 233
 	private lateinit var adapter: FileTransferAdapter
 
@@ -32,6 +36,23 @@ class FileTransferActivity : AppCompatActivity()
 		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
 		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().transferHelperHandler!!.list)
 		recycler_view.layoutManager = LinearLayoutManager(this)
+		val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
+		{
+			override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+								target: RecyclerView.ViewHolder): Boolean
+			{
+				return false
+			}
+
+			override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
+			{
+				val position = viewHolder.adapterPosition
+				Logs.i(TAG, "onSwiped: " + position)
+				FileTransferHelper.getInstance().transferHelperHandler!!.list.removeAt(position)
+				adapter.notifyItemRemoved(position)
+			}
+		}
+		ItemTouchHelper(callback).attachToRecyclerView(recycler_view)
 		recycler_view.adapter = adapter
 		FileTransferHelper.getInstance().transferHelperHandler!!.adapter = adapter
 
