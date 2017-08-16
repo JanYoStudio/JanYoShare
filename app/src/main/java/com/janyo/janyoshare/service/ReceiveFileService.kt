@@ -58,6 +58,8 @@ class ReceiveFileService : Service()
 				val transferHeader = obj as TransferHeader
 				FileTransferHelper.getInstance().fileList.clear()
 				FileTransferHelper.getInstance().fileList.addAll(transferHeader.list)
+				FileTransferHelper.getInstance().transferHelperHandler!!.list.clear()
+				FileTransferHelper.getInstance().transferHelperHandler!!.list.addAll(transferHeader.list)
 				Logs.i(TAG, "onCreate: 获取请求头成功")
 				Logs.i(TAG, "onStartCommand: " + transferHeader.list.size)
 				val updateListMessage = Message()
