@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.FileTransferAdapter
 import com.janyo.janyoshare.classes.TransferFile
@@ -37,24 +38,29 @@ class FileTransferActivity : AppCompatActivity()
 		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
 		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().transferHelperHandler!!.list)
 		recycler_view.layoutManager = LinearLayoutManager(this)
-		val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
+		if (FileTransferHelper.getInstance().tag == 1)
 		{
-			override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-								target: RecyclerView.ViewHolder): Boolean
+			val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
 			{
-				return false
-			}
+				override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+									target: RecyclerView.ViewHolder): Boolean
+				{
+					return false
+				}
 
-			override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
-			{
-				val position = viewHolder.adapterPosition
-				Logs.i(TAG, "onSwiped: " + position)
-				FileTransferHelper.getInstance().fileList.removeAt(position)
-				FileTransferHelper.getInstance().transferHelperHandler!!.list.removeAt(position)
-				adapter.notifyItemRemoved(position)
+				override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
+				{
+					val position = viewHolder.adapterPosition
+					Logs.i(TAG, "onSwiped: " + position)
+					FileTransferHelper.getInstance().fileList.removeAt(position)
+					FileTransferHelper.getInstance().transferHelperHandler!!.list.removeAt(position)
+					adapter.notifyItemRemoved(position)
+				}
 			}
+			ItemTouchHelper(callback).attachToRecyclerView(recycler_view)
 		}
-		ItemTouchHelper(callback).attachToRecyclerView(recycler_view)
+		else
+			fab.visibility = View.GONE
 		recycler_view.adapter = adapter
 		FileTransferHelper.getInstance().transferHelperHandler!!.adapter = adapter
 
@@ -68,7 +74,8 @@ class FileTransferActivity : AppCompatActivity()
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean
 	{
-		menuInflater.inflate(R.menu.menu_file_transfer, menu)
+		if (FileTransferHelper.getInstance().tag == 1)
+			menuInflater.inflate(R.menu.menu_file_transfer, menu)
 		return true
 	}
 
@@ -103,7 +110,7 @@ class FileTransferActivity : AppCompatActivity()
 			transferFile.fileName = file.name
 			transferFile.fileUri = FileProvider.getUriForFile(this, getString(R.string.authorities), file).toString()
 			transferFile.fileSize = file.length()
-			transferFile.filePath = data.data.path
+			transferFile.filePath = FileUtil.getPath(this, data.data)
 			FileTransferHelper.getInstance().fileList.add(transferFile)
 			FileTransferHelper.getInstance().transferHelperHandler!!.list.add(transferFile)
 			adapter.notifyDataSetChanged()
