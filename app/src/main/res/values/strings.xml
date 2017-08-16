@@ -57,6 +57,7 @@
     <string name="hint_socket_wait_server">等待设备连接……</string>
     <string name="hint_socket_wait_client">正在搜索设备……</string>
     <string name="hint_socket_connecting">连接中……</string>
+    <string name="hint_socket_timeout">连接超时！</string>
     <string name="hint_socket_verify_device_title">确认设备？</string>
     <string name="hint_socket_verify_device_message">确认从 %1$s 处接收文件吗？</string>
     <string name="hint_socket_verifying">验证中……</string>
