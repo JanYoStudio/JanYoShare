@@ -24,6 +24,7 @@ import com.janyo.janyoshare.activity.SettingsActivity
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
+import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
 import java.io.File
@@ -42,6 +43,7 @@ class AppFragment : Fragment()
 	private lateinit var settings: Settings
 	private var index = 0
 	private lateinit var loadHandler: LoadHandler
+	private lateinit var exportHandler: ExportHandler
 	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -147,6 +149,7 @@ class AppFragment : Fragment()
 						progressDialog.dismiss()
 						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
 								.show()
+						exportHandler.sendEmptyMessage(0)
 					}
 				})
 			}
@@ -169,6 +172,7 @@ class AppFragment : Fragment()
 															 event: Int)
 									{
 										JYFileUtil.doShare(context, fileList)
+										exportHandler.sendEmptyMessage(0)
 									}
 								})
 								.show()
@@ -196,6 +200,7 @@ class AppFragment : Fragment()
 		recyclerView.layoutManager = LinearLayoutManager(activity)
 		recyclerView.adapter = appRecyclerViewAdapter
 		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter, swipeRefreshLayout)
+		exportHandler = ExportHandler(appRecyclerViewAdapter, activity)
 
 		refreshList()
 
