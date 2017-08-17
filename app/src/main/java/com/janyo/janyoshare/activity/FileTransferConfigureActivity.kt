@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.handler.ReceiveHandler
 import com.janyo.janyoshare.handler.SendHandler
+import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
@@ -50,6 +51,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		sendHandler.context = this
 		receiveHandler.progressDialog = progressDialog
 		receiveHandler.context = this
+		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
 		{
@@ -58,6 +60,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 		if (intent.getIntExtra("action", 0) == 1)
 		{
+			FileTransferHelper.getInstance().transferHelperHandler!!.list.clear()
+			FileTransferHelper.getInstance().transferHelperHandler!!.list.addAll(FileTransferHelper.getInstance().fileList)
 			openAP()
 		}
 
