@@ -41,6 +41,7 @@
         <activity
             android:name=".activity.FileTransferConfigureActivity"
             android:label="@string/title_activity_file_transfer_configure"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".activity.ShareActivity"
@@ -123,6 +124,7 @@
         <activity
             android:name=".activity.FileTransferActivity"
             android:label="@string/title_activity_file_transfer"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
     </application>
