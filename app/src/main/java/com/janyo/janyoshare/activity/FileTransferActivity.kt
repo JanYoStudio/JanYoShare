@@ -35,7 +35,6 @@ class FileTransferActivity : AppCompatActivity()
 		setContentView(R.layout.activity_file_transfer)
 		setSupportActionBar(toolbar)
 
-		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
 		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().transferHelperHandler!!.list)
 		recycler_view.layoutManager = LinearLayoutManager(this)
 		if (FileTransferHelper.getInstance().tag == 1)
