@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 
 def a = 2
 def b = 8
-def c = 0
+def c = 1
 
 autoVersion {
     major a
