@@ -95,7 +95,7 @@
     <string name="hint_jys_rename_error">重命名失败！</string>
     <string name="hint_long_click_do_title">请选择长按的操作</string>
 
-    <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
+    <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
     <string name="address_become_test">https://play.google.com/apps/testing/com.janyo.janyoshare</string>
     <string name="address_join_test_group">https://jq.qq.com/?_wv=1027&amp;k=4Ea0d0A</string>
