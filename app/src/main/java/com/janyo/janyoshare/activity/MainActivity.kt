@@ -211,7 +211,7 @@ class MainActivity : AppCompatActivity()
 		}
 		else
 		{
-			finish()
+			System.exit(0)//销毁进程
 		}
 	}
 
