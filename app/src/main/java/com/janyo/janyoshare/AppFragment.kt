@@ -3,6 +3,7 @@
 package com.janyo.janyoshare
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -17,13 +18,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
+import android.widget.Toast
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.activity.SettingsActivity
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
+import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
+import java.io.File
 
 import java.util.ArrayList
 import java.util.concurrent.Executors
@@ -39,6 +43,7 @@ class AppFragment : Fragment()
 	private lateinit var settings: Settings
 	private var index = 0
 	private lateinit var loadHandler: LoadHandler
+	private lateinit var exportHandler: ExportHandler
 	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -52,6 +57,7 @@ class AppFragment : Fragment()
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
 	{
 		inflater.inflate(R.menu.menu_main, menu)
+		appRecyclerViewAdapter.menu = menu
 		@Suppress("CAST_NEVER_SUCCEEDS")
 		val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
@@ -129,7 +135,50 @@ class AppFragment : Fragment()
 			}
 			R.id.action_file_transfer -> startActivity(Intent(activity, FileTransferConfigureActivity::class.java))
 			R.id.action_settings -> startActivity(Intent(activity, SettingsActivity::class.java))
-//			R.id.action_settings -> startActivity(Intent(activity, FileTransferActivity::class.java))
+			R.id.action_export ->
+			{
+				val list = appRecyclerViewAdapter.multiChoiceList
+				val progressDialog = ProgressDialog(activity)
+				progressDialog.setCancelable(false)
+				progressDialog.setMessage(getString(R.string.copy_file_loading))
+				progressDialog.show()
+				exportAPK(list, object : ExportListener
+				{
+					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
+					{
+						progressDialog.dismiss()
+						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
+								.show()
+						exportHandler.sendEmptyMessage(0)
+					}
+				})
+			}
+			R.id.action_send ->
+			{
+				val list = appRecyclerViewAdapter.multiChoiceList
+				val progressDialog = ProgressDialog(activity)
+				progressDialog.setCancelable(false)
+				progressDialog.setMessage(getString(R.string.copy_file_loading))
+				progressDialog.show()
+				exportAPK(list, object : ExportListener
+				{
+					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
+					{
+						progressDialog.dismiss()
+						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
+								.addCallback(object : Snackbar.Callback()
+								{
+									override fun onDismissed(transientBottomBar: Snackbar?,
+															 event: Int)
+									{
+										JYFileUtil.doShare(context, fileList)
+										exportHandler.sendEmptyMessage(0)
+									}
+								})
+								.show()
+					}
+				})
+			}
 		}
 		return super.onOptionsItemSelected(item)
 	}
@@ -140,7 +189,7 @@ class AppFragment : Fragment()
 		coordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
 		val view = inflater!!.inflate(R.layout.fragment_app, container, false)
 		val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-		swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+		swipeRefreshLayout = view.findViewById(R.id.swipe_refresh)
 		swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_light,
 				android.R.color.holo_green_light,
@@ -151,11 +200,54 @@ class AppFragment : Fragment()
 		recyclerView.layoutManager = LinearLayoutManager(activity)
 		recyclerView.adapter = appRecyclerViewAdapter
 		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter, swipeRefreshLayout)
+		exportHandler = ExportHandler(appRecyclerViewAdapter, activity)
 
 		refreshList()
 
 		swipeRefreshLayout.setOnRefreshListener { refresh() }
 		return view
+	}
+
+	private fun exportAPK(list: List<InstallApp>, listener: ExportListener)
+	{
+		Thread(Runnable {
+			val fileList = ArrayList<File>()
+			val cacheThreadPool = Executors.newCachedThreadPool()
+			var finish = 0
+			var error = 0
+			list.forEach {
+				cacheThreadPool.submit {
+					val code: Int = if (settings.customFileName.format == "")
+						JYFileUtil.fileToSD(it.sourceDir!!, it, getString(R.string.app_name), "apk")
+					else
+						JYFileUtil.fileToSD(it.sourceDir!!, settings.customFileName, it, getString(R.string.app_name), "apk")
+					if (code == -1)
+					{
+						Toast.makeText(activity, getString(R.string.hint_copy_error_with_name, it.name), Toast.LENGTH_SHORT)
+								.show()
+						error++
+					}
+					else
+					{
+						if (settings.customFileName.format == "")
+							fileList.add(JYFileUtil.getFilePath(it, context.getString(R.string.app_name), "apk"))
+						else
+							fileList.add(JYFileUtil.getFilePath(settings.customFileName, it, context.getString(R.string.app_name), "apk"))
+						finish++
+					}
+				}
+			}
+			cacheThreadPool.shutdown()
+			while (true)
+			{
+				if (cacheThreadPool.isTerminated)
+				{
+					listener.done(finish, error, fileList)
+					break
+				}
+				Thread.sleep(100)
+			}
+		}).start()
 	}
 
 	fun refreshList()
@@ -172,7 +264,7 @@ class AppFragment : Fragment()
 		}
 	}
 
-	fun getCatchList()
+	private fun getCatchList()
 	{
 		Thread(Runnable {
 			var fileName = ""
@@ -196,7 +288,7 @@ class AppFragment : Fragment()
 		}).start()
 	}
 
-	fun refresh()
+	private fun refresh()
 	{
 		singleThreadPool.execute {
 			val installAppList = AppManager.getInstallAppList(activity, type, index, true)
@@ -222,5 +314,10 @@ class AppFragment : Fragment()
 			fragment.arguments = bundle
 			return fragment
 		}
+	}
+
+	interface ExportListener
+	{
+		fun done(finish: Int, error: Int, fileList: ArrayList<File>)
 	}
 }

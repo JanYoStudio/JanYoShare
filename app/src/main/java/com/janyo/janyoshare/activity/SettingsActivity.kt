@@ -51,6 +51,7 @@ class SettingsActivity : PreferenceActivity()
 	private lateinit var enableExcludeList: SwitchPreference
 	private lateinit var excludeList: Preference
 	private lateinit var customNameFormat: Preference
+	private lateinit var longClickDo: Preference
 	private lateinit var developerMode: PreferenceCategory
 	private lateinit var developerModeEnable: SwitchPreference
 	private lateinit var enableExcludeNameList: SwitchPreference
@@ -93,6 +94,7 @@ class SettingsActivity : PreferenceActivity()
 		enableExcludeList = findPreference(getString(R.string.key_enable_exclude_list)) as SwitchPreference
 		excludeList = findPreference(getString(R.string.key_exclude_list))
 		customNameFormat = findPreference(getString(R.string.key_custom_name_format))
+		longClickDo = findPreference(getString(R.string.key_long_click_do))
 		developerMode = findPreference(getString(R.string.key_developer_mode)) as PreferenceCategory
 		developerModeEnable = findPreference(getString(R.string.key_developer_mode_enable)) as SwitchPreference
 		enableExcludeNameList = findPreference(getString(R.string.key_enable_exclude_name)) as SwitchPreference
@@ -140,6 +142,7 @@ class SettingsActivity : PreferenceActivity()
 			excludeNameList.summary = getNameList(settings.excludeNameList)
 		excludeNameList.isEnabled = settings.excludeNameList.isNotEmpty()
 		customNameFormat.summary = settings.customFileName.format
+		longClickDo.summary = resources.getStringArray(R.array.long_click_do)[settings.longClickDo]
 		if (settings.excludeSize != 0L)
 			excludeSize.summary = (settings.excludeSize.toFloat() / 1048576f).toString()
 		excludeSize.isEnabled = settings.excludeSize != 0L
@@ -260,6 +263,16 @@ class SettingsActivity : PreferenceActivity()
 						customNameFormat.summary = temp
 					})
 					.setNegativeButton(R.string.action_cancel, null)
+					.show()
+			false
+		}
+		longClickDo.setOnPreferenceClickListener {
+			AlertDialog.Builder(this)
+					.setTitle(R.string.hint_long_click_do_title)
+					.setItems(R.array.long_click_do, { _, position ->
+						settings.longClickDo = position
+						longClickDo.summary = resources.getStringArray(R.array.long_click_do)[settings.longClickDo]
+					})
 					.show()
 			false
 		}

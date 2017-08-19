@@ -76,6 +76,12 @@ class ReceiveHandler : Handler()
 					Toast.makeText(context, R.string.hint_socket_scan_complete, Toast.LENGTH_SHORT)
 							.show()
 			}
+			FileTransferConfigureActivity.VERIFY_ERROR ->
+			{
+				progressDialog.dismiss()
+				Toast.makeText(context, R.string.hint_socket_verify_error, Toast.LENGTH_SHORT)
+						.show()
+			}
 		}
 	}
 }
