@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.content.FileProvider
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -23,12 +24,15 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.handler.RenameHandler
 import com.janyo.janyoshare.handler.SendHandler
+import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 import java.io.File
+import java.util.*
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class AppRecyclerViewAdapter(private val context: Context,
@@ -39,9 +43,10 @@ class AppRecyclerViewAdapter(private val context: Context,
 	private val renameHandler = RenameHandler(context as Activity)
 	private val shareList = ArrayList<File>()
 	private val settings = Settings.getInstance(context)
-	var progressDialog = ProgressDialog(context)
-
-	val sendHandler = SendHandler()
+	private var progressDialog = ProgressDialog(context)
+	private val sendHandler = SendHandler()
+	var menu: Menu? = null
+	val multiChoiceList = ArrayList<InstallApp>()
 
 	init
 	{
@@ -52,8 +57,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 	override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder
 	{
 		val view = LayoutInflater.from(parent.context).inflate(R.layout.item_app, parent, false)
-		val holder = ViewHolder(view)
-		return holder
+		return ViewHolder(view)
 	}
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int)
@@ -72,6 +76,44 @@ class AppRecyclerViewAdapter(private val context: Context,
 		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
 
 		val singleThreadPool = Executors.newSingleThreadExecutor()
+		holder.imageView.setOnClickListener {
+			holder.imageView.visibility = View.GONE
+			holder.checkBox.visibility = View.VISIBLE
+			holder.checkBox.isChecked = true
+		}
+		holder.checkBox.setOnCheckedChangeListener { _, checked ->
+			if (checked)
+			{
+				if (multiChoiceList.size == 0)
+				{
+					val action_search = menu!!.findItem(R.id.action_search)
+					val action_sort = menu!!.findItem(R.id.action_sort)
+					val action_clear = menu!!.findItem(R.id.action_clear)
+					val action_file_transfer = menu!!.findItem(R.id.action_file_transfer)
+					val action_settings = menu!!.findItem(R.id.action_settings)
+					val action_export = menu!!.findItem(R.id.action_export)
+					val action_send = menu!!.findItem(R.id.action_send)
+					action_search.isVisible = false
+					action_sort.isVisible = false
+					action_clear.isVisible = false
+					action_file_transfer.isVisible = false
+					action_settings.isVisible = false
+					action_export.isVisible = true
+					action_send.isVisible = true
+				}
+				multiChoiceList.add(installApp)
+			}
+			else
+			{
+				holder.checkBox.visibility = View.GONE
+				holder.imageView.visibility = View.VISIBLE
+				multiChoiceList.remove(installApp)
+				if (multiChoiceList.size == 0)
+				{
+					(context as Activity).invalidateOptionsMenu()
+				}
+			}
+		}
 		holder.fullView.setOnClickListener {
 			AlertDialog.Builder(context)
 					.setTitle(R.string.copy_file_selection)
@@ -79,65 +121,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 						progressDialog.show()
 						if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
 						{
-							singleThreadPool.execute {
-								val code: Int
-								if (settings.customFileName.format == "")
-									code = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-								else
-									code = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-								progressDialog.dismiss()
-								when
-								{
-									code == -1 ->
-									{
-										Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-												.show()
-									}
-									code == 1 || choose == 2 || choose == 3 || choose == 5 ->
-										doChoose(choose, installApp)
-									code == 0 ->
-									{
-										Snackbar.make(coordinatorLayout, R.string.hint_copy_exist, Snackbar.LENGTH_SHORT)
-												.setAction(R.string.hint_recopy, {
-													progressDialog.show()
-													singleThreadPool.execute {
-														if (settings.customFileName.format == "")
-															JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
-														else
-															JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
-														val temp: Int
-														if (settings.customFileName.format == "")
-															temp = JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
-														else
-															temp = JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
-														progressDialog.dismiss()
-														if (temp == 1)
-														{
-															doChoose(choose, installApp)
-														}
-														else
-														{
-															Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
-																	.show()
-														}
-													}
-												})
-												.addCallback(object : Snackbar.Callback()
-												{
-													override fun onDismissed(
-															transientBottomBar: Snackbar?,
-															event: Int)
-													{
-														if (event != DISMISS_EVENT_ACTION)
-														{
-															doChoose(choose, installApp)
-														}
-													}
-												})
-												.show()
-									}
-								}
-							}
+							doSelect(singleThreadPool, installApp, choose)
 						}
 						else
 						{
@@ -147,6 +131,84 @@ class AppRecyclerViewAdapter(private val context: Context,
 						}
 					})
 					.show()
+		}
+		holder.fullView.setOnLongClickListener {
+			if (settings.longClickDo != 0)
+			{
+				progressDialog.show()
+				if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
+				{
+					doSelect(singleThreadPool, installApp, settings.longClickDo)
+				}
+				else
+				{
+					progressDialog.dismiss()
+					Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
+							.show()
+				}
+			}
+			true
+		}
+	}
+
+	private fun doSelect(singleThreadPool: ExecutorService, installApp: InstallApp, choose: Int)
+	{
+		singleThreadPool.execute {
+			val code: Int = if (settings.customFileName.format == "")
+				JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
+			else
+				JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+			progressDialog.dismiss()
+			when
+			{
+				code == -1 ->
+				{
+					Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
+							.show()
+				}
+				code == 1 || choose != 0 ->
+					doChoose(choose, installApp)
+				code == 0 ->
+				{
+					Snackbar.make(coordinatorLayout, R.string.hint_copy_exist, Snackbar.LENGTH_SHORT)
+							.setAction(R.string.hint_recopy, {
+								progressDialog.show()
+								singleThreadPool.execute {
+									if (settings.customFileName.format == "")
+										JYFileUtil.deleteFile(JYFileUtil.getFilePath(installApp, context.getString(R.string.app_name), "apk"))
+									else
+										JYFileUtil.deleteFile(JYFileUtil.getFilePath(settings.customFileName, installApp, context.getString(R.string.app_name), "apk"))
+									val temp: Int = if (settings.customFileName.format == "")
+										JYFileUtil.fileToSD(installApp.sourceDir!!, installApp, context.getString(R.string.app_name), "apk")
+									else
+										JYFileUtil.fileToSD(installApp.sourceDir!!, settings.customFileName, installApp, context.getString(R.string.app_name), "apk")
+									progressDialog.dismiss()
+									if (temp == 1)
+									{
+										doChoose(choose, installApp)
+									}
+									else
+									{
+										Snackbar.make(coordinatorLayout, R.string.hint_copy_error, Snackbar.LENGTH_SHORT)
+												.show()
+									}
+								}
+							})
+							.addCallback(object : Snackbar.Callback()
+							{
+								override fun onDismissed(
+										transientBottomBar: Snackbar?,
+										event: Int)
+								{
+									if (event != DISMISS_EVENT_ACTION)
+									{
+										doChoose(choose, installApp)
+									}
+								}
+							})
+							.show()
+				}
+			}
 		}
 	}
 
@@ -269,10 +331,11 @@ class AppRecyclerViewAdapter(private val context: Context,
 
 	class ViewHolder(var fullView: View) : RecyclerView.ViewHolder(fullView)
 	{
-		var imageView: ImageView = fullView.findViewById<ImageView>(R.id.app_icon)
-		var textView_name: TextView = fullView.findViewById<TextView>(R.id.app_name)
-		var textView_packageName: TextView = fullView.findViewById<TextView>(R.id.app_package_name)
-		var textView_versionName: TextView = fullView.findViewById<TextView>(R.id.app_version_name)
-		var textView_size: TextView = fullView.findViewById<TextView>(R.id.app_size)
+		var checkBox: CheckBox = fullView.findViewById(R.id.checkBox)
+		var imageView: ImageView = fullView.findViewById(R.id.app_icon)
+		var textView_name: TextView = fullView.findViewById(R.id.app_name)
+		var textView_packageName: TextView = fullView.findViewById(R.id.app_package_name)
+		var textView_versionName: TextView = fullView.findViewById(R.id.app_version_name)
+		var textView_size: TextView = fullView.findViewById(R.id.app_size)
 	}
 }

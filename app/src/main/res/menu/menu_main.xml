@@ -22,14 +22,28 @@
 
     <item
         android:id="@+id/action_file_transfer"
-        android:title="@string/action_file_transfer"
         android:icon="@drawable/ic_file_transfer"
+        android:title="@string/action_file_transfer"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/action_settings"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_export"
+        android:title="@string/action_done_get"
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_send"
+        android:icon="@drawable/ic_send"
+        android:title="@string/action_send_files"
+        android:visible="false"
         app:showAsAction="ifRoom"/>
 
 </menu>

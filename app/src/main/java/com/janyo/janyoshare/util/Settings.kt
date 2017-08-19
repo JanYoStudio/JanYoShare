@@ -80,4 +80,8 @@ class Settings private constructor()
 	var customFileName: CustomFormat
 		get() = CustomFormat(sharedPreferences!!.getString("customFileName", ""))
 		set(customFileName) = sharedPreferences!!.edit().putString("customFileName", customFileName.format).apply()
+
+	var longClickDo: Int
+		get() = sharedPreferences!!.getInt("longClickDo", 0)
+		set(longClickDo) = sharedPreferences!!.edit().putInt("longClickDo", longClickDo).apply()
 }

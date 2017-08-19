@@ -75,4 +75,7 @@
     <string name="key_home_page">key_home_page</string>
     <string name="title_home_page">应用官网（提供历史版本下载）</string>
 
+    <string name="key_long_click_do">key_long_click_do</string>
+    <string name="title_long_click_do">长按操作</string>
+
 </resources>

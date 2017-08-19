@@ -58,6 +58,8 @@ class ReceiveFileService : Service()
 				val transferHeader = obj as TransferHeader
 				FileTransferHelper.getInstance().fileList.clear()
 				FileTransferHelper.getInstance().fileList.addAll(transferHeader.list)
+				FileTransferHelper.getInstance().transferHelperHandler!!.list.clear()
+				FileTransferHelper.getInstance().transferHelperHandler!!.list.addAll(transferHeader.list)
 				Logs.i(TAG, "onCreate: 获取请求头成功")
 				Logs.i(TAG, "onStartCommand: " + transferHeader.list.size)
 				val updateListMessage = Message()
@@ -73,7 +75,7 @@ class ReceiveFileService : Service()
 							{
 								Logs.i(TAG, "onStart: ")
 								FileTransferHelper.getInstance().currentFileIndex = index
-								FileTransferHelper.getInstance().fileList[index].transferProgress = 0
+								transferFile.transferProgress = 0
 								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
 								val message = Message()
 								message.what = TransferHelperHandler.UPDATE_UI
@@ -83,7 +85,7 @@ class ReceiveFileService : Service()
 							override fun onProgress(progress: Int)
 							{
 								Logs.i(TAG, "onProgress: " + progress)
-								FileTransferHelper.getInstance().fileList[index].transferProgress = progress
+								transferFile.transferProgress = progress
 								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
 								val message = Message()
 								message.what = TransferHelperHandler.UPDATE_UI
@@ -92,11 +94,15 @@ class ReceiveFileService : Service()
 
 							override fun onFinish()
 							{
-								Logs.i(TAG, "onFinish: " + FileTransferHelper.getInstance().fileList[index].fileName)
-								FileTransferHelper.getInstance().fileList[index].transferProgress = 100
-								TransferFileNotification.done(this@ReceiveFileService, index, FileTransferHelper.getInstance().fileList[index])
+								Logs.i(TAG, "onFinish: " + transferFile.fileName)
+								transferFile.transferProgress = 100
+								TransferFileNotification.done(this@ReceiveFileService, index, transferFile)
+								val map = HashMap<String, Any>()
+								map.put("context", this@ReceiveFileService)
+								map.put("fileName", transferFile.fileName!!)
 								val message = Message()
-								message.what = TransferHelperHandler.UPDATE_UI
+								message.obj = map
+								message.what = TransferHelperHandler.UPDATE_TOAST
 								transferHelperHandler!!.sendMessage(message)
 							}
 
@@ -122,6 +128,11 @@ class ReceiveFileService : Service()
 					if (singleFileThreadPool.isTerminated)
 					{
 						Logs.i(TAG, "onStartCommand: 传输完成")
+						FileTransferHelper.getInstance().fileList
+								.filter { it.transferProgress == 100 }
+								.forEachIndexed { index, transferFile ->
+									TransferFileNotification.done(this@ReceiveFileService, index, transferFile)
+								}
 						FileTransferHelper.getInstance().clear()
 						stopSelf()
 						break

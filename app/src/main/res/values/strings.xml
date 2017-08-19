@@ -28,6 +28,7 @@
     <string name="action_pause">暂停</string>
     <string name="action_resume">继续</string>
     <string name="action_pay_sure">支付完成</string>
+    <string name="action_done_get">提取选定的软件</string>
 
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>
@@ -38,6 +39,8 @@
     <string name="pay_method_title">请选择捐赠方式</string>
 
     <string name="hint_copy_error">文件提取失败！</string>
+    <string name="hint_copy_error_with_name">提取%1$s失败！</string>
+    <string name="hint_copy_done_with_number">提取完成！%1$d个成功，%2$d失败！</string>
     <string name="hint_copy_exist">文件已经存在！</string>
     <string name="hint_copy_not_exist">文件不存在！</string>
     <string name="hint_recopy">重新提取</string>
@@ -54,9 +57,11 @@
     <string name="hint_socket_wait_server">等待设备连接……</string>
     <string name="hint_socket_wait_client">正在搜索设备……</string>
     <string name="hint_socket_connecting">连接中……</string>
+    <string name="hint_socket_timeout">连接超时！</string>
     <string name="hint_socket_verify_device_title">确认设备？</string>
     <string name="hint_socket_verify_device_message">确认从 %1$s 处接收文件吗？</string>
     <string name="hint_socket_verifying">验证中……</string>
+    <string name="hint_socket_verify_error">连接失败！</string>
     <string name="hint_socket_connected">连接成功！</string>
     <string name="hint_socket_scan_complete">未找到设备</string>
     <string name="hint_twice_exit">再按一次返回键退出</string>
@@ -64,6 +69,7 @@
     <string name="hint_developer_mode">还差%1$d步启用开发者模式</string>
     <string name="hint_developer_mode_enable">已启用开发者模式！</string>
     <string name="hint_transfer_file_notification_title">正在传输： %1$s</string>
+    <string name="hint_transfer_file_notification_message">点击打开文件</string>
     <string name="hint_transfer_file_notification_done">传输完成： %1$s</string>
     <string name="hint_transfer_file_exists">文件已存在！</string>
     <string name="hint_transfer_file_not_exists">文件不存在！</string>
@@ -87,8 +93,9 @@
     <string name="hint_custom_name_format_text">%N代表应用名称，\n%V代表应用的版本名称，\n%W代表应用的版本号，\n%P代表应用的包名</string>
     <string name="hint_custom_name_format_show">当前格式示例：%1$s</string>
     <string name="hint_jys_rename_error">重命名失败！</string>
+    <string name="hint_long_click_do_title">请选择长按的操作</string>
 
-    <string name="address_open_source">https://github.com/Mystery00/JanYoShare</string>
+    <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
     <string name="address_become_test">https://play.google.com/apps/testing/com.janyo.janyoshare</string>
     <string name="address_join_test_group">https://jq.qq.com/?_wv=1027&amp;k=4Ea0d0A</string>
@@ -120,6 +127,15 @@
 
     <string-array name="copy_do">
         <item>仅提取</item>
+        <item>提取并分享</item>
+        <item>重命名并分享</item>
+        <item>修改扩展名后分享</item>
+        <item>提取后和数据包一起分享</item>
+        <item>面对面分享</item>
+    </string-array>
+
+    <string-array name="long_click_do">
+        <item>无操作</item>
         <item>提取并分享</item>
         <item>重命名并分享</item>
         <item>修改扩展名后分享</item>

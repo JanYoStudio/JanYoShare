@@ -6,10 +6,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.FileProvider
 
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
+import java.io.File
 
 object TransferFileNotification
 {
@@ -31,13 +34,31 @@ object TransferFileNotification
 	fun done(context: Context, id: Int, transferFile: TransferFile)
 	{
 		val title = context.getString(R.string.hint_transfer_file_notification_done, transferFile.fileName)
-		val mimeType = context.contentResolver.getType(Uri.parse(transferFile.fileUri))
+		var path = ""
+		when (FileTransferHelper.getInstance().tag)
+		{
+			1 ->
+			{
+				path = transferFile.filePath!!
+			}
+			2 ->
+			{
+				path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, "JY Share")
+			}
+		}
+		val uri: Uri = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+			FileProvider.getUriForFile(context, context.getString(R.string.authorities), File(path))
+		else
+			Uri.fromFile(File(path))
+		val mimeType = context.contentResolver.getType(uri)
 		val intent = Intent(Intent.ACTION_VIEW)
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-		intent.setDataAndType(Uri.parse(transferFile.fileUri), mimeType)
+		intent.setDataAndType(uri, mimeType)
+		JYFileUtil.grantUriPermission(context, intent, uri)
 		val builder = NotificationCompat.Builder(context, context.getString(R.string.app_name))
 				.setSmallIcon(R.drawable.ic_send)
 				.setContentTitle(title)
+				.setContentText(context.getString(R.string.hint_transfer_file_notification_message))
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setContentIntent(
 						PendingIntent.getActivity(

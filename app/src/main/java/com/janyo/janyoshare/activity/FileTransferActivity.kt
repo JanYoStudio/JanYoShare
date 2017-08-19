@@ -2,11 +2,15 @@ package com.janyo.janyoshare.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.FileTransferAdapter
 import com.janyo.janyoshare.classes.TransferFile
@@ -14,12 +18,14 @@ import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.mystery0.tools.FileUtil.FileUtil
+import com.mystery0.tools.Logs.Logs
 
 import kotlinx.android.synthetic.main.activity_file_transfer.*
 import java.io.File
 
 class FileTransferActivity : AppCompatActivity()
 {
+	private val TAG = "FileTransferActivity"
 	private val CHOOSE_FILE = 233
 	private lateinit var adapter: FileTransferAdapter
 
@@ -29,10 +35,32 @@ class FileTransferActivity : AppCompatActivity()
 		setContentView(R.layout.activity_file_transfer)
 		setSupportActionBar(toolbar)
 
-		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().fileList)
+		adapter = FileTransferAdapter(this, FileTransferHelper.getInstance().transferHelperHandler!!.list)
 		recycler_view.layoutManager = LinearLayoutManager(this)
+		if (FileTransferHelper.getInstance().tag == 1)
+		{
+			val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
+			{
+				override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+									target: RecyclerView.ViewHolder): Boolean
+				{
+					return false
+				}
+
+				override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
+				{
+					val position = viewHolder.adapterPosition
+					Logs.i(TAG, "onSwiped: " + position)
+					FileTransferHelper.getInstance().fileList.removeAt(position)
+					FileTransferHelper.getInstance().transferHelperHandler!!.list.removeAt(position)
+					adapter.notifyItemRemoved(position)
+				}
+			}
+			ItemTouchHelper(callback).attachToRecyclerView(recycler_view)
+		}
+		else
+			fab.visibility = View.GONE
 		recycler_view.adapter = adapter
-		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
 		FileTransferHelper.getInstance().transferHelperHandler!!.adapter = adapter
 
 		fab.setOnClickListener {
@@ -45,7 +73,8 @@ class FileTransferActivity : AppCompatActivity()
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean
 	{
-		menuInflater.inflate(R.menu.menu_file_transfer, menu)
+		if (FileTransferHelper.getInstance().tag == 1)
+			menuInflater.inflate(R.menu.menu_file_transfer, menu)
 		return true
 	}
 
@@ -55,9 +84,17 @@ class FileTransferActivity : AppCompatActivity()
 		{
 			R.id.action_send_files ->
 			{
-				val intent = Intent(this, SendFileService::class.java)
-				intent.putExtra("action", "start")
-				startService(intent)
+				if (FileTransferHelper.getInstance().fileList.size == 0)
+				{
+					Snackbar.make(coordinatorLayout, R.string.hint_transfer_file_not_exists, Snackbar.LENGTH_SHORT)
+							.show()
+				}
+				else
+				{
+					val intent = Intent(this, SendFileService::class.java)
+					intent.putExtra("action", "start")
+					startService(intent)
+				}
 			}
 		}
 		return super.onOptionsItemSelected(item)
@@ -72,10 +109,16 @@ class FileTransferActivity : AppCompatActivity()
 			transferFile.fileName = file.name
 			transferFile.fileUri = FileProvider.getUriForFile(this, getString(R.string.authorities), file).toString()
 			transferFile.fileSize = file.length()
-			transferFile.filePath = data.data.path
+			transferFile.filePath = FileUtil.getPath(this, data.data)
 			FileTransferHelper.getInstance().fileList.add(transferFile)
+			FileTransferHelper.getInstance().transferHelperHandler!!.list.add(transferFile)
 			adapter.notifyDataSetChanged()
 		}
 	}
 
+	override fun onDestroy()
+	{
+		super.onDestroy()
+
+	}
 }
