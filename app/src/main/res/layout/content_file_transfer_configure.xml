@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.janyo.janyoshare.activity.FileTransferConfigureActivity"
     tools:showIn="@layout/activity_file_transfer_configure">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
         android:id="@+id/sendFile"
         android:layout_width="@dimen/item_file_transfer_configure_button_size"
         android:layout_height="@dimen/item_file_transfer_configure_button_size"
+        android:layout_marginBottom="@dimen/item_file_transfer_configure_button_margin"
         android:background="@drawable/ic_circle_cyan"
         android:gravity="center"
-        android:text="@string/send_file"/>
+        android:text="@string/send_file"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/receiveFile"
@@ -26,6 +36,9 @@
         android:layout_marginTop="@dimen/item_file_transfer_configure_button_margin"
         android:background="@drawable/ic_circle_cyan"
         android:gravity="center"
-        android:text="@string/receive_file"/>
+        android:text="@string/receive_file"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"/>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

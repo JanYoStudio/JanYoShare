@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_app_height">
 
     <View
-        android:layout_width="match_parent"
+        android:id="@+id/view"
+        android:layout_width="0dp"
         android:layout_height="0.1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/textColorBlack"/>
+        android:background="@color/textColorBlack"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="@dimen/item_app_img_height"
         android:layout_height="@dimen/item_app_img_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="@dimen/item_app_margin"
-        android:layout_marginTop="@dimen/item_app_margin">
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/app_icon"
@@ -36,54 +42,55 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_app_height"
-        android:layout_marginBottom="@dimen/item_app_margin"
-        android:layout_marginTop="@dimen/item_app_margin"
-        android:layout_toEndOf="@id/frameLayout"
-        android:layout_toLeftOf="@id/app_size"
-        android:layout_toRightOf="@id/frameLayout"
-        android:layout_toStartOf="@id/app_size"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/textColorBlack"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/app_package_name"
+        app:layout_constraintEnd_toEndOf="@+id/app_size"
+        app:layout_constraintEnd_toStartOf="@id/app_size"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/frameLayout"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/textColorBlack"
-            android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/app_package_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/textColorBlack"
+        app:layout_constraintBottom_toTopOf="@+id/app_version_name"
+        app:layout_constraintEnd_toStartOf="@id/app_size"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/frameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/app_name"/>
 
-        <TextView
-            android:id="@+id/app_package_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/textColorBlack"/>
+    <TextView
+        android:id="@+id/app_version_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/textColorBlue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/app_size"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/frameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/app_package_name"/>
 
-        <TextView
-            android:id="@+id/app_version_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/textColorBlue"/>
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/app_size"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_app_height"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/item_app_margin"
-        android:layout_marginTop="@dimen/item_app_margin"
-        android:gravity="center_vertical"/>
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
