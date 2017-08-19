@@ -18,5 +18,5 @@
     <dimen name="item_file_name_size">18sp</dimen>
     <dimen name="item_file_progress_size">36dp</dimen>
     <dimen name="item_file_transfer_configure_button_size">180dp</dimen>
-    <dimen name="item_file_transfer_configure_button_margin">50dp</dimen>
+    <dimen name="item_file_transfer_configure_button_margin">24dp</dimen>
 </resources>

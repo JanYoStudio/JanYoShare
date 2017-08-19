@@ -1,46 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dialog_margin"
         android:layout_marginLeft="@dimen/dialog_margin"
         android:layout_marginRight="@dimen/dialog_margin"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:orientation="vertical">
+        android:layout_marginStart="@dimen/dialog_margin">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/text_how_to_use_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/how_to_use"
             android:textSize="@dimen/dialog_help_text_size"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/text_how_to_use1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dialog_margin"
-            android:text="@string/help_text_1"/>
+            android:text="@string/help_text_1"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_how_to_use_title"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/text_how_to_use2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dialog_help_margin_top"
-            android:text="@string/help_text_2"/>
+            android:text="@string/help_text_2"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_how_to_use1"/>
 
         <TextView
             android:id="@+id/autoCleanWarn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dialog_help_margin_top"
             android:text="@string/autoCleanWarn"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_how_to_use2"/>
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.NestedScrollView>
