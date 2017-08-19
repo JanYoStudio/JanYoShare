@@ -3,9 +3,16 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.nillith.autoversion'
 apply plugin: 'kotlin-android-extensions'
 
+//一种常见软件版本号的形式是major.minor.patch.build：
+//major是主版本号，一般在软件有重大升级时增长
+//minor是次版本号，一般在软件有新功能时增长
+//patch，一般在软件有主要的问题修复后增长
+//build是构建版本，一般只要软件被重新编译过就会增长
+
 def a = 2
 def b = 8
-def c = 1
+def c = 2
+def d = 1
 
 autoVersion {
     major a
@@ -21,25 +28,34 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode autoVersion.code
-        versionName a + '.' + b + '.' + c
+        if (d == 0)
+            versionName a + '.' + b + '.' + c
+        else
+            versionName a + '.' + b + '.' + c + '-beta' + d
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
-            resValue "string", "app_version", a + '.' + b + '.' + c
+            if (d == 0)
+                resValue "string", "app_version", a + '.' + b + '.' + c
+            else
+                resValue "string", "app_version", a + '.' + b + '.' + c + '-beta' + d
             resValue "string", "app_version_code", autoVersion.code + ''
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            resValue "string", "app_version", a + '.' + b + '.' + c
+            if (d == 0)
+                resValue "string", "app_version", a + '.' + b + '.' + c
+            else
+                resValue "string", "app_version", a + '.' + b + '.' + c + '-beta' + d
             resValue "string", "app_version_code", autoVersion.code + ''
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions{
+    lintOptions {
         abortOnError false
         checkReleaseBuilds false
     }
