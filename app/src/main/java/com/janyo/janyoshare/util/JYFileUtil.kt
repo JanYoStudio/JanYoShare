@@ -194,20 +194,17 @@ object JYFileUtil
 				(drawable is BitmapDrawable) -> bitmap = drawable.bitmap
 				(drawable is VectorDrawableCompat) -> bitmap = getBitmap(drawable)
 				(drawable is VectorDrawable) -> bitmap = getBitmap(drawable)
-				(drawable is AdaptiveIconDrawable) ->
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+				else ->
+				{
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && drawable is AdaptiveIconDrawable)
 					{
 						bitmap = getBitmap(drawable)
 					}
 					else
 					{
-						Logs.i(TAG, "saveDrawableToSd: SDK版本低于26")
+						Logs.i(TAG, "saveDrawableToSd: SDK版本低于26或者不支持的drawable")
 						return false
 					}
-				else ->
-				{
-					Logs.i(TAG, "saveDrawableToSd: 不支持的drawable类型")
-					return false
 				}
 			}
 			bitmap.compress(Bitmap.CompressFormat.PNG, 10, out)
