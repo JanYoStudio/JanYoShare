@@ -1,6 +1,7 @@
 package com.janyo.janyoshare.activity
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.FileProvider
@@ -8,9 +9,11 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.transition.TransitionInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.FileTransferAdapter
 import com.janyo.janyoshare.classes.TransferFile
@@ -32,6 +35,13 @@ class FileTransferActivity : AppCompatActivity()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+		{
+			window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+			window.exitTransition = TransitionInflater.from(this).inflateTransition(android.R.transition.slide_right)
+			window.enterTransition = TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left)
+			window.reenterTransition = TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left)
+		}
 		setContentView(R.layout.activity_file_transfer)
 		setSupportActionBar(toolbar)
 
