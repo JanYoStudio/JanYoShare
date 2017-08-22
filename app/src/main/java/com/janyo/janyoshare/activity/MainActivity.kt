@@ -24,7 +24,7 @@ import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.CrashHandler.CrashHandler
 import com.mystery0.tools.Logs.Logs
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity()
 
 	private fun initialization()
 	{
-		setContentView(R.layout.activity_main)
+		setContentView(R.layout.app_bar_main)
 
 		val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 		val userFragment = AppFragment.newInstance(AppManager.USER)
