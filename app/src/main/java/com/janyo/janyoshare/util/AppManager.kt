@@ -89,8 +89,7 @@ object AppManager
 
 	fun searchApps(sourceList: List<InstallApp>, message: String): List<InstallApp>
 	{
-		val list = sourceList.filter { it.name!!.toLowerCase().contains(message.toLowerCase()) }
-		return list
+		return sourceList.filter { it.name!!.toLowerCase().contains(message.toLowerCase()) }
 	}
 
 	fun getAllApps(context: Context): List<InstallApp>
