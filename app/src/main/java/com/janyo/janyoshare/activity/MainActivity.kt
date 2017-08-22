@@ -1,19 +1,26 @@
 package com.janyo.janyoshare.activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.NestedScrollView
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.janyo.janyoshare.AppFragment
@@ -24,6 +31,7 @@ import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.CrashHandler.CrashHandler
 import com.mystery0.tools.Logs.Logs
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
@@ -33,13 +41,15 @@ import com.android.volley.toolbox.Volley
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity()
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
+
 	private val TAG = "MainActivity"
 	private lateinit var settings: Settings
 	private val PERMISSION_CODE = 233
 	private var oneClickTime: Long = 0
 	private lateinit var currentFragment: AppFragment
+	private lateinit var img_janyo: ImageView
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -47,11 +57,20 @@ class MainActivity : AppCompatActivity()
 		settings = Settings.getInstance(this)
 		checkPermission()
 		initialization()
+		monitor()
 	}
 
 	private fun initialization()
 	{
 		setContentView(R.layout.activity_main)
+
+		val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+		drawer_layout.addDrawerListener(toggle)
+		toggle.syncState()
+
+		img_janyo = nav_view.getHeaderView(0).findViewById(R.id.imageView)
+
+		nav_view.setNavigationItemSelectedListener(this)
 
 		val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 		val userFragment = AppFragment.newInstance(AppManager.USER)
@@ -188,6 +207,15 @@ class MainActivity : AppCompatActivity()
 		}
 	}
 
+	private fun monitor()
+	{
+		img_janyo.setOnClickListener {
+			val intent = Intent(Intent.ACTION_VIEW)
+			intent.data = Uri.parse(getString(R.string.address_home_page))
+			startActivity(intent)
+		}
+	}
+
 	private fun checkPermission()
 	{
 		if (ContextCompat.checkSelfPermission(this,
@@ -199,19 +227,37 @@ class MainActivity : AppCompatActivity()
 		}
 	}
 
+	override fun onNavigationItemSelected(item: MenuItem): Boolean
+	{
+		when (item.itemId)
+		{
+			R.id.action_file_transfer -> startActivity(Intent(this, FileTransferConfigureActivity::class.java))
+			R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+			else -> return true
+		}
+		drawer_layout.closeDrawer(GravityCompat.START)
+		return true
+	}
+
 	override fun onBackPressed()
 	{
-		Logs.i(TAG, "onBackPressed: 返回按键监听")
-		val doubleClickTime = System.currentTimeMillis()
-		if (doubleClickTime - oneClickTime > 2000)
+		if (drawer_layout.isDrawerOpen(GravityCompat.START))
 		{
-			Snackbar.make(coordinatorLayout, R.string.hint_twice_exit, Snackbar.LENGTH_SHORT)
-					.show()
-			oneClickTime = doubleClickTime
+			drawer_layout.closeDrawer(GravityCompat.START)
 		}
 		else
 		{
-			System.exit(0)//销毁进程
+			val doubleClickTime = System.currentTimeMillis()
+			if (doubleClickTime - oneClickTime > 2000)
+			{
+				Snackbar.make(coordinatorLayout, R.string.hint_twice_exit, Snackbar.LENGTH_SHORT)
+						.show()
+				oneClickTime = doubleClickTime
+			}
+			else
+			{
+				System.exit(0)//销毁进程
+			}
 		}
 	}
 

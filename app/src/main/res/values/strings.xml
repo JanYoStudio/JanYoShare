@@ -13,6 +13,9 @@
     <string name="copyright">Copyright @2016–2017 JanYo Studio</string>
     <string name="all_right_reserved">All Right Reserved</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="action_search">搜索</string>
     <string name="action_clear_all">清除临时文件</string>
     <string name="action_settings">设置</string>
@@ -158,8 +161,4 @@
     <string name="title_activity_file_transfer">文件传输</string>
     <string name="title_activity_file_transfer_configure">文件传输</string>
     <string name="title_activity_file_transfer_send">通过JY Share面对面分享</string>
-    <string name="title_activity_main2">Main2Activity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
