@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <item
+        android:icon="@drawable/ic_file_transfer"
+        android:title="@string/action_file_transfer"/>
+
+    <item
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings"/>
+
+    <item android:title="@string/janyo_studio">
+        <menu>
+            <item android:title="@string/dicklight"/>
+            <item android:title="@string/zh_lyh"/>
+            <item android:title="@string/cieyget"/>
+            <item android:title="@string/mystery0"/>
+            <item android:title="@string/gsoy"/>
+            <item android:title="@string/kiva"/>
+        </menu>
+    </item>
+
+</menu>

@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity()
 
 	private fun initialization()
 	{
-		setContentView(R.layout.app_bar_main)
+		setContentView(R.layout.activity_main)
 
 		val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 		val userFragment = AppFragment.newInstance(AppManager.USER)
