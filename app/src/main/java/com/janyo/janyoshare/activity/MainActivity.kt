@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -231,8 +232,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	{
 		when (item.itemId)
 		{
-			R.id.action_file_transfer -> startActivity(Intent(this, FileTransferConfigureActivity::class.java))
-			R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+			R.id.action_file_transfer -> startActivity(Intent(this, FileTransferConfigureActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
+			R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
 			else -> return true
 		}
 		drawer_layout.closeDrawer(GravityCompat.START)

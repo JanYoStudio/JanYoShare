@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
+import android.transition.TransitionInflater
+import android.view.Window
 import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.handler.ReceiveHandler
@@ -44,6 +46,13 @@ class FileTransferConfigureActivity : AppCompatActivity()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+		{
+			window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+			window.exitTransition = TransitionInflater.from(this).inflateTransition(android.R.transition.slide_right)
+			window.enterTransition = TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left)
+			window.reenterTransition = TransitionInflater.from(this).inflateTransition(android.R.transition.slide_left)
+		}
 		setContentView(R.layout.activity_file_transfer_configure)
 
 		progressDialog = ProgressDialog(this)

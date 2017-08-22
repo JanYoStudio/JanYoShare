@@ -11,6 +11,8 @@ import android.os.Message
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -24,6 +26,7 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
+import com.mystery0.tools.Logs.Logs
 import java.io.File
 
 import java.util.ArrayList
@@ -60,12 +63,10 @@ class AppFragment : Fragment()
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
 		searchView.setOnQueryTextFocusChangeListener { _, b ->
 			val action_clear = menu.findItem(R.id.action_clear)
-			val action_settings = menu.findItem(R.id.action_settings)
 			val action_sort = menu.findItem(R.id.action_sort)
 			if (b)
 			{
 				action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-				action_settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 				action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 			}
 			else
@@ -115,6 +116,11 @@ class AppFragment : Fragment()
 	{
 		when (item.itemId)
 		{
+			android.R.id.home ->
+			{
+				val drawer: DrawerLayout = activity.findViewById(R.id.drawer_layout)
+				drawer.openDrawer(GravityCompat.START)
+			}
 			R.id.action_clear -> Snackbar.make(activity.findViewById<View>(R.id.coordinatorLayout), String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
 					.show()
 			R.id.action_sort ->
