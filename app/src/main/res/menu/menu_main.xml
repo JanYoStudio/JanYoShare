@@ -21,18 +21,6 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_file_transfer"
-        android:icon="@drawable/ic_file_transfer"
-        android:title="@string/action_file_transfer"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/action_export"
         android:icon="@drawable/ic_export"
         android:title="@string/action_done_get"

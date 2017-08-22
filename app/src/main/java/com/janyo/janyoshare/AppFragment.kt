@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Message
 import android.support.design.widget.CoordinatorLayout
@@ -19,8 +18,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
-import com.janyo.janyoshare.activity.FileTransferConfigureActivity
-import com.janyo.janyoshare.activity.SettingsActivity
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
@@ -133,8 +130,6 @@ class AppFragment : Fragment()
 						}
 						.show()
 			}
-			R.id.action_file_transfer -> startActivity(Intent(activity, FileTransferConfigureActivity::class.java))
-			R.id.action_settings -> startActivity(Intent(activity, SettingsActivity::class.java))
 			R.id.action_export ->
 			{
 				val list = appRecyclerViewAdapter.multiChoiceList
