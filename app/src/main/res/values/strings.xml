@@ -33,6 +33,7 @@
     <string name="action_resume">继续</string>
     <string name="action_pay_sure">支付完成</string>
     <string name="action_done_get">提取选定的软件</string>
+    <string name="action_dayNight">夜间模式</string>
 
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>
@@ -98,6 +99,7 @@
     <string name="hint_custom_name_format_show">当前格式示例：%1$s</string>
     <string name="hint_jys_rename_error">重命名失败！</string>
     <string name="hint_long_click_do_title">请选择长按的操作</string>
+    <string name="hint_day_night">重启应用后全局生效！</string>
 
     <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
@@ -161,4 +163,5 @@
     <string name="title_activity_file_transfer">文件传输</string>
     <string name="title_activity_file_transfer_configure">文件传输</string>
     <string name="title_activity_file_transfer_send">通过JY Share面对面分享</string>
+    <string name="title_activity_settings2">Settings</string>
 </resources>

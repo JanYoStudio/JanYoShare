@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_app_height">
 
@@ -48,7 +47,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/textColorBlack"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/app_package_name"
         app:layout_constraintEnd_toEndOf="@+id/app_size"
@@ -63,7 +61,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/textColorBlack"
         app:layout_constraintBottom_toTopOf="@+id/app_version_name"
         app:layout_constraintEnd_toStartOf="@id/app_size"
         app:layout_constraintHorizontal_bias="0.5"

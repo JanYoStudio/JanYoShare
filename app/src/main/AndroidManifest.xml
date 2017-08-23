@@ -99,6 +99,7 @@
             android:name=".service.ReceiveFileService"
             android:enabled="true"
             android:exported="true"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/authorities"
