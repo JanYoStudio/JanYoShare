@@ -34,6 +34,7 @@ import java.util.concurrent.Executors
 
 class AppFragment : Fragment()
 {
+	private val TAG = "AppFragment"
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 	private lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter

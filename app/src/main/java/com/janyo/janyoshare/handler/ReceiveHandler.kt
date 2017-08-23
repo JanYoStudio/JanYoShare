@@ -65,9 +65,9 @@ class ReceiveHandler : Handler()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHelper.getInstance().tag = 2
+				context.startService(Intent(context, ReceiveFileService::class.java))
 				(context as Activity).finish()
 				context.startActivity(Intent(context, FileTransferActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity).toBundle())
-				context.startService(Intent(context, ReceiveFileService::class.java))
 			}
 			FileTransferConfigureActivity.SCAN_COMPLETE ->
 			{

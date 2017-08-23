@@ -257,6 +257,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			}
 			else
 			{
+				finish()
 				System.exit(0)//销毁进程
 			}
 		}
