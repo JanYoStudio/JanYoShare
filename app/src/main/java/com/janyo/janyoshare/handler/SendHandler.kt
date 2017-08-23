@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Message
+import android.support.v4.app.ActivityOptionsCompat
 import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.activity.FileTransferActivity
@@ -38,7 +39,7 @@ class SendHandler : Handler()
 						.show()
 				FileTransferHelper.getInstance().tag = 1
 				(context as Activity).finish()
-				context.startActivity(Intent(context, FileTransferActivity::class.java))
+				context.startActivity(Intent(context, FileTransferActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity).toBundle())
 			}
 		}
 	}

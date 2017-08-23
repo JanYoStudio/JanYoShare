@@ -24,7 +24,6 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.handler.RenameHandler
 import com.janyo.janyoshare.handler.SendHandler
-import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
@@ -75,6 +74,20 @@ class AppRecyclerViewAdapter(private val context: Context,
 			holder.imageView.setImageDrawable(installApp.icon)
 		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
 
+		holder.checkBox.tag = installApp
+		if (multiChoiceList.contains(installApp))
+		{
+			holder.imageView.visibility = View.GONE
+			holder.checkBox.visibility = View.VISIBLE
+			holder.checkBox.isChecked = true
+		}
+		else
+		{
+			holder.checkBox.visibility = View.GONE
+			holder.imageView.visibility = View.VISIBLE
+			holder.checkBox.isChecked = false
+		}
+
 		val singleThreadPool = Executors.newSingleThreadExecutor()
 		holder.imageView.setOnClickListener {
 			holder.imageView.visibility = View.GONE
@@ -97,13 +110,15 @@ class AppRecyclerViewAdapter(private val context: Context,
 					action_export.isVisible = true
 					action_send.isVisible = true
 				}
-				multiChoiceList.add(installApp)
+				if (!multiChoiceList.contains(holder.checkBox.tag as InstallApp))
+					multiChoiceList.add(installApp)
 			}
 			else
 			{
 				holder.checkBox.visibility = View.GONE
 				holder.imageView.visibility = View.VISIBLE
-				multiChoiceList.remove(installApp)
+				if (multiChoiceList.contains(holder.checkBox.tag as InstallApp))
+					multiChoiceList.remove(installApp)
 				if (multiChoiceList.size == 0)
 				{
 					(context as Activity).invalidateOptionsMenu()
