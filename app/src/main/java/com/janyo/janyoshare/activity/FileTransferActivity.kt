@@ -17,7 +17,7 @@ import android.view.Window
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.FileTransferAdapter
 import com.janyo.janyoshare.classes.TransferFile
-import com.janyo.janyoshare.handler.TransferHelperHandler
+import com.janyo.janyoshare.service.ReceiveFileService
 import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.mystery0.tools.FileUtil.FileUtil
@@ -129,6 +129,7 @@ class FileTransferActivity : AppCompatActivity()
 	override fun onDestroy()
 	{
 		super.onDestroy()
-
+		stopService(Intent(this, ReceiveFileService::class.java))
+		stopService(Intent(this, SendFileService::class.java))
 	}
 }

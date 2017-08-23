@@ -271,14 +271,21 @@ class SocketUtil
 	fun clientDisconnect()
 	{
 		Logs.i(TAG, "clientDisconnect: 客户端终止连接")
-		socket.close()
+		try
+		{
+			socket.close()
+		}
+		catch (e: Exception)
+		{
+			Logs.wtf(TAG, "clientDisconnect: ", e)
+		}
 	}
 
 	fun serverDisconnect()
 	{
+		Logs.i(TAG, "serverDisconnect: 服务端终止连接")
 		try
 		{
-			Logs.i(TAG, "serverDisconnect: 服务端终止连接")
 			serverSocket.close()
 		}
 		catch (e: Exception)
