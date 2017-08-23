@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/constraintLayout_margin2"
+            android:layout_marginStart="@dimen/constraintLayout_margin2"
+            android:layout_marginTop="@dimen/constraintLayout_margin2"
+            android:text="text_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/text_version"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/constraintLayout_margin2"
+            android:layout_marginStart="@dimen/constraintLayout_margin2"
+            android:layout_marginTop="@dimen/constraintLayout_margin1"
+            android:text="text_version"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_date"/>
+
+        <TextView
+            android:id="@+id/text_SDK"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/constraintLayout_margin2"
+            android:layout_marginStart="@dimen/constraintLayout_margin2"
+            android:layout_marginTop="@dimen/constraintLayout_margin1"
+            android:text="text_SDK"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_version"/>
+
+        <TextView
+            android:id="@+id/text_vendor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/constraintLayout_margin2"
+            android:layout_marginStart="@dimen/constraintLayout_margin2"
+            android:layout_marginTop="@dimen/constraintLayout_margin1"
+            android:text="text_vendor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_SDK"/>
+
+        <TextView
+            android:id="@+id/text_model"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/constraintLayout_margin2"
+            android:layout_marginStart="@dimen/constraintLayout_margin2"
+            android:layout_marginTop="@dimen/constraintLayout_margin1"
+            android:text="text_model"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_vendor"/>
+
+        <TextView
+            android:id="@+id/text_exception"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/constraintLayout_margin2"
+            android:layout_marginStart="@dimen/constraintLayout_margin2"
+            android:layout_marginTop="@dimen/constraintLayout_margin3"
+            android:text="text_exception"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_model"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v4.widget.NestedScrollView>

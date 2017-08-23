@@ -35,4 +35,16 @@ class APP : Application()
 			Logs.i(TAG, "onCreate: 未开启无障碍服务或者关闭强制")
 		}
 	}
+
+	companion object
+	{
+		private var app: APP? = null
+
+		fun getInstance(): APP
+		{
+			if (app == null)
+				app = APP()
+			return app!!
+		}
+	}
 }

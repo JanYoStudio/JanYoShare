@@ -131,14 +131,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 						Logs.i(TAG, "error: " + message)
 					}
 				})
-		if (settings.isAutoUploadLog)
-		{
-			CrashHandler.getInstance(this)
-					.sendException(object : CrashHandler.CatchExceptionListener
+		CrashHandler.getInstance(this)
+				.sendException(object : CrashHandler.CatchExceptionListener
+				{
+					override fun onException(file: File, appVersionName: String,
+											 appVersionCode: Int, AndroidVersion: String,
+											 sdk: Int, vendor: String, model: String)
 					{
-						override fun onException(file: File, appVersionName: String,
-												 appVersionCode: Int, AndroidVersion: String,
-												 sdk: Int, vendor: String, model: String)
+						if (settings.isAutoUploadLog)
 						{
 							val map = HashMap<String, String>()
 							val fileMap = HashMap<String, File>()
@@ -177,8 +177,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 									})
 									.open()
 						}
-					})
-		}
+						else
+						{
+							val error = Error(appVersionName, appVersionCode, AndroidVersion, sdk, vendor, model)
+							val bundle = Bundle()
+							bundle.putSerializable("error", error)
+							val intent = Intent(this@MainActivity, ErrorActivity::class.java)
+							intent.putExtra("error", bundle)
+							startActivity(intent)
+						}
+					}
+				})
 
 		setSupportActionBar(toolbar)
 
