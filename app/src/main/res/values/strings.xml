@@ -34,6 +34,7 @@
     <string name="action_pay_sure">支付完成</string>
     <string name="action_done_get">提取选定的软件</string>
     <string name="action_dayNight">夜间模式</string>
+    <string name="action_upload">上传</string>
 
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>

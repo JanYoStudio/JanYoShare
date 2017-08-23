@@ -116,6 +116,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
+        <activity android:name=".activity.ErrorActivity">
+        </activity>
     </application>
 
 </manifest>
