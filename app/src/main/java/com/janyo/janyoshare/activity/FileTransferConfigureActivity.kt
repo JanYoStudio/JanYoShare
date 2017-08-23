@@ -1,8 +1,5 @@
-@file:Suppress("DEPRECATION")
-
 package com.janyo.janyoshare.activity
 
-import android.app.ProgressDialog
 import android.os.Build
 import android.os.Bundle
 import android.os.Message
@@ -20,6 +17,7 @@ import com.janyo.janyoshare.util.Settings
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
 import com.mystery0.tools.Logs.Logs
+import dmax.dialog.SpotsDialog
 
 import kotlinx.android.synthetic.main.content_file_transfer_configure.*
 import java.util.concurrent.Executors
@@ -29,7 +27,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 	private val TAG = "FileTransferConfigureActivity"
 	private val sendHandler = SendHandler()
 	private val receiveHandler = ReceiveHandler()
-	private lateinit var progressDialog: ProgressDialog
+	private lateinit var progressDialog: SpotsDialog
 	private val socketUtil = SocketUtil()
 	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
@@ -61,7 +59,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 		setContentView(R.layout.activity_file_transfer_configure)
 
-		progressDialog = ProgressDialog(this)
+		progressDialog = SpotsDialog(this)
 		sendHandler.progressDialog = progressDialog
 		sendHandler.context = this
 		receiveHandler.progressDialog = progressDialog
@@ -76,6 +74,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		sendFile.setOnClickListener {
+			throw Exception("233")
 			openAP()
 		}
 

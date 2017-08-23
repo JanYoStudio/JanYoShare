@@ -3,6 +3,13 @@
     <string name="app_package_name">com.janyo.janyoshare</string>
     <string name="authorities">com.janyo.janyoshare</string>
 
+    <string name="exception_time">崩溃时间：%1$s</string>
+    <string name="exception_version">崩溃版本：%1$s_%2$d</string>
+    <string name="exception_sdk">SDK：%1$s_%2$d</string>
+    <string name="exception_vendor">Vendor：%1$s</string>
+    <string name="exception_model">Model：%1$s</string>
+    <string name="exception_message">崩溃详情：\n%1$s</string>
+
     <string name="janyo_studio">JanYo Studio</string>
     <string name="dicklight">DickLight</string>
     <string name="zh_lyh">ZH_LYH</string>
@@ -101,6 +108,7 @@
     <string name="hint_jys_rename_error">重命名失败！</string>
     <string name="hint_long_click_do_title">请选择长按的操作</string>
     <string name="hint_day_night">重启应用后全局生效！</string>
+    <string name="hint_upload_log">日志文件上传中……</string>
 
     <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
@@ -165,4 +173,5 @@
     <string name="title_activity_file_transfer_configure">文件传输</string>
     <string name="title_activity_file_transfer_send">通过JY Share面对面分享</string>
     <string name="title_activity_settings2">Settings</string>
+    <string name="action_upload_file">点击上传日志文件</string>
 </resources>

@@ -40,7 +40,6 @@ import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
 import com.janyo.janyoshare.classes.Error
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
@@ -135,17 +134,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		CrashHandler.getInstance(this)
 				.sendException(object : CrashHandler.CatchExceptionListener
 				{
-					override fun onException(file: File, appVersionName: String,
+					override fun onException(date: String, file: File, appVersionName: String,
 											 appVersionCode: Int, AndroidVersion: String,
-											 sdk: Int, vendor: String, model: String)
+											 sdk: Int, vendor: String, model: String, ex: Throwable)
 					{
 						if (settings.isAutoUploadLog)
 						{
 							val map = HashMap<String, String>()
 							val fileMap = HashMap<String, File>()
-							val time: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(Calendar.getInstance().time)
 							fileMap.put("logFile", file)
-							map.put("date", time)
+							map.put("date", date)
 							map.put("appName", getString(R.string.app_name))
 							map.put("appVersionName", appVersionName)
 							map.put("appVersionCode", appVersionCode.toString())
@@ -180,8 +178,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 						}
 						else
 						{
-							val error = Error(appVersionName, appVersionCode, AndroidVersion, sdk, vendor, model)
+							val error = Error(date, appVersionName, appVersionCode, AndroidVersion, sdk, vendor, model, ex)
 							val bundle = Bundle()
+							bundle.putSerializable("file", file)
 							bundle.putSerializable("error", error)
 							val intent = Intent(this@MainActivity, ErrorActivity::class.java)
 							intent.putExtra("error", bundle)

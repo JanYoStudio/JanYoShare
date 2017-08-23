@@ -180,3 +180,8 @@
   **[] $VALUES;
   public *;
 }
+
+## SpotsDialog
+-keep class dmax.dialog.** {
+    *;
+}

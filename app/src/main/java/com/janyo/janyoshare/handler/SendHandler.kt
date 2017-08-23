@@ -1,9 +1,6 @@
-@file:Suppress("DEPRECATION")
-
 package com.janyo.janyoshare.handler
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -14,10 +11,11 @@ import com.janyo.janyoshare.R
 import com.janyo.janyoshare.activity.FileTransferActivity
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.util.FileTransferHelper
+import dmax.dialog.SpotsDialog
 
 class SendHandler : Handler()
 {
-	lateinit var progressDialog: ProgressDialog
+	lateinit var progressDialog: SpotsDialog
 	lateinit var context: Context
 
 	override fun handleMessage(msg: Message)

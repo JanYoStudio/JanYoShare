@@ -7,7 +7,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/text_date"
@@ -16,7 +16,6 @@
             android:layout_marginEnd="@dimen/constraintLayout_margin2"
             android:layout_marginStart="@dimen/constraintLayout_margin2"
             android:layout_marginTop="@dimen/constraintLayout_margin2"
-            android:text="text_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -28,7 +27,6 @@
             android:layout_marginEnd="@dimen/constraintLayout_margin2"
             android:layout_marginStart="@dimen/constraintLayout_margin2"
             android:layout_marginTop="@dimen/constraintLayout_margin1"
-            android:text="text_version"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_date"/>
@@ -40,7 +38,6 @@
             android:layout_marginEnd="@dimen/constraintLayout_margin2"
             android:layout_marginStart="@dimen/constraintLayout_margin2"
             android:layout_marginTop="@dimen/constraintLayout_margin1"
-            android:text="text_SDK"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_version"/>
@@ -52,7 +49,6 @@
             android:layout_marginEnd="@dimen/constraintLayout_margin2"
             android:layout_marginStart="@dimen/constraintLayout_margin2"
             android:layout_marginTop="@dimen/constraintLayout_margin1"
-            android:text="text_vendor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_SDK"/>
@@ -64,7 +60,6 @@
             android:layout_marginEnd="@dimen/constraintLayout_margin2"
             android:layout_marginStart="@dimen/constraintLayout_margin2"
             android:layout_marginTop="@dimen/constraintLayout_margin1"
-            android:text="text_model"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_vendor"/>
@@ -76,10 +71,31 @@
             android:layout_marginEnd="@dimen/constraintLayout_margin2"
             android:layout_marginStart="@dimen/constraintLayout_margin2"
             android:layout_marginTop="@dimen/constraintLayout_margin3"
-            android:text="text_exception"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_model"/>
+
+        <Switch
+            android:id="@+id/Switch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/constraintLayout_margin3"
+            android:text="@string/title_auto_upload_log"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_exception"/>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/constraintLayout_margin1"
+            android:layout_marginStart="@dimen/constraintLayout_margin1"
+            android:layout_marginTop="@dimen/constraintLayout_margin1"
+            android:text="@string/action_upload_file"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Switch"/>
 
     </android.support.constraint.ConstraintLayout>
 
