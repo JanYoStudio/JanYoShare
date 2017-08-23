@@ -84,4 +84,8 @@ class Settings private constructor()
 	var longClickDo: Int
 		get() = sharedPreferences!!.getInt("longClickDo", 0)
 		set(longClickDo) = sharedPreferences!!.edit().putInt("longClickDo", longClickDo).apply()
+
+	var dayNight: Boolean
+		get() = sharedPreferences!!.getBoolean("dayNight", false)
+		set(dayNight) = sharedPreferences!!.edit().putBoolean("dayNight", dayNight).apply()
 }

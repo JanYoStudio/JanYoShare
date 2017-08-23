@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
@@ -18,10 +17,12 @@ import android.support.v4.view.ViewPager
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatDelegate
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import com.janyo.janyoshare.AppFragment
@@ -34,7 +35,6 @@ import com.mystery0.tools.CrashHandler.CrashHandler
 import com.mystery0.tools.Logs.Logs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
@@ -44,7 +44,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
-
 	private val TAG = "MainActivity"
 	private lateinit var settings: Settings
 	private val PERMISSION_CODE = 233
@@ -54,8 +53,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
-		super.onCreate(savedInstanceState)
 		settings = Settings.getInstance(this)
+		if (settings.dayNight)
+			delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+		else
+			delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+		super.onCreate(savedInstanceState)
 		checkPermission()
 		initialization()
 		monitor()
@@ -70,6 +73,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		toggle.syncState()
 
 		img_janyo = nav_view.getHeaderView(0).findViewById(R.id.imageView)
+		nav_view.menu.findItem(R.id.action_night).actionView.findViewById<Switch>(R.id.Switch).isChecked = settings.dayNight
+		nav_view.menu.findItem(R.id.action_night).actionView.findViewById<Switch>(R.id.Switch).setOnCheckedChangeListener { _, checked ->
+			settings.dayNight = checked
+			Snackbar.make(coordinatorLayout, R.string.hint_day_night, Snackbar.LENGTH_SHORT)
+					.show()
+		}
 
 		nav_view.setNavigationItemSelectedListener(this)
 
@@ -81,7 +90,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		currentFragment = userFragment
 		viewpager.adapter = viewPagerAdapter
 		title_tabs.setupWithViewPager(viewpager)
-		title_tabs.tabMode = TabLayout.MODE_FIXED
 
 		viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener
 		{

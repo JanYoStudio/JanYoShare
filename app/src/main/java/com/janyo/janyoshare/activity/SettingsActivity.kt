@@ -5,7 +5,6 @@ package com.janyo.janyoshare.activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.preference.*
@@ -19,11 +18,9 @@ import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -82,8 +79,10 @@ class SettingsActivity : PreferenceActivity()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
-		super.onCreate(savedInstanceState)
 		settings = Settings.getInstance(this)
+		if (settings.dayNight)
+			setTheme(R.style.AppTheme_Night)
+		super.onCreate(savedInstanceState)
 		payHandler = PayHandler(this, Volley.newRequestQueue(this))
 		addPreferencesFromResource(R.xml.preferences)
 		initialization()

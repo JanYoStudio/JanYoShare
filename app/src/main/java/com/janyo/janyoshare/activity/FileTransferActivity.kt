@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -20,6 +21,7 @@ import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.service.ReceiveFileService
 import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHelper
+import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 
@@ -34,6 +36,10 @@ class FileTransferActivity : AppCompatActivity()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
+		if (Settings.getInstance(this).dayNight)
+			delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+		else
+			delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 		super.onCreate(savedInstanceState)
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 		{

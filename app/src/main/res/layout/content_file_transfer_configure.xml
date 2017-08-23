@@ -34,7 +34,7 @@
         android:layout_width="@dimen/item_file_transfer_configure_button_size"
         android:layout_height="@dimen/item_file_transfer_configure_button_size"
         android:layout_marginTop="@dimen/item_file_transfer_configure_button_margin"
-        android:background="@drawable/ic_circle_cyan"
+        android:background="@drawable/ic_circle_indigo"
         android:gravity="center"
         android:text="@string/receive_file"
         app:layout_constraintEnd_toEndOf="parent"

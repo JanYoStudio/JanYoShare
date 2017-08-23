@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.transition.TransitionInflater
 import android.view.Window
 import android.widget.Toast
@@ -15,6 +16,7 @@ import com.janyo.janyoshare.handler.ReceiveHandler
 import com.janyo.janyoshare.handler.SendHandler
 import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.util.FileTransferHelper
+import com.janyo.janyoshare.util.Settings
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
 import com.mystery0.tools.Logs.Logs
@@ -45,6 +47,10 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
+		if (Settings.getInstance(this).dayNight)
+			delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+		else
+			delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 		super.onCreate(savedInstanceState)
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 		{
@@ -61,11 +67,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		receiveHandler.progressDialog = progressDialog
 		receiveHandler.context = this
 		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-		{
-			receiveFile.setBackgroundResource(R.drawable.ic_circle_indigo)
-		}
 
 		if (intent.getIntExtra("action", 0) == 1)
 		{
