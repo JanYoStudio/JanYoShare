@@ -1,5 +1,7 @@
 package com.janyo.janyoshare.classes
 
-data class Error(appVersionName: String,
-				 appVersionCode: Int, AndroidVersion: String,
-				 sdk: Int, vendor: String, model: String)
+import java.io.Serializable
+
+data class Error(val appVersionName: String,
+				 val appVersionCode: Int, val AndroidVersion: String,
+				 val sdk: Int, val vendor: String, val model: String) : Serializable
