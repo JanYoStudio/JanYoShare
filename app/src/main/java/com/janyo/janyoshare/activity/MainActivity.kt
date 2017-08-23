@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		when (item.itemId)
 		{
 			R.id.action_file_transfer -> startActivity(Intent(this, FileTransferConfigureActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
-			R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
+			R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
 			else -> return true
 		}
 		drawer_layout.closeDrawer(GravityCompat.START)
