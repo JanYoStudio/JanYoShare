@@ -1,8 +1,5 @@
-@file:Suppress("DEPRECATION")
-
 package com.janyo.janyoshare.handler
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.os.Handler
 import android.os.Message
@@ -11,9 +8,10 @@ import android.support.v7.app.AlertDialog
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.util.Settings
+import dmax.dialog.SpotsDialog
 
 class SettingHandler(private val context: Context,
-					 private val progressDialog: ProgressDialog,
+					 private val progressDialog: SpotsDialog,
 					 private val excludeList: Preference) : Handler()
 {
 	override fun handleMessage(msg: Message)

@@ -26,7 +26,6 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
-import com.mystery0.tools.Logs.Logs
 import java.io.File
 
 import java.util.ArrayList
@@ -34,7 +33,6 @@ import java.util.concurrent.Executors
 
 class AppFragment : Fragment()
 {
-	private val TAG = "AppFragment"
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 	private lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter

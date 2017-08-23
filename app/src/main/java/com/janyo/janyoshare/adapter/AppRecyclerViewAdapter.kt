@@ -1,10 +1,7 @@
-@file:Suppress("DEPRECATION")
-
 package com.janyo.janyoshare.adapter
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Message
@@ -29,6 +26,7 @@ import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
+import dmax.dialog.SpotsDialog
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -42,7 +40,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 	private val renameHandler = RenameHandler(context as Activity)
 	private val shareList = ArrayList<File>()
 	private val settings = Settings.getInstance(context)
-	private var progressDialog = ProgressDialog(context)
+	private var progressDialog = SpotsDialog(context)
 	private val sendHandler = SendHandler()
 	var menu: Menu? = null
 	val multiChoiceList = ArrayList<InstallApp>()
