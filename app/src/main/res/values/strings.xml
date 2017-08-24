@@ -63,7 +63,7 @@
     <string name="hint_rename_error">重命名失败，已取消分享！</string>
     <string name="hint_clear_file">文件清除%1$s！</string>
     <string name="hint_select_sort">请选择排序方式</string>
-    <string name="hint_upload_log_done">日志已经成功反馈给开发者！</string>
+    <string name="hint_upload_log_done">日志已经成功反馈给开发者，即将重启应用！</string>
     <string name="hint_check_obb_exists">检测到数据包，是否进行分享？</string>
     <string name="hint_check_obb_not_exists">文件提取完成，该软件不存在数据包！</string>
     <string name="hint_check_obb_number_warning">文件提取完成，该软件共有%1$d个数据包，是否分享？</string>
@@ -174,4 +174,6 @@
     <string name="title_activity_file_transfer_send">通过JY Share面对面分享</string>
     <string name="title_activity_settings2">Settings</string>
     <string name="action_upload_file">点击上传日志文件</string>
+    <string name="action_restart">重启应用</string>
+    <string name="action_exit">退出应用</string>
 </resources>

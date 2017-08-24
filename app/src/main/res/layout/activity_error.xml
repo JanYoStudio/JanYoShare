@@ -1,90 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/coordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/text_date"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/constraintLayout_margin2"
-            android:layout_marginStart="@dimen/constraintLayout_margin2"
-            android:layout_marginTop="@dimen/constraintLayout_margin2"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_upload"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/text_version"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/constraintLayout_margin2"
-            android:layout_marginStart="@dimen/constraintLayout_margin2"
-            android:layout_marginTop="@dimen/constraintLayout_margin1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_date"/>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/text_SDK"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/constraintLayout_margin2"
-            android:layout_marginStart="@dimen/constraintLayout_margin2"
-            android:layout_marginTop="@dimen/constraintLayout_margin1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_version"/>
+                <TextView
+                    android:id="@+id/text_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/constraintLayout_margin2"
+                    android:layout_marginStart="@dimen/constraintLayout_margin2"
+                    android:layout_marginTop="@dimen/constraintLayout_margin2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/text_vendor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/constraintLayout_margin2"
-            android:layout_marginStart="@dimen/constraintLayout_margin2"
-            android:layout_marginTop="@dimen/constraintLayout_margin1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_SDK"/>
+                <TextView
+                    android:id="@+id/text_version"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/constraintLayout_margin2"
+                    android:layout_marginStart="@dimen/constraintLayout_margin2"
+                    android:layout_marginTop="@dimen/constraintLayout_margin1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_date"/>
 
-        <TextView
-            android:id="@+id/text_model"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/constraintLayout_margin2"
-            android:layout_marginStart="@dimen/constraintLayout_margin2"
-            android:layout_marginTop="@dimen/constraintLayout_margin1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_vendor"/>
+                <TextView
+                    android:id="@+id/text_SDK"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/constraintLayout_margin2"
+                    android:layout_marginStart="@dimen/constraintLayout_margin2"
+                    android:layout_marginTop="@dimen/constraintLayout_margin1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_version"/>
 
-        <TextView
-            android:id="@+id/text_exception"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/constraintLayout_margin2"
-            android:layout_marginStart="@dimen/constraintLayout_margin2"
-            android:layout_marginTop="@dimen/constraintLayout_margin3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_model"/>
+                <TextView
+                    android:id="@+id/text_vendor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/constraintLayout_margin2"
+                    android:layout_marginStart="@dimen/constraintLayout_margin2"
+                    android:layout_marginTop="@dimen/constraintLayout_margin1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_SDK"/>
 
-        <Switch
-            android:id="@+id/Switch"
-            android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/text_model"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/constraintLayout_margin2"
+                    android:layout_marginStart="@dimen/constraintLayout_margin2"
+                    android:layout_marginTop="@dimen/constraintLayout_margin1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_vendor"/>
+
+                <TextView
+                    android:id="@+id/text_exception"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/constraintLayout_margin2"
+                    android:layout_marginStart="@dimen/constraintLayout_margin2"
+                    android:layout_marginTop="@dimen/constraintLayout_margin3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_model"/>
+
+                <Switch
+                    android:id="@+id/Switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/constraintLayout_margin3"
+                    android:text="@string/title_auto_upload_log"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_exception"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/button_upload"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/constraintLayout_margin3"
-            android:text="@string/title_auto_upload_log"
+            android:background="@null"
+            android:text="@string/action_upload"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+            android:id="@+id/button_restart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/action_restart"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_exception"/>
+            app:layout_constraintEnd_toStartOf="@+id/button_upload"/>
+
+        <Button
+            android:id="@+id/button_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/action_exit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_restart"/>
 
     </android.support.constraint.ConstraintLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>
