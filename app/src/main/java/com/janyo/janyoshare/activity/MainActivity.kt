@@ -39,7 +39,9 @@ import java.io.File
 import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import com.janyo.janyoshare.classes.Error
+import com.janyo.janyoshare.classes.Response
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
@@ -163,7 +165,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 									{
 										override fun onResponse(code: Int, message: String?)
 										{
-											if (code == 0)
+											val response = Gson().fromJson(message, Response::class.java)
+											if (response.code == 0)
 											{
 												Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
 														.show()

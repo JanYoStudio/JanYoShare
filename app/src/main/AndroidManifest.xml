@@ -118,7 +118,7 @@
         </activity>
         <activity
             android:name=".activity.ErrorActivity"
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
