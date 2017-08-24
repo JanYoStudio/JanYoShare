@@ -2,6 +2,8 @@ package com.janyo.janyoshare.adapter
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Message
@@ -127,16 +129,23 @@ class AppRecyclerViewAdapter(private val context: Context,
 			AlertDialog.Builder(context)
 					.setTitle(R.string.copy_file_selection)
 					.setItems(R.array.copy_do, { _, choose ->
-						progressDialog.show()
-						if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
+						if (choose == 6)
 						{
-							doSelect(singleThreadPool, installApp, choose)
+							copyInfo(installApp)
 						}
 						else
 						{
-							progressDialog.dismiss()
-							Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
-									.show()
+							progressDialog.show()
+							if (JYFileUtil.isDirExist(context.getString(R.string.app_name)))
+							{
+								doSelect(singleThreadPool, installApp, choose)
+							}
+							else
+							{
+								progressDialog.dismiss()
+								Snackbar.make(coordinatorLayout, context.getString(R.string.hint_copy_not_exist), Snackbar.LENGTH_SHORT)
+										.show()
+							}
 						}
 					})
 					.show()
@@ -219,6 +228,30 @@ class AppRecyclerViewAdapter(private val context: Context,
 				}
 			}
 		}
+	}
+
+	private fun copyInfo(installApp: InstallApp)
+	{
+		AlertDialog.Builder(context)
+				.setTitle(R.string.copy_file_selection)
+				.setItems(R.array.copy_info, { _, choose ->
+					when (choose)
+					{
+						0 -> copyToClipboard(installApp.name, installApp.name)
+						1 -> copyToClipboard(installApp.name, installApp.packageName)
+						2 -> copyToClipboard(installApp.name, installApp.versionName)
+						3 -> copyToClipboard(installApp.name, installApp.versionCode.toString())
+					}
+				})
+				.show()
+	}
+
+	private fun copyToClipboard(label: String?, text: String?)
+	{
+		val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+		clipboardManager.primaryClip = ClipData.newPlainText(label, text)
+		Snackbar.make(coordinatorLayout, R.string.hint_copy_info, Snackbar.LENGTH_SHORT)
+				.show()
 	}
 
 	private fun doChoose(choose: Int, installApp: InstallApp)
