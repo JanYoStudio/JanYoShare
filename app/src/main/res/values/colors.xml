@@ -6,9 +6,10 @@
 
     <color name="colorPrimaryNight">#212121</color>
     <color name="colorPrimaryDarkNight">#000000</color>
-    <color name="colorAccentNight">#424242</color>
+    <color name="colorAccentNight">#BDBDBD</color>
 
     <color name="ic_disable_accessibility_background">#FFFFFF</color>
+
     <color name="textColorBlack">#000000</color>
     <color name="textColorBlue">#66CCFF</color>
     <color name="textColorWhite">#FFFFFF</color>
