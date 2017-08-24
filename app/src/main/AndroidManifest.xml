@@ -72,6 +72,15 @@
                     android:scheme="file"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.FileTransferActivity"
+            android:label="@string/title_activity_file_transfer"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".activity.ErrorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".service.ShareTileService"
@@ -110,16 +119,6 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <activity
-            android:name=".activity.FileTransferActivity"
-            android:label="@string/title_activity_file_transfer"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity
-            android:name=".activity.ErrorActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
     </application>
 
 </manifest>

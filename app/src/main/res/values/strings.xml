@@ -112,6 +112,7 @@
     <string name="hint_long_click_do_title">请选择长按的操作</string>
     <string name="hint_day_night">重启应用后全局生效！</string>
     <string name="hint_upload_log">日志文件上传中……</string>
+    <string name="hint_copy_info">信息复制成功！</string>
 
     <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>

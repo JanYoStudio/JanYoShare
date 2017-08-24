@@ -5,7 +5,7 @@
     <color name="colorAccent">#ff4081</color>
 
     <color name="colorPrimaryNight">#424242</color>
-    <color name="colorPrimaryDarkNight">#000000</color>
+    <color name="colorPrimaryDarkNight">#212121</color>
     <color name="colorAccentNight">#BDBDBD</color>
 
     <color name="ic_disable_accessibility_background">#FFFFFF</color>
