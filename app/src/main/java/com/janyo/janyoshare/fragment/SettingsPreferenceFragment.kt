@@ -76,6 +76,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+		settings = Settings.getInstance(activity)
 		addPreferencesFromResource(R.xml.preferences)
 		payHandler = PayHandler(activity, Volley.newRequestQueue(activity))
 		initialization()
