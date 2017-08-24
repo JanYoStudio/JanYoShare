@@ -21,7 +21,8 @@
     <dimen name="item_file_transfer_configure_button_size">180dp</dimen>
     <dimen name="item_file_transfer_configure_button_margin">24dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
-    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="nav_header_height">156dp</dimen>
+    <dimen name="nav_width">320dp</dimen>
     <dimen name="constraintLayout_margin1">8dp</dimen>
     <dimen name="constraintLayout_margin2">16dp</dimen>
     <dimen name="constraintLayout_margin3">24dp</dimen>
