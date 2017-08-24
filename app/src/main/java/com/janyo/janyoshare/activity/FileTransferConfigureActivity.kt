@@ -74,7 +74,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		sendFile.setOnClickListener {
-			throw Exception("233")
 			openAP()
 		}
 
