@@ -9,10 +9,10 @@ apply plugin: 'kotlin-android-extensions'
 //patch，一般在软件有主要的问题修复后增长
 //build是构建版本，一般只要软件被重新编译过就会增长
 
-def a = 2
-def b = 8
-def c = 2
-def d = 3
+def a = 3
+def b = 0
+def c = 0
+def d = 1
 
 autoVersion {
     major a
