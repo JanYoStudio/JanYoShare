@@ -38,6 +38,7 @@ android {
             versionName JY_major + '.' + JY_minor + '.' + JY_patch + '-beta' + JY_beta
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        setProperty("archivesBaseName", "JY Share-$versionName")
     }
     buildTypes {
         debug {
