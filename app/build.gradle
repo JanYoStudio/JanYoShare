@@ -9,15 +9,16 @@ apply plugin: 'kotlin-android-extensions'
 //patch，一般在软件有主要的问题修复后增长
 //build是构建版本，一般只要软件被重新编译过就会增长
 
-def a = 3
-def b = 0
-def c = 0
-def d = 1
+def JY_major = 3
+def JY_minor = 0
+def JY_patch = 0
+def JY_beta = 0
+def JY_alpha = 1
 
 autoVersion {
-    major a
-    minor b
-    patch c
+    major JY_major
+    minor JY_minor
+    patch JY_patch
 }
 
 android {
@@ -28,28 +29,37 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode autoVersion.code
-        if (d == 0)
-            versionName a + '.' + b + '.' + c
+        if (JY_beta == 0)
+            if (JY_alpha == 0)
+                versionName JY_major + '.' + JY_minor + '.' + JY_patch
+            else
+                versionName JY_major + '.' + JY_minor + '.' + JY_patch + '-alpha' + JY_alpha
         else
-            versionName a + '.' + b + '.' + c + '-beta' + d
+            versionName JY_major + '.' + JY_minor + '.' + JY_patch + '-beta' + JY_beta
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
-            if (d == 0)
-                resValue "string", "app_version", a + '.' + b + '.' + c
+            if (JY_beta == 0)
+                if (JY_alpha == 0)
+                    resValue "string", "app_version", JY_major + '.' + JY_minor + '.' + JY_patch
+                else
+                    resValue "string", "app_version", JY_major + '.' + JY_minor + '.' + JY_patch + '-alpha' + JY_alpha
             else
-                resValue "string", "app_version", a + '.' + b + '.' + c + '-beta' + d
+                resValue "string", "app_version", JY_major + '.' + JY_minor + '.' + JY_patch + '-beta' + JY_beta
             resValue "string", "app_version_code", autoVersion.code + ''
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            if (d == 0)
-                resValue "string", "app_version", a + '.' + b + '.' + c
+            if (JY_beta == 0)
+                if (JY_alpha == 0)
+                    resValue "string", "app_version", JY_major + '.' + JY_minor + '.' + JY_patch
+                else
+                    resValue "string", "app_version", JY_major + '.' + JY_minor + '.' + JY_patch + '-alpha' + JY_alpha
             else
-                resValue "string", "app_version", a + '.' + b + '.' + c + '-beta' + d
+                resValue "string", "app_version", JY_major + '.' + JY_minor + '.' + JY_patch + '-beta' + JY_beta
             resValue "string", "app_version_code", autoVersion.code + ''
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
