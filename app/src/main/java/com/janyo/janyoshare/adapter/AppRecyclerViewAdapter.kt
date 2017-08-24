@@ -40,7 +40,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 	private val renameHandler = RenameHandler(context as Activity)
 	private val shareList = ArrayList<File>()
 	private val settings = Settings.getInstance(context)
-	private var progressDialog = SpotsDialog(context)
+	private var progressDialog = SpotsDialog(context, R.style.SpotsDialog)
 	private val sendHandler = SendHandler()
 	var menu: Menu? = null
 	val multiChoiceList = ArrayList<InstallApp>()
