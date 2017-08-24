@@ -41,7 +41,6 @@ class ReceiveHandler : Handler()
 						.setPositiveButton(R.string.action_done, { _, _ ->
 							Thread(Runnable {
 								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_DONE)
-
 								val message = Message()
 								message.what = FileTransferConfigureActivity.CONNECTED
 								message.obj = map["message"]
@@ -53,6 +52,9 @@ class ReceiveHandler : Handler()
 						.setNegativeButton(R.string.action_cancel, { _, _ ->
 							Thread(Runnable {
 								socketUtil.sendMessage(FileTransferConfigureActivity.VERIFY_CANCEL)
+								val message = Message()
+								message.what = FileTransferConfigureActivity.VERIFY_ERROR
+								sendMessage(message)
 							}).start()
 						})
 						.show()
