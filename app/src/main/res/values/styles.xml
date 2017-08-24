@@ -32,4 +32,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert"/>
+
 </resources>

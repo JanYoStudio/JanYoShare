@@ -85,18 +85,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_exception"/>
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/constraintLayout_margin1"
-            android:layout_marginStart="@dimen/constraintLayout_margin1"
-            android:layout_marginTop="@dimen/constraintLayout_margin1"
-            android:text="@string/action_upload_file"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Switch"/>
-
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.NestedScrollView>
