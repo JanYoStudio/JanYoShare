@@ -59,7 +59,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 		setContentView(R.layout.activity_file_transfer_configure)
 
-		progressDialog = SpotsDialog(this)
+		progressDialog = SpotsDialog(this, R.style.SpotsDialog)
 		sendHandler.progressDialog = progressDialog
 		sendHandler.context = this
 		receiveHandler.progressDialog = progressDialog

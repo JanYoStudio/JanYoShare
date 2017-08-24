@@ -1,9 +1,6 @@
-@file:Suppress("DEPRECATION")
-
 package com.janyo.janyoshare
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
@@ -26,6 +23,7 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
+import dmax.dialog.SpotsDialog
 import java.io.File
 
 import java.util.ArrayList
@@ -138,7 +136,7 @@ class AppFragment : Fragment()
 			R.id.action_export ->
 			{
 				val list = appRecyclerViewAdapter.multiChoiceList
-				val progressDialog = ProgressDialog(activity)
+				val progressDialog = SpotsDialog(activity, R.style.SpotsDialog)
 				progressDialog.setCancelable(false)
 				progressDialog.setMessage(getString(R.string.copy_file_loading))
 				progressDialog.show()
@@ -156,7 +154,7 @@ class AppFragment : Fragment()
 			R.id.action_send ->
 			{
 				val list = appRecyclerViewAdapter.multiChoiceList
-				val progressDialog = ProgressDialog(activity)
+				val progressDialog = SpotsDialog(activity, R.style.SpotsDialog)
 				progressDialog.setCancelable(false)
 				progressDialog.setMessage(getString(R.string.copy_file_loading))
 				progressDialog.show()

@@ -58,7 +58,7 @@ class ErrorActivity : AppCompatActivity()
 			finish()
 		}
 		button_upload.setOnClickListener {
-			val progressDialog = SpotsDialog(this, getString(R.string.hint_upload_log))
+			val progressDialog = SpotsDialog(this, getString(R.string.hint_upload_log), R.style.SpotsDialog)
 			uploadLogHandler.progressDialog = progressDialog
 			progressDialog.show()
 			val map = HashMap<String, String>()
