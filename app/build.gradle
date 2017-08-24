@@ -13,7 +13,7 @@ def JY_major = 3
 def JY_minor = 0
 def JY_patch = 0
 def JY_beta = 0
-def JY_alpha = 2
+def JY_alpha = 3
 
 autoVersion {
     major JY_major
