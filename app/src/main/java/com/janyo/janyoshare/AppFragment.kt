@@ -45,9 +45,9 @@ class AppFragment : Fragment()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
+		settings = Settings.getInstance(activity)
 		super.onCreate(savedInstanceState)
 		type = arguments.getInt("type")
-		settings = Settings.getInstance(activity)
 		setHasOptionsMenu(true)
 	}
 

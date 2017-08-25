@@ -21,7 +21,7 @@ class SettingsActivity : PreferenceActivity()
 	{
 		val settings = Settings.getInstance(this)
 		if (settings.dayNight)
-			setTheme(R.style.AppTheme_Night)
+			setTheme(R.style.AppTheme_Night_Preference)
 		super.onCreate(savedInstanceState)
 		fragmentManager.beginTransaction().replace(R.id.content_wrapper, SettingsPreferenceFragment()).commit()
 		toolbar.title = title
