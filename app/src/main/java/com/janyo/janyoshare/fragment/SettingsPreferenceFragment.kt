@@ -11,8 +11,6 @@ import android.preference.SwitchPreference
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.InputType
@@ -22,15 +20,12 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.android.volley.toolbox.Volley
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
-import com.janyo.janyoshare.handler.PayHandler
 import com.janyo.janyoshare.handler.SettingHandler
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.Settings
-import com.mystery0.tools.Logs.Logs
 import com.mystery0.tools.SnackBar.ASnackBar
 import dmax.dialog.SpotsDialog
 import java.util.*
@@ -40,9 +35,7 @@ import kotlin.concurrent.timerTask
 
 class SettingsPreferenceFragment : PreferenceFragment()
 {
-	private val TAG = "SettingsPreferenceFragment"
 	private lateinit var settings: Settings
-	private lateinit var payHandler: PayHandler
 	private lateinit var auto_clean: SwitchPreference
 	private lateinit var enableExcludeList: SwitchPreference
 	private lateinit var excludeList: Preference
@@ -61,24 +54,20 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	private lateinit var about: Preference
 	private lateinit var howToUse: Preference
 	private lateinit var openSourceAddress: Preference
-	private lateinit var license: Preference
 	private lateinit var checkUpdate: Preference
 	private lateinit var versionCode: Preference
-	private lateinit var support: Preference
 	private lateinit var joinTest: Preference
 	private lateinit var homePage: Preference
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var settingHandler: SettingHandler
 	private lateinit var progressDialog: SpotsDialog
 	private var clickTime = 0
-	private var isGooglePlayPay = false
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		settings = Settings.getInstance(activity)
 		addPreferencesFromResource(R.xml.preferences)
-		payHandler = PayHandler(activity, Volley.newRequestQueue(activity))
 		initialization()
 		monitor()
 	}
@@ -103,10 +92,8 @@ class SettingsPreferenceFragment : PreferenceFragment()
 		about = findPreference(getString(R.string.key_about))
 		howToUse = findPreference(getString(R.string.key_how_to_use))
 		openSourceAddress = findPreference(getString(R.string.key_open_source_address))
-		license = findPreference(getString(R.string.key_license))
 		checkUpdate = findPreference(getString(R.string.key_check_update))
 		versionCode = findPreference(getString(R.string.key_version_code))
-		support = findPreference(getString(R.string.key_support))
 		joinTest = findPreference(getString(R.string.key_join_test))
 		homePage = findPreference(getString(R.string.key_home_page))
 
@@ -434,25 +421,6 @@ class SettingsPreferenceFragment : PreferenceFragment()
 			startActivity(intent)
 			false
 		}
-		license.setOnPreferenceClickListener {
-			val view_license = LayoutInflater.from(activity).inflate(R.layout.dialog_license, NestedScrollView(activity), false)
-			val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
-			val text_license_point2 = view_license.findViewById<TextView>(R.id.license_point2)
-			val text_license_point3 = view_license.findViewById<TextView>(R.id.license_point3)
-			val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
-			point!!.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
-			text_license_point1.setCompoundDrawables(point, null, null, null)
-			text_license_point2.setCompoundDrawables(point, null, null, null)
-			text_license_point3.setCompoundDrawables(point, null, null, null)
-			AlertDialog.Builder(activity)
-					.setTitle(" ")
-					.setView(view_license)
-					.setPositiveButton(R.string.action_done, { _, _ ->
-						settings.isFirst = false
-					})
-					.show()
-			false
-		}
 		checkUpdate.setOnPreferenceClickListener {
 			val intent = Intent(Intent.ACTION_VIEW)
 			val content_url = Uri.parse(getString(R.string.address_check_update))
@@ -489,34 +457,6 @@ class SettingsPreferenceFragment : PreferenceFragment()
 					}, 1000)
 				}
 			}
-			false
-		}
-		support.setOnPreferenceClickListener {
-			AlertDialog.Builder(activity)
-					.setTitle(R.string.pay_method_title)
-					.setItems(R.array.pay_method, { _, choose ->
-						val message = Message()
-						when (choose)
-						{
-							0 ->
-							{
-								message.what = PayHandler.PAY_PLAY
-								isGooglePlayPay = true
-							}
-							1 ->
-							{
-								message.what = PayHandler.PAY_ALIPAY
-								isGooglePlayPay = false
-							}
-							2 ->
-							{
-								message.what = PayHandler.PAY_WEIXIN
-								isGooglePlayPay = false
-							}
-						}
-						payHandler.sendMessage(message)
-					})
-					.show()
 			false
 		}
 		joinTest.setOnPreferenceClickListener {
@@ -559,26 +499,5 @@ class SettingsPreferenceFragment : PreferenceFragment()
 				tempString += ","
 		}
 		return tempString
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-	{
-		if (!isGooglePlayPay && payHandler.onPayResult(requestCode, resultCode, data))
-			super.onActivityResult(requestCode, resultCode, data)
-		else
-			Logs.i(TAG, "onActivityResult handled by IABUtil.")
-	}
-
-	override fun onDestroy()
-	{
-		try
-		{
-			payHandler.playDestroy()
-		}
-		catch (e: Exception)
-		{
-			Logs.e(TAG, "onDestroy: 销毁失败")
-		}
-		super.onDestroy()
 	}
 }
