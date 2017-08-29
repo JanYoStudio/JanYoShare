@@ -26,7 +26,7 @@ import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import com.janyo.janyoshare.AppFragment
+import com.janyo.janyoshare.fragment.AppFragment
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.ViewPagerAdapter
 import com.janyo.janyoshare.util.AppManager

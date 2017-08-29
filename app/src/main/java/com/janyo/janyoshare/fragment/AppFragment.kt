@@ -1,4 +1,4 @@
-package com.janyo.janyoshare
+package com.janyo.janyoshare.fragment
 
 import android.annotation.SuppressLint
 import android.app.SearchManager
@@ -17,12 +17,16 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
+import com.janyo.janyoshare.APP
+import com.janyo.janyoshare.R
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
+import com.janyo.janyoshare.callback.ExportListener
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
+import com.mystery0.tools.Logs.Logs
 import dmax.dialog.SpotsDialog
 import java.io.File
 
@@ -31,6 +35,7 @@ import java.util.concurrent.Executors
 
 class AppFragment : Fragment()
 {
+	private val TAG = "AppFragment"
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 	private lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
@@ -132,6 +137,20 @@ class AppFragment : Fragment()
 						}
 						.show()
 			}
+			R.id.action_select_all ->
+			{
+				val list = appRecyclerViewAdapter.multiChoiceList
+				list.clear()
+				list.addAll(showList)
+				appRecyclerViewAdapter.notifyDataSetChanged()
+			}
+			R.id.action_select_none ->
+			{
+				val list = appRecyclerViewAdapter.multiChoiceList
+				list.clear()
+				appRecyclerViewAdapter.notifyDataSetChanged()
+				activity.invalidateOptionsMenu()
+			}
 			R.id.action_export ->
 			{
 				val list = appRecyclerViewAdapter.multiChoiceList
@@ -207,6 +226,7 @@ class AppFragment : Fragment()
 
 	private fun exportAPK(list: List<InstallApp>, listener: ExportListener)
 	{
+		Logs.i(TAG, "exportAPK: " + list.size)
 		Thread(Runnable {
 			val fileList = ArrayList<File>()
 			val cacheThreadPool = Executors.newCachedThreadPool()
@@ -312,10 +332,5 @@ class AppFragment : Fragment()
 			fragment.arguments = bundle
 			return fragment
 		}
-	}
-
-	interface ExportListener
-	{
-		fun done(finish: Int, error: Int, fileList: ArrayList<File>)
 	}
 }
