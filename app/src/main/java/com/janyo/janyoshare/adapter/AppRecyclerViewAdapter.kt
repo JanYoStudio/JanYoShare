@@ -110,11 +110,15 @@ class AppRecyclerViewAdapter(private val context: Context,
 					val action_search = menu!!.findItem(R.id.action_search)
 					val action_sort = menu!!.findItem(R.id.action_sort)
 					val action_clear = menu!!.findItem(R.id.action_clear)
+					val action_select_all=menu!!.findItem(R.id.action_select_all)
+					val action_select_none=menu!!.findItem(R.id.action_select_none)
 					val action_export = menu!!.findItem(R.id.action_export)
 					val action_send = menu!!.findItem(R.id.action_send)
 					action_search.isVisible = false
 					action_sort.isVisible = false
 					action_clear.isVisible = false
+					action_select_all.isVisible = true
+					action_select_none.isVisible = true
 					action_export.isVisible = true
 					action_send.isVisible = true
 				}

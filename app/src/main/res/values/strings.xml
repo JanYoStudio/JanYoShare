@@ -189,4 +189,6 @@
     <string name="title_activity_file_transfer">文件传输</string>
     <string name="title_activity_file_transfer_configure">文件传输</string>
     <string name="title_activity_file_transfer_send">通过JY Share面对面分享</string>
+    <string name="action_select_all">全选</string>
+    <string name="action_select_none">反选</string>
 </resources>
