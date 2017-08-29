@@ -252,7 +252,7 @@ class AppFragment : Fragment()
 	{
 		index = settings.sort
 		swipeRefreshLayout.isRefreshing = true
-		if (JYFileUtil.isCacheAvailable(context))
+		if (JYFileUtil.isCacheAvailable(activity))
 		{
 			getCatchList()
 		}
@@ -290,15 +290,15 @@ class AppFragment : Fragment()
 	{
 		singleThreadPool.execute {
 			val installAppList = AppManager.getInstallAppList(context, type, index, true)
+			val message = Message()
+			message.obj = installAppList
+			message.what = 1
+			loadHandler.sendMessage(message)
 			when (type)
 			{
 				AppManager.SYSTEM -> JYFileUtil.saveList(context, installAppList, "system.list")
 				AppManager.USER -> JYFileUtil.saveList(context, installAppList, "user.list")
 			}
-			val message = Message()
-			message.obj = installAppList
-			message.what = 1
-			loadHandler.sendMessage(message)
 		}
 	}
 
