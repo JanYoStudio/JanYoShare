@@ -11,9 +11,11 @@ import com.janyo.janyoshare.R
 import com.janyo.janyoshare.fragment.SettingsPreferenceFragment
 
 import com.janyo.janyoshare.util.Settings
+import com.mystery0.tools.Logs.Logs
 
 class SettingsActivity : PreferenceActivity()
 {
+	private val TAG = "SettingsActivity"
 	private lateinit var toolbar: Toolbar
 	private lateinit var coordinatorLayout: CoordinatorLayout
 
@@ -39,5 +41,11 @@ class SettingsActivity : PreferenceActivity()
 		LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true)
 
 		window.setContentView(contentView)
+	}
+
+	override fun onDestroy()
+	{
+		super.onDestroy()
+		Logs.i(TAG, "onDestroy: ")
 	}
 }

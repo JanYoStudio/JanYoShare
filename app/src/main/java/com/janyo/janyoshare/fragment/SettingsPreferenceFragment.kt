@@ -27,6 +27,7 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.SettingHandler
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.Settings
+import com.mystery0.tools.Logs.Logs
 import com.mystery0.tools.SnackBar.ASnackBar
 import dmax.dialog.SpotsDialog
 import java.util.*
@@ -36,6 +37,7 @@ import kotlin.concurrent.timerTask
 
 class SettingsPreferenceFragment : PreferenceFragment()
 {
+	private val TAG = "SettingsPreferenceFragment"
 	private var settings = Settings.getInstance(APP.getInstance())
 	private lateinit var auto_clean: SwitchPreference
 	private lateinit var enableExcludeList: SwitchPreference
@@ -68,6 +70,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+		Logs.i(TAG, "onCreate: 创建settings的fragment")
 		addPreferencesFromResource(R.xml.preferences)
 		initialization()
 		monitor()
@@ -507,5 +510,11 @@ class SettingsPreferenceFragment : PreferenceFragment()
 				tempString += ","
 		}
 		return tempString
+	}
+
+	override fun onDestroy()
+	{
+		super.onDestroy()
+		Logs.i(TAG, "onDestroy: 销毁settings的Fragment")
 	}
 }

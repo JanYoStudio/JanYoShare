@@ -47,16 +47,19 @@ class AppFragment : Fragment()
 	private lateinit var loadHandler: LoadHandler
 	private lateinit var exportHandler: ExportHandler
 	private val singleThreadPool = Executors.newSingleThreadExecutor()
+	private var isReadyTag = false
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		type = arguments.getInt("type")
+		Logs.i(TAG, "onCreate: 创建app的fragment" + type)
 		setHasOptionsMenu(true)
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
 	{
+		Logs.i(TAG, "onCreateOptionsMenu: 创建菜单" + type)
 		inflater.inflate(R.menu.menu_main, menu)
 		appRecyclerViewAdapter.menu = menu
 		@Suppress("CAST_NEVER_SUCCEEDS")
@@ -199,11 +202,12 @@ class AppFragment : Fragment()
 		return super.onOptionsItemSelected(item)
 	}
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View?
 	{
+		Logs.i(TAG, "onCreateView: 创建视图")
 		coordinatorLayout = activity.findViewById(R.id.coordinatorLayout)
-		val view = inflater!!.inflate(R.layout.fragment_app, container, false)
+		val view = inflater.inflate(R.layout.fragment_app, container, false)
 		val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
 		swipeRefreshLayout = view.findViewById(R.id.swipe_refresh)
 		swipeRefreshLayout.setColorSchemeResources(
@@ -221,6 +225,7 @@ class AppFragment : Fragment()
 		refreshList()
 
 		swipeRefreshLayout.setOnRefreshListener { refresh() }
+		isReadyTag = true
 		return view
 	}
 
@@ -269,11 +274,44 @@ class AppFragment : Fragment()
 
 	fun refreshList()
 	{
-		index = settings.sort
-		swipeRefreshLayout.isRefreshing = true
-		if (settings.savedSort == settings.sort && JYFileUtil.isCacheAvailable(activity))
+		singleThreadPool.execute {
+			while (true)
+			{
+				Logs.i(TAG, "refreshList: 等待初始化")
+				if (isReadyTag)
+					break
+				Thread.sleep(200)
+			}
+			val message = Message()
+			message.what = LoadHandler.READY_TO_REFRESH
+			loadHandler.sendMessage(message)
+			index = settings.sort
+			if (settings.savedSort == settings.sort && JYFileUtil.isCacheAvailable(activity))
+			{
+				getCatchList()
+			}
+			else
+			{
+				refresh()
+			}
+		}
+	}
+
+	private fun getCatchList()
+	{
+		var fileName = ""
+		when (type)
 		{
-			getCatchList()
+			AppManager.SYSTEM -> fileName = "system.list"
+			AppManager.USER -> fileName = "user.list"
+		}
+		val installAppList = JYFileUtil.getList(context, fileName)
+		if (installAppList != null)
+		{
+			val message = Message()
+			message.obj = installAppList
+			message.what = LoadHandler.REFRESH_DONE
+			loadHandler.sendMessage(message)
 		}
 		else
 		{
@@ -281,45 +319,25 @@ class AppFragment : Fragment()
 		}
 	}
 
-	private fun getCatchList()
-	{
-		Thread(Runnable {
-			var fileName = ""
-			when (type)
-			{
-				AppManager.SYSTEM -> fileName = "system.list"
-				AppManager.USER -> fileName = "user.list"
-			}
-			val installAppList = JYFileUtil.getList(context, fileName)
-			if (installAppList != null)
-			{
-				val message = Message()
-				message.obj = installAppList
-				message.what = 1
-				loadHandler.sendMessage(message)
-			}
-			else
-			{
-				refresh()
-			}
-		}).start()
-	}
-
 	private fun refresh()
 	{
-		singleThreadPool.execute {
-			val installAppList = AppManager.getInstallAppList(activity, type, index, true)
-			val message = Message()
-			message.obj = installAppList
-			message.what = 1
-			loadHandler.sendMessage(message)
-			when (type)
-			{
-				AppManager.SYSTEM -> JYFileUtil.saveList(activity, installAppList, "system.list")
-				AppManager.USER -> JYFileUtil.saveList(activity, installAppList, "user.list")
-			}
-			settings.savedSort = index
+		val installAppList = AppManager.getInstallAppList(activity, type, index, true)
+		val message = Message()
+		message.obj = installAppList
+		message.what = LoadHandler.REFRESH_DONE
+		loadHandler.sendMessage(message)
+		when (type)
+		{
+			AppManager.SYSTEM -> JYFileUtil.saveList(activity, installAppList, "system.list")
+			AppManager.USER -> JYFileUtil.saveList(activity, installAppList, "user.list")
 		}
+		settings.savedSort = index
+	}
+
+	override fun onDestroy()
+	{
+		super.onDestroy()
+		Logs.i(TAG, "onDestroy: 销毁app的fragment" + type)
 	}
 
 	companion object
