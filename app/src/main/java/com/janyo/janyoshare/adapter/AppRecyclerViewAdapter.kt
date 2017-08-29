@@ -68,10 +68,17 @@ class AppRecyclerViewAdapter(private val context: Context,
 		holder.textView_name.text = installApp.name
 		holder.textView_packageName.text = installApp.packageName
 		holder.textView_versionName.text = installApp.versionName
-		if (installApp.iconPath != null)
-			Glide.with(context).load(installApp.iconPath).into(holder.imageView)
+		if (settings.isDisableIcon)
+		{
+			holder.imageView.setImageResource(R.mipmap.ic_launcher)
+		}
 		else
-			holder.imageView.setImageDrawable(installApp.icon)
+		{
+			if (installApp.iconPath != null)
+				Glide.with(context).load(installApp.iconPath).into(holder.imageView)
+			else
+				holder.imageView.setImageDrawable(installApp.icon)
+		}
 		holder.textView_size.text = FileUtil.FormatFileSize(installApp.size)
 
 		holder.checkBox.tag = installApp

@@ -62,6 +62,11 @@
             android:key="@string/key_disable_accessibility"
             android:title="@string/title_disable_accessibility"/>
 
+        <SwitchPreference
+            android:key="@string/key_disable_icon"
+            android:summary="@string/summary_disable_icon"
+            android:title="@string/title_disable_icon"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

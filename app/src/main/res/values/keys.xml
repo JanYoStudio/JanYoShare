@@ -78,4 +78,8 @@
     <string name="key_long_click_do">key_long_click_do</string>
     <string name="title_long_click_do">长按操作</string>
 
+    <string name="key_disable_icon">key_disable_icon</string>
+    <string name="title_disable_icon">禁用图标</string>
+    <string name="summary_disable_icon">一定程度上可以加快软件刷新速度</string>
+
 </resources>

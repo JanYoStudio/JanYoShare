@@ -18,6 +18,7 @@ object AppManager
 	fun getInstallAppList(context: Context, appType: Int, type: Int,
 						  isExclude: Boolean): List<InstallApp>
 	{
+		val settings = Settings.getInstance(context)
 		val packageManager = context.packageManager
 		val packageInfoList = packageManager.getInstalledPackages(0)
 		val installAppList = ArrayList<InstallApp>()
@@ -63,14 +64,17 @@ object AppManager
 					installApp.versionCode = packageInfo.versionCode
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
-					val path = context.cacheDir.absolutePath + File.separator + "icon" + File.separator + installApp.packageName
-					if (JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path))
+					if (!settings.isDisableIcon)
 					{
-						installApp.iconPath = path
-					}
-					else
-					{
-						installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
+						val path = context.cacheDir.absolutePath + File.separator + "icon" + File.separator + installApp.packageName
+						if (JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path))
+						{
+							installApp.iconPath = path
+						}
+						else
+						{
+							installApp.icon = packageInfo.applicationInfo.loadIcon(packageManager)
+						}
 					}
 					installApp.size = File(packageInfo.applicationInfo.publicSourceDir).length()
 					installApp.installTime = packageInfo.firstInstallTime
