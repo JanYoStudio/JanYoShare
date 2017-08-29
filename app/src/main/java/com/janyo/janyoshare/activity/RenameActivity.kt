@@ -40,7 +40,7 @@ class RenameActivity : AppCompatActivity()
 				Toast.makeText(this, R.string.hint_jys_rename_error, Toast.LENGTH_SHORT)
 						.show()
 			}
-			finish()
 		}
+		finish()
 	}
 }

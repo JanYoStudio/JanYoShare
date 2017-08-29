@@ -36,6 +36,15 @@ class UploadLogHandler : Handler()
 		else
 		{
 			Logs.e(TAG, "onResponse: " + response.message)
+			Snackbar.make(coordinatorLayout, R.string.hint_upload_log_error, Snackbar.LENGTH_SHORT)
+					.addCallback(object : Snackbar.Callback()
+					{
+						override fun onDismissed(transientBottomBar: Snackbar?, event: Int)
+						{
+							activity.finish()
+						}
+					})
+					.show()
 		}
 	}
 }

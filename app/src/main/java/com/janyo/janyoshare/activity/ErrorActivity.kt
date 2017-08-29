@@ -31,7 +31,9 @@ class ErrorActivity : AppCompatActivity()
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_error)
 
+		val spotsDialog = SpotsDialog(this, getString(R.string.hint_upload_log), R.style.SpotsDialog)
 		val uploadLogHandler = UploadLogHandler()
+		uploadLogHandler.spotsDialog = spotsDialog
 		uploadLogHandler.activity = this
 		uploadLogHandler.coordinatorLayout = coordinatorLayout
 
@@ -58,8 +60,6 @@ class ErrorActivity : AppCompatActivity()
 			finish()
 		}
 		button_upload.setOnClickListener {
-			val spotsDialog = SpotsDialog(this, getString(R.string.hint_upload_log), R.style.SpotsDialog)
-			uploadLogHandler.spotsDialog = spotsDialog
 			spotsDialog.show()
 			val map = HashMap<String, String>()
 			val fileMap = HashMap<String, File>()
