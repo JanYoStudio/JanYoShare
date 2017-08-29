@@ -41,6 +41,7 @@ import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.callback.InitGooglePlayListener
 import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
@@ -50,7 +51,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
 	private val TAG = "MainActivity"
-	private lateinit var settings: Settings
+	private var settings = Settings.getInstance(APP.getInstance())
 	private val PERMISSION_CODE = 233
 	private var oneClickTime: Long = 0
 	private lateinit var currentFragment: AppFragment
@@ -61,7 +62,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
-		settings = Settings.getInstance(this)
 		if (settings.dayNight)
 			delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 		else

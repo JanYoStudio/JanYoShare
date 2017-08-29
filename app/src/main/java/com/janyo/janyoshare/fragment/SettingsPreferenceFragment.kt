@@ -20,6 +20,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
@@ -35,7 +36,7 @@ import kotlin.concurrent.timerTask
 
 class SettingsPreferenceFragment : PreferenceFragment()
 {
-	private lateinit var settings: Settings
+	private var settings = Settings.getInstance(APP.getInstance())
 	private lateinit var auto_clean: SwitchPreference
 	private lateinit var enableExcludeList: SwitchPreference
 	private lateinit var excludeList: Preference
@@ -67,7 +68,6 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
-		settings = Settings.getInstance(activity)
 		addPreferencesFromResource(R.xml.preferences)
 		initialization()
 		monitor()
