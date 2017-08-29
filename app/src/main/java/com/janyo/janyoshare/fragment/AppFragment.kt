@@ -11,6 +11,7 @@ import android.view.*
 import android.widget.Toast
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.activity.MainActivity
 
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.callback.ExportListener
@@ -66,17 +67,27 @@ class AppFragment : Fragment()
 		recyclerView.adapter = appRecyclerViewAdapter
 		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter, swipeRefreshLayout)
 		exportHandler = ExportHandler(appRecyclerViewAdapter, activity)
-
-		refreshList()
-
 		swipeRefreshLayout.setOnRefreshListener { singleThreadPool.execute { refresh() } }
 		isReadyTag = true
 		return view
 	}
 
-	fun clearSelected()
+	fun clearSelected(activity: MainActivity)
 	{
-		appRecyclerViewAdapter.multiChoiceList.clear()
+		singleThreadPool.execute {
+			while (true)
+			{
+				if (isReadyTag)
+					break
+				Logs.i(TAG, "clearSelected: 等待初始化")
+				Thread.sleep(200)
+			}
+			if (appRecyclerViewAdapter.multiChoiceList.size != 0)
+			{
+				appRecyclerViewAdapter.multiChoiceList.clear()
+				activity.invalidateOptionsMenu()
+			}
+		}
 	}
 
 	fun exportAPK(list: List<InstallApp>, listener: ExportListener)
@@ -127,9 +138,9 @@ class AppFragment : Fragment()
 		singleThreadPool.execute {
 			while (true)
 			{
-				Logs.i(TAG, "refreshList: 等待初始化")
 				if (isReadyTag)
 					break
+				Logs.i(TAG, "refreshList: 等待初始化")
 				Thread.sleep(200)
 			}
 			val message = Message()
@@ -183,12 +194,6 @@ class AppFragment : Fragment()
 			AppManager.USER -> JYFileUtil.saveList(activity, installAppList, "user.list")
 		}
 		settings.savedSort = index
-	}
-
-	override fun onDestroy()
-	{
-		super.onDestroy()
-		Logs.i(TAG, "onDestroy: 销毁app的fragment" + type)
 	}
 
 	companion object

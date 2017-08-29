@@ -123,6 +123,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		viewPagerAdapter.addFragment(userFragment, getString(R.string.title_fragment_user))
 		viewPagerAdapter.addFragment(systemFragment, getString(R.string.title_fragment_system))
 		currentFragment = userFragment
+		userFragment.refreshList()
 		viewpager.adapter = viewPagerAdapter
 		title_tabs.setupWithViewPager(viewpager)
 
@@ -137,10 +138,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			{
 				Logs.i(TAG, "onPageSelected: " + position)
 				Logs.i(TAG, "onPageSelected: 当前滚动到" + viewPagerAdapter.getPageTitle(position))
-				currentFragment.clearSelected()
+
 				val fragment = viewPagerAdapter.getItem(position) as AppFragment
 				fragment.refreshList()
-				invalidateOptionsMenu()
+				currentFragment.clearSelected(this@MainActivity)
 				currentFragment = fragment
 			}
 
