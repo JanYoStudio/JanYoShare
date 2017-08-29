@@ -37,7 +37,7 @@ class AppFragment : Fragment()
 	private val installAppList = ArrayList<InstallApp>()
 	private val showList = ArrayList<InstallApp>()
 	private var type = -1
-	private lateinit var settings: Settings
+	private var settings = Settings.getInstance(APP.getInstance())
 	private var index = 0
 	private lateinit var loadHandler: LoadHandler
 	private lateinit var exportHandler: ExportHandler
@@ -45,7 +45,6 @@ class AppFragment : Fragment()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
-		settings = Settings.getInstance(activity)
 		super.onCreate(savedInstanceState)
 		type = arguments.getInt("type")
 		setHasOptionsMenu(true)
@@ -289,15 +288,15 @@ class AppFragment : Fragment()
 	private fun refresh()
 	{
 		singleThreadPool.execute {
-			val installAppList = AppManager.getInstallAppList(context, type, index, true)
+			val installAppList = AppManager.getInstallAppList(activity, type, index, true)
 			val message = Message()
 			message.obj = installAppList
 			message.what = 1
 			loadHandler.sendMessage(message)
 			when (type)
 			{
-				AppManager.SYSTEM -> JYFileUtil.saveList(context, installAppList, "system.list")
-				AppManager.USER -> JYFileUtil.saveList(context, installAppList, "user.list")
+				AppManager.SYSTEM -> JYFileUtil.saveList(activity, installAppList, "system.list")
+				AppManager.USER -> JYFileUtil.saveList(activity, installAppList, "user.list")
 			}
 		}
 	}

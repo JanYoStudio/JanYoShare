@@ -28,11 +28,10 @@ class RenameActivity : AppCompatActivity()
 				Logs.i(TAG, "onCreate: 重命名完成")
 				val intent = Intent(Intent.ACTION_VIEW)
 				val openFile = File(file.parent + File.separator + file.name + ".apk")
-				val openUri: Uri
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-					openUri = FileProvider.getUriForFile(this, getString(R.string.authorities), openFile)
+				val openUri = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+					FileProvider.getUriForFile(this, getString(R.string.authorities), openFile)
 				else
-					openUri = Uri.fromFile(openFile)
+					Uri.fromFile(openFile)
 				intent.setDataAndType(openUri, "application/vnd.android.package-archive")
 				startActivity(intent)
 			}

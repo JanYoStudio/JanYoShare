@@ -16,6 +16,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 
 import com.janyo.janyoshare.R
@@ -41,7 +42,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 	private val coordinatorLayout: CoordinatorLayout = (context as Activity).findViewById(R.id.coordinatorLayout)
 	private val renameHandler = RenameHandler(context as Activity)
 	private val shareList = ArrayList<File>()
-	private val settings = Settings.getInstance(context)
+	private val settings = Settings.getInstance(APP.getInstance())
 	private var progressDialog = SpotsDialog(context, R.style.SpotsDialog)
 	private val sendHandler = SendHandler()
 	var menu: Menu? = null
