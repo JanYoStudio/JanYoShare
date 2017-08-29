@@ -16,7 +16,7 @@ import java.io.File
 
 object TransferFileNotification
 {
-	fun notify(context: Context, id: Int, action: String?)
+	fun notify(context: Context, id: Int)
 	{
 		val index = FileTransferHelper.getInstance().currentFileIndex
 		val transferFile = FileTransferHelper.getInstance().fileList[index]

@@ -76,7 +76,7 @@ class ReceiveFileService : Service()
 								Logs.i(TAG, "onStart: ")
 								FileTransferHelper.getInstance().currentFileIndex = index
 								transferFile.transferProgress = 0
-								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
+								TransferFileNotification.notify(this@ReceiveFileService, index)
 								val message = Message()
 								message.what = TransferHelperHandler.UPDATE_UI
 								transferHelperHandler!!.sendMessage(message)
@@ -86,7 +86,7 @@ class ReceiveFileService : Service()
 							{
 								Logs.i(TAG, "onProgress: " + progress)
 								transferFile.transferProgress = progress
-								TransferFileNotification.notify(this@ReceiveFileService, index, "start")
+								TransferFileNotification.notify(this@ReceiveFileService, index)
 								val message = Message()
 								message.what = TransferHelperHandler.UPDATE_UI
 								transferHelperHandler!!.sendMessage(message)
