@@ -7,7 +7,7 @@ import com.janyo.janyoshare.classes.CustomFormat
 
 class Settings private constructor()
 {
-	var sharedPreferences: SharedPreferences? = null
+	lateinit var sharedPreferences: SharedPreferences
 
 	companion object
 	{
@@ -26,19 +26,23 @@ class Settings private constructor()
 	}
 
 	var isAutoClean: Boolean
-		get() = sharedPreferences!!.getBoolean("key_auto_clean", true)
-		set(isAutoClean) = sharedPreferences!!.edit().putBoolean("key_auto_clean", isAutoClean).apply()
+		get() = sharedPreferences.getBoolean("key_auto_clean", true)
+		set(isAutoClean) = sharedPreferences.edit().putBoolean("key_auto_clean", isAutoClean).apply()
 
 	var sort: Int
-		get() = sharedPreferences!!.getInt("sortType", 0)
-		set(type) = sharedPreferences!!.edit().putInt("sortType", type).apply()
+		get() = sharedPreferences.getInt("sortType", 0)
+		set(sort) = sharedPreferences.edit().putInt("sortType", sort).apply()
+
+	var savedSort: Int
+		get() = sharedPreferences.getInt("savedSort", 0)
+		set(savedSort) = sharedPreferences.edit().putInt("savedSort", savedSort).apply()
 
 	var isFirst: Boolean
-		get() = sharedPreferences!!.getBoolean("isFirst", true)
-		set(isFirst) = sharedPreferences!!.edit().putBoolean("isFirst", isFirst).apply()
+		get() = sharedPreferences.getBoolean("isFirst", true)
+		set(isFirst) = sharedPreferences.edit().putBoolean("isFirst", isFirst).apply()
 
 	var isDeveloperModeEnable: Boolean
-		get() = sharedPreferences!!.getBoolean("isDeveloperModeEnable", false)
+		get() = sharedPreferences.getBoolean("isDeveloperModeEnable", false)
 		set(isDeveloperModeEnable)
 		{
 			if (!isDeveloperModeEnable)
@@ -50,46 +54,46 @@ class Settings private constructor()
 				excludeSize = 0L
 				excludeRegularExpression = ""
 			}
-			sharedPreferences!!.edit().putBoolean("isDeveloperModeEnable", isDeveloperModeEnable).apply()
+			sharedPreferences.edit().putBoolean("isDeveloperModeEnable", isDeveloperModeEnable).apply()
 		}
 
 	var isAutoUploadLog: Boolean
-		get() = sharedPreferences!!.getBoolean("isAutoUploadLog", false)
-		set(isAutoUploadLog) = sharedPreferences!!.edit().putBoolean("isAutoUploadLog", isAutoUploadLog).apply()
+		get() = sharedPreferences.getBoolean("isAutoUploadLog", false)
+		set(isAutoUploadLog) = sharedPreferences.edit().putBoolean("isAutoUploadLog", isAutoUploadLog).apply()
 
 	var excludeList: Set<String>
-		get() = sharedPreferences!!.getStringSet("excludeList", emptySet())
-		set(excludeList) = sharedPreferences!!.edit().putStringSet("excludeList", excludeList).apply()
+		get() = sharedPreferences.getStringSet("excludeList", emptySet())
+		set(excludeList) = sharedPreferences.edit().putStringSet("excludeList", excludeList).apply()
 
 	var excludeNameList: Set<String>
-		get() = sharedPreferences!!.getStringSet("excludeNameList", emptySet())
-		set(excludeNameList) = sharedPreferences!!.edit().putStringSet("excludeNameList", excludeNameList).apply()
+		get() = sharedPreferences.getStringSet("excludeNameList", emptySet())
+		set(excludeNameList) = sharedPreferences.edit().putStringSet("excludeNameList", excludeNameList).apply()
 
 	var excludeSize: Long
-		get() = sharedPreferences!!.getLong("excludeSize", 0L)
-		set(excludeSize) = sharedPreferences!!.edit().putLong("excludeSize", excludeSize).apply()
+		get() = sharedPreferences.getLong("excludeSize", 0L)
+		set(excludeSize) = sharedPreferences.edit().putLong("excludeSize", excludeSize).apply()
 
 	var excludeRegularExpression: String
-		get() = sharedPreferences!!.getString("excludeRegularExpression", "")
-		set(excludeRegularExpression) = sharedPreferences!!.edit().putString("excludeRegularExpression", excludeRegularExpression).apply()
+		get() = sharedPreferences.getString("excludeRegularExpression", "")
+		set(excludeRegularExpression) = sharedPreferences.edit().putString("excludeRegularExpression", excludeRegularExpression).apply()
 
 	var isDisableAccessibility: Boolean
-		get() = sharedPreferences!!.getBoolean("isDisableAccessibility", false)
-		set(isDisableAccessibility) = sharedPreferences!!.edit().putBoolean("isDisableAccessibility", isDisableAccessibility).apply()
+		get() = sharedPreferences.getBoolean("isDisableAccessibility", false)
+		set(isDisableAccessibility) = sharedPreferences.edit().putBoolean("isDisableAccessibility", isDisableAccessibility).apply()
 
 	var customFileName: CustomFormat
-		get() = CustomFormat(sharedPreferences!!.getString("customFileName", ""))
-		set(customFileName) = sharedPreferences!!.edit().putString("customFileName", customFileName.format).apply()
+		get() = CustomFormat(sharedPreferences.getString("customFileName", ""))
+		set(customFileName) = sharedPreferences.edit().putString("customFileName", customFileName.format).apply()
 
 	var longClickDo: Int
-		get() = sharedPreferences!!.getInt("longClickDo", 0)
-		set(longClickDo) = sharedPreferences!!.edit().putInt("longClickDo", longClickDo).apply()
+		get() = sharedPreferences.getInt("longClickDo", 0)
+		set(longClickDo) = sharedPreferences.edit().putInt("longClickDo", longClickDo).apply()
 
 	var dayNight: Boolean
-		get() = sharedPreferences!!.getBoolean("dayNight", false)
-		set(dayNight) = sharedPreferences!!.edit().putBoolean("dayNight", dayNight).apply()
+		get() = sharedPreferences.getBoolean("dayNight", false)
+		set(dayNight) = sharedPreferences.edit().putBoolean("dayNight", dayNight).apply()
 
 	var isDisableIcon: Boolean
-		get() = sharedPreferences!!.getBoolean("isDisableIcon", false)
-		set(isDisableIcon) = sharedPreferences!!.edit().putBoolean("isDisableIcon", isDisableIcon).apply()
+		get() = sharedPreferences.getBoolean("isDisableIcon", false)
+		set(isDisableIcon) = sharedPreferences.edit().putBoolean("isDisableIcon", isDisableIcon).apply()
 }
