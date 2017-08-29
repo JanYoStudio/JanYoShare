@@ -251,7 +251,7 @@ class AppFragment : Fragment()
 	{
 		index = settings.sort
 		swipeRefreshLayout.isRefreshing = true
-		if (JYFileUtil.isCacheAvailable(activity))
+		if (settings.savedSort == settings.sort && JYFileUtil.isCacheAvailable(activity))
 		{
 			getCatchList()
 		}
@@ -298,6 +298,7 @@ class AppFragment : Fragment()
 				AppManager.SYSTEM -> JYFileUtil.saveList(activity, installAppList, "system.list")
 				AppManager.USER -> JYFileUtil.saveList(activity, installAppList, "user.list")
 			}
+			settings.savedSort = index
 		}
 	}
 
