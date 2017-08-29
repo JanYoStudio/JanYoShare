@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Message
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.graphics.drawable.VectorDrawableCompat
@@ -40,8 +41,10 @@ import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import com.janyo.janyoshare.callback.InitGooglePlayListener
 import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
+import com.janyo.janyoshare.handler.PayHandler
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
@@ -52,6 +55,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	private var oneClickTime: Long = 0
 	private lateinit var currentFragment: AppFragment
 	private lateinit var img_janyo: ImageView
+	private lateinit var payHandler: PayHandler
+	private var isGooglePlayPay = false
+	private var isGooglePlayAvailable = true
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -69,6 +75,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	private fun initialization()
 	{
 		setContentView(R.layout.activity_main)
+
+		payHandler = PayHandler(this, Volley.newRequestQueue(this))
+		payHandler.initGooglePlay(object : InitGooglePlayListener
+		{
+			override fun onSuccess()
+			{
+				isGooglePlayAvailable = true
+			}
+
+			override fun onFailed()
+			{
+				isGooglePlayAvailable = false
+			}
+
+		})
 
 		val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 		drawer_layout.addDrawerListener(toggle)
@@ -254,6 +275,57 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		{
 			R.id.action_file_transfer -> startActivity(Intent(this, FileTransferConfigureActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
 			R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+			R.id.action_license ->
+			{
+				val view_license = LayoutInflater.from(this).inflate(R.layout.dialog_license, NestedScrollView(this), false)
+				val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
+				val text_license_point2 = view_license.findViewById<TextView>(R.id.license_point2)
+				val text_license_point3 = view_license.findViewById<TextView>(R.id.license_point3)
+				val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
+				point!!.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
+				text_license_point1.setCompoundDrawables(point, null, null, null)
+				text_license_point2.setCompoundDrawables(point, null, null, null)
+				text_license_point3.setCompoundDrawables(point, null, null, null)
+				AlertDialog.Builder(this)
+						.setTitle(" ")
+						.setView(view_license)
+						.setPositiveButton(R.string.action_done, { _, _ ->
+							settings.isFirst = false
+						})
+						.show()
+			}
+			R.id.action_support ->
+			{
+				val method: Int = if (isGooglePlayAvailable)
+					R.array.pay_method
+				else
+					R.array.pay_method_without_play
+				AlertDialog.Builder(this)
+						.setTitle(R.string.pay_method_title)
+						.setItems(method, { _, choose ->
+							val message = Message()
+							when (choose)
+							{
+								0 ->
+								{
+									message.what = PayHandler.PAY_ALIPAY
+									isGooglePlayPay = false
+								}
+								1 ->
+								{
+									message.what = PayHandler.PAY_WEIXIN
+									isGooglePlayPay = false
+								}
+								2 ->
+								{
+									message.what = PayHandler.PAY_PLAY
+									isGooglePlayPay = true
+								}
+							}
+							payHandler.sendMessage(message)
+						})
+						.show()
+			}
 			else -> return true
 		}
 		drawer_layout.closeDrawer(GravityCompat.START)
@@ -313,5 +385,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				}
 			}
 		}
+	}
+
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+	{
+		if (!isGooglePlayPay && payHandler.onPayResult(requestCode, resultCode, data))
+			super.onActivityResult(requestCode, resultCode, data)
+		else
+			Logs.i(TAG, "onActivityResult handled by IABUtil.")
+	}
+
+	override fun onDestroy()
+	{
+		try
+		{
+			payHandler.playDestroy()
+		}
+		catch (e: Exception)
+		{
+			Logs.e(TAG, "onDestroy: 销毁失败")
+		}
+		super.onDestroy()
 	}
 }

@@ -171,7 +171,12 @@
     </string-array>
 
     <string-array name="pay_method">
+        <item>支付宝转账</item>
+        <item>微信转账</item>
         <item>Google Play内购</item>
+    </string-array>
+
+    <string-array name="pay_method_without_play">
         <item>支付宝转账</item>
         <item>微信转账</item>
     </string-array>
