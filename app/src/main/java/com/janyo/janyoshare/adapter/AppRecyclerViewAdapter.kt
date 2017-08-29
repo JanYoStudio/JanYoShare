@@ -20,6 +20,7 @@ import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.activity.MainActivity
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.handler.RenameHandler
@@ -45,7 +46,6 @@ class AppRecyclerViewAdapter(private val context: Context,
 	private val settings = Settings.getInstance(APP.getInstance())
 	private var progressDialog = SpotsDialog(context, R.style.SpotsDialog)
 	private val sendHandler = SendHandler()
-	var menu: Menu? = null
 	val multiChoiceList = ArrayList<InstallApp>()
 
 	init
@@ -103,17 +103,18 @@ class AppRecyclerViewAdapter(private val context: Context,
 			holder.checkBox.isChecked = true
 		}
 		holder.checkBox.setOnCheckedChangeListener { _, checked ->
+			val menu = (context as MainActivity).menu
 			if (checked)
 			{
 				if (multiChoiceList.size == 0)
 				{
 					val action_search = menu!!.findItem(R.id.action_search)
-					val action_sort = menu!!.findItem(R.id.action_sort)
-					val action_clear = menu!!.findItem(R.id.action_clear)
-					val action_select_all=menu!!.findItem(R.id.action_select_all)
-					val action_select_none=menu!!.findItem(R.id.action_select_none)
-					val action_export = menu!!.findItem(R.id.action_export)
-					val action_send = menu!!.findItem(R.id.action_send)
+					val action_sort = menu.findItem(R.id.action_sort)
+					val action_clear = menu.findItem(R.id.action_clear)
+					val action_select_all = menu.findItem(R.id.action_select_all)
+					val action_select_none = menu.findItem(R.id.action_select_none)
+					val action_export = menu.findItem(R.id.action_export)
+					val action_send = menu.findItem(R.id.action_send)
 					action_search.isVisible = false
 					action_sort.isVisible = false
 					action_clear.isVisible = false
