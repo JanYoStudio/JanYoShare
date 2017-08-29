@@ -88,4 +88,8 @@ class Settings private constructor()
 	var dayNight: Boolean
 		get() = sharedPreferences!!.getBoolean("dayNight", false)
 		set(dayNight) = sharedPreferences!!.edit().putBoolean("dayNight", dayNight).apply()
+
+	var isDisableIcon: Boolean
+		get() = sharedPreferences!!.getBoolean("isDisableIcon", false)
+		set(isDisableIcon) = sharedPreferences!!.edit().putBoolean("isDisableIcon", isDisableIcon).apply()
 }

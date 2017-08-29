@@ -51,6 +51,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	private lateinit var excludeRegularExpression: Preference
 	private lateinit var autoUploadLog: SwitchPreference
 	private lateinit var disableAccessibility: SwitchPreference
+	private lateinit var disableIcon: SwitchPreference
 	private lateinit var about: Preference
 	private lateinit var howToUse: Preference
 	private lateinit var openSourceAddress: Preference
@@ -89,6 +90,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 		excludeRegularExpression = findPreference(getString(R.string.key_exclude_regular_expression))
 		autoUploadLog = findPreference(getString(R.string.key_auto_upload_log)) as SwitchPreference
 		disableAccessibility = findPreference(getString(R.string.key_disable_accessibility)) as SwitchPreference
+		disableIcon = findPreference(getString(R.string.key_disable_icon)) as SwitchPreference
 		about = findPreference(getString(R.string.key_about))
 		howToUse = findPreference(getString(R.string.key_how_to_use))
 		openSourceAddress = findPreference(getString(R.string.key_open_source_address))
@@ -106,6 +108,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 		developerModeEnable.isChecked = settings.isDeveloperModeEnable
 		autoUploadLog.isChecked = settings.isAutoUploadLog
 		disableAccessibility.isChecked = settings.isDisableAccessibility
+		disableIcon.isChecked = settings.isDisableIcon
 		enableExcludeList.isChecked = settings.excludeList.isNotEmpty()
 		enableExcludeNameList.isChecked = settings.excludeNameList.isNotEmpty()
 		enableExcludeSize.isChecked = settings.excludeSize != 0L
@@ -390,6 +393,11 @@ class SettingsPreferenceFragment : PreferenceFragment()
 			{
 				settings.isDisableAccessibility = false
 			}
+			true
+		}
+		disableIcon.setOnPreferenceChangeListener { _, _ ->
+			val isDisableIcon = !disableIcon.isChecked
+			settings.isDisableIcon = isDisableIcon
 			true
 		}
 		about.setOnPreferenceClickListener {
