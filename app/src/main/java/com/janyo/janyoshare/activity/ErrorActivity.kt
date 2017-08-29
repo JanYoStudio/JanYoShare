@@ -58,9 +58,9 @@ class ErrorActivity : AppCompatActivity()
 			finish()
 		}
 		button_upload.setOnClickListener {
-			val progressDialog = SpotsDialog(this, getString(R.string.hint_upload_log), R.style.SpotsDialog)
-			uploadLogHandler.progressDialog = progressDialog
-			progressDialog.show()
+			val spotsDialog = SpotsDialog(this, getString(R.string.hint_upload_log), R.style.SpotsDialog)
+			uploadLogHandler.spotsDialog = spotsDialog
+			spotsDialog.show()
 			val map = HashMap<String, String>()
 			val fileMap = HashMap<String, File>()
 			fileMap.put("logFile", intent.getBundleExtra("error").getSerializable("file") as File)

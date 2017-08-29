@@ -15,7 +15,7 @@ import dmax.dialog.SpotsDialog
 
 class SendHandler : Handler()
 {
-	lateinit var progressDialog: SpotsDialog
+	lateinit var spotsDialog: SpotsDialog
 	lateinit var context: Context
 
 	override fun handleMessage(msg: Message)
@@ -24,15 +24,15 @@ class SendHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_SERVER ->
 			{
-				progressDialog.setMessage(context.getString(R.string.hint_socket_connecting))
+				spotsDialog.setMessage(context.getString(R.string.hint_socket_connecting))
 			}
 			FileTransferConfigureActivity.VERIFY_DEVICE ->
 			{
-				progressDialog.setMessage(context.getString(R.string.hint_socket_verifying))
+				spotsDialog.setMessage(context.getString(R.string.hint_socket_verifying))
 			}
 			FileTransferConfigureActivity.CONNECTED ->
 			{
-				progressDialog.dismiss()
+				spotsDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHelper.getInstance().tag = 1

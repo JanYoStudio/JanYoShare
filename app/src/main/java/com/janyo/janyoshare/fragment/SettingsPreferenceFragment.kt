@@ -64,7 +64,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	private lateinit var homePage: Preference
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var settingHandler: SettingHandler
-	private lateinit var progressDialog: SpotsDialog
+	private lateinit var spotsDialog: SpotsDialog
 	private var clickTime = 0
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -102,10 +102,9 @@ class SettingsPreferenceFragment : PreferenceFragment()
 		joinTest = findPreference(getString(R.string.key_join_test))
 		homePage = findPreference(getString(R.string.key_home_page))
 
-		progressDialog = SpotsDialog(activity, R.style.SpotsDialog)
-		progressDialog.setMessage(getString(R.string.hint_exclude_list_loading))
-		progressDialog.setCancelable(false)
-		settingHandler = SettingHandler(activity, progressDialog, excludeList)
+		spotsDialog = SpotsDialog(activity, getString(R.string.hint_exclude_list_loading), R.style.SpotsDialog)
+		spotsDialog.setCancelable(false)
+		settingHandler = SettingHandler(activity, spotsDialog, excludeList)
 
 		auto_clean.isChecked = settings.isAutoClean
 		developerModeEnable.isChecked = settings.isDeveloperModeEnable
@@ -206,7 +205,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 			true
 		}
 		excludeList.setOnPreferenceClickListener {
-			progressDialog.show()
+			spotsDialog.show()
 			Thread(Runnable {
 				val allApp = AppManager.getAllApps(activity)
 				val message = Message()

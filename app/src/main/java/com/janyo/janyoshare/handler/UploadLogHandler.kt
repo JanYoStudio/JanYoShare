@@ -14,13 +14,13 @@ class UploadLogHandler : Handler()
 {
 	private val TAG = "UploadLogHandler"
 	lateinit var coordinatorLayout: View
-	lateinit var progressDialog: SpotsDialog
+	lateinit var spotsDialog: SpotsDialog
 	lateinit var activity: Activity
 	lateinit var response: Response
 
 	override fun handleMessage(msg: Message)
 	{
-		progressDialog.dismiss()
+		spotsDialog.dismiss()
 		if (response.code == 0)
 		{
 			Snackbar.make(coordinatorLayout, R.string.hint_upload_log_done, Snackbar.LENGTH_SHORT)

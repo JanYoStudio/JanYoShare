@@ -18,7 +18,7 @@ import dmax.dialog.SpotsDialog
 
 class ReceiveHandler : Handler()
 {
-	lateinit var progressDialog: SpotsDialog
+	lateinit var spotsDialog: SpotsDialog
 	lateinit var context: Context
 
 	override fun handleMessage(msg: Message)
@@ -27,7 +27,7 @@ class ReceiveHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_CONNECTION ->
 			{
-				progressDialog.setMessage(context.getString(R.string.hint_socket_connecting))
+				spotsDialog.setMessage(context.getString(R.string.hint_socket_connecting))
 			}
 			FileTransferConfigureActivity.VERIFY_DEVICE ->
 			{
@@ -61,7 +61,7 @@ class ReceiveHandler : Handler()
 			}
 			FileTransferConfigureActivity.CONNECTED ->
 			{
-				progressDialog.dismiss()
+				spotsDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_connected, Toast.LENGTH_SHORT)
 						.show()
 				FileTransferHelper.getInstance().tag = 2
@@ -71,7 +71,7 @@ class ReceiveHandler : Handler()
 			}
 			FileTransferConfigureActivity.SCAN_COMPLETE ->
 			{
-				progressDialog.dismiss()
+				spotsDialog.dismiss()
 				val isDeviceFind = msg.obj as Boolean
 				if (!isDeviceFind)
 					Toast.makeText(context, R.string.hint_socket_scan_complete, Toast.LENGTH_SHORT)
@@ -79,7 +79,7 @@ class ReceiveHandler : Handler()
 			}
 			FileTransferConfigureActivity.VERIFY_ERROR ->
 			{
-				progressDialog.dismiss()
+				spotsDialog.dismiss()
 				Toast.makeText(context, R.string.hint_socket_verify_error, Toast.LENGTH_SHORT)
 						.show()
 			}

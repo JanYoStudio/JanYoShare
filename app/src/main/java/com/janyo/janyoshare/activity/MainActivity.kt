@@ -56,13 +56,14 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
-	private val TAG = "MainActivity"
-	private var settings = Settings.getInstance(APP.getInstance())
-	private val PERMISSION_CODE = 233
-	private var oneClickTime: Long = 0
 	private lateinit var currentFragment: AppFragment
 	private lateinit var img_janyo: ImageView
 	private lateinit var payHandler: PayHandler
+	private lateinit var spotsDialog: SpotsDialog
+	private val TAG = "MainActivity"
+	private val PERMISSION_CODE = 233
+	private var settings = Settings.getInstance(APP.getInstance())
+	private var oneClickTime: Long = 0
 	private var isGooglePlayPay = false
 	private var isGooglePlayAvailable = true
 	var menu: Menu? = null
@@ -82,6 +83,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	private fun initialization()
 	{
 		setContentView(R.layout.activity_main)
+
+		spotsDialog = SpotsDialog(this, R.style.SpotsDialog)
+		spotsDialog.setCancelable(false)
+		spotsDialog.setMessage(getString(R.string.copy_file_loading))
 
 		payHandler = PayHandler(this, Volley.newRequestQueue(this))
 		payHandler.initGooglePlay(object : InitGooglePlayListener
@@ -115,8 +120,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 		val userFragment = AppFragment.newInstance(AppManager.USER)
 		val systemFragment = AppFragment.newInstance(AppManager.SYSTEM)
-		viewPagerAdapter.addFragment(userFragment, "User Apps")
-		viewPagerAdapter.addFragment(systemFragment, "System Apps")
+		viewPagerAdapter.addFragment(userFragment, getString(R.string.title_fragment_user))
+		viewPagerAdapter.addFragment(systemFragment, getString(R.string.title_fragment_system))
 		currentFragment = userFragment
 		viewpager.adapter = viewPagerAdapter
 		title_tabs.setupWithViewPager(viewpager)
@@ -132,6 +137,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			{
 				Logs.i(TAG, "onPageSelected: " + position)
 				Logs.i(TAG, "onPageSelected: 当前滚动到" + viewPagerAdapter.getPageTitle(position))
+				currentFragment.clearSelected()
 				val fragment = viewPagerAdapter.getItem(position) as AppFragment
 				fragment.refreshList()
 				invalidateOptionsMenu()
@@ -356,7 +362,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 						.setPositiveButton(R.string.action_done) { _, _ ->
 							settings.sort = index
 							currentFragment.swipeRefreshLayout.isRefreshing = true
-							currentFragment.refresh()
+							currentFragment.refreshList()
 						}
 						.show()
 			}
@@ -377,15 +383,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			R.id.action_export ->
 			{
 				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
-				val progressDialog = SpotsDialog(this, R.style.SpotsDialog)
-				progressDialog.setCancelable(false)
-				progressDialog.setMessage(getString(R.string.copy_file_loading))
-				progressDialog.show()
+				spotsDialog.show()
 				currentFragment.exportAPK(list, object : ExportListener
 				{
 					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
 					{
-						progressDialog.dismiss()
+						spotsDialog.dismiss()
 						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
 								.show()
 						currentFragment.exportHandler.sendEmptyMessage(0)
@@ -395,15 +398,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			R.id.action_send ->
 			{
 				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
-				val progressDialog = SpotsDialog(this, R.style.SpotsDialog)
-				progressDialog.setCancelable(false)
-				progressDialog.setMessage(getString(R.string.copy_file_loading))
-				progressDialog.show()
+				spotsDialog.show()
 				currentFragment.exportAPK(list, object : ExportListener
 				{
 					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
 					{
-						progressDialog.dismiss()
+						spotsDialog.dismiss()
 						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
 								.addCallback(object : Snackbar.Callback()
 								{
@@ -419,7 +419,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				})
 			}
 		}
-		return super.onOptionsItemSelected(item)
+		return true
 	}
 
 	override fun onNavigationItemSelected(item: MenuItem): Boolean

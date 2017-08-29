@@ -26,19 +26,19 @@ import java.util.concurrent.Executors
 
 class AppFragment : Fragment()
 {
-	private val TAG = "AppFragment"
 	private lateinit var coordinatorLayout: CoordinatorLayout
-	lateinit var swipeRefreshLayout: SwipeRefreshLayout
-	val installAppList = ArrayList<InstallApp>()
-	lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
-	val showList = ArrayList<InstallApp>()
+	private lateinit var loadHandler: LoadHandler
+	private val TAG = "AppFragment"
+	private val singleThreadPool = Executors.newSingleThreadExecutor()
 	private var type = -1
 	private var settings = Settings.getInstance(APP.getInstance())
 	private var index = 0
-	private lateinit var loadHandler: LoadHandler
-	lateinit var exportHandler: ExportHandler
-	private val singleThreadPool = Executors.newSingleThreadExecutor()
 	private var isReadyTag = false
+	lateinit var swipeRefreshLayout: SwipeRefreshLayout
+	lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
+	lateinit var exportHandler: ExportHandler
+	val installAppList = ArrayList<InstallApp>()
+	val showList = ArrayList<InstallApp>()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -72,6 +72,11 @@ class AppFragment : Fragment()
 		swipeRefreshLayout.setOnRefreshListener { singleThreadPool.execute { refresh() } }
 		isReadyTag = true
 		return view
+	}
+
+	fun clearSelected()
+	{
+		appRecyclerViewAdapter.multiChoiceList.clear()
 	}
 
 	fun exportAPK(list: List<InstallApp>, listener: ExportListener)
@@ -164,8 +169,9 @@ class AppFragment : Fragment()
 		}
 	}
 
-	fun refresh()
+	private fun refresh()
 	{
+		index = settings.sort
 		val installAppList = AppManager.getInstallAppList(activity, type, index, true)
 		val message = Message()
 		message.obj = installAppList

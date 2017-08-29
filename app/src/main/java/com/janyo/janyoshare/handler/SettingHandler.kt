@@ -11,7 +11,7 @@ import com.janyo.janyoshare.util.Settings
 import dmax.dialog.SpotsDialog
 
 class SettingHandler(private val context: Context,
-					 private val progressDialog: SpotsDialog,
+					 private val spotsDialog: SpotsDialog,
 					 private val excludeList: Preference) : Handler()
 {
 	override fun handleMessage(msg: Message)
@@ -25,7 +25,7 @@ class SettingHandler(private val context: Context,
 		list.indices
 				.filter { saved.contains(list[it].packageName) }
 				.forEach { checkedItems[it] = true }
-		progressDialog.dismiss()
+		spotsDialog.dismiss()
 		AlertDialog.Builder(context)
 				.setTitle(R.string.hint_exclude_list_title)
 				.setMultiChoiceItems(arrays, checkedItems, { _, position, checked ->
