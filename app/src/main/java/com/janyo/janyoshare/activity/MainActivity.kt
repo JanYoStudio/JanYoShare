@@ -123,10 +123,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 			override fun onPageSelected(position: Int)
 			{
+				Logs.i(TAG, "onPageSelected: " + position)
+				Logs.i(TAG, "onPageSelected: 当前滚动到" + viewPagerAdapter.getPageTitle(position))
 				val fragment = viewPagerAdapter.getItem(position) as AppFragment
 				fragment.refreshList()
 				currentFragment = fragment
-				Logs.i(TAG, "onPageSelected: 当前滚动到" + viewPagerAdapter.getPageTitle(position))
 			}
 
 			override fun onPageScrollStateChanged(state: Int)
