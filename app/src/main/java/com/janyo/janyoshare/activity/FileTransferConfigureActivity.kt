@@ -24,10 +24,10 @@ import java.util.concurrent.Executors
 
 class FileTransferConfigureActivity : AppCompatActivity()
 {
+	private lateinit var spotsDialog: SpotsDialog
 	private val TAG = "FileTransferConfigureActivity"
 	private val sendHandler = SendHandler()
 	private val receiveHandler = ReceiveHandler()
-	private lateinit var progressDialog: SpotsDialog
 	private val socketUtil = SocketUtil()
 	private val singleThreadPool = Executors.newSingleThreadExecutor()
 
@@ -59,10 +59,10 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 		setContentView(R.layout.activity_file_transfer_configure)
 
-		progressDialog = SpotsDialog(this, R.style.SpotsDialog)
-		sendHandler.progressDialog = progressDialog
+		spotsDialog = SpotsDialog(this, R.style.SpotsDialog)
+		sendHandler.spotsDialog = spotsDialog
 		sendHandler.context = this
-		receiveHandler.progressDialog = progressDialog
+		receiveHandler.spotsDialog = spotsDialog
 		receiveHandler.context = this
 		FileTransferHelper.getInstance().transferHelperHandler = TransferHelperHandler()
 
@@ -78,8 +78,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 		}
 
 		receiveFile.setOnClickListener {
-			progressDialog.setMessage(getString(R.string.hint_socket_wait_client))
-			progressDialog.show()
+			spotsDialog.setMessage(getString(R.string.hint_socket_wait_client))
+			spotsDialog.show()
 			val task = singleThreadPool.submit {
 				WIFIUtil(this, FileTransferHelper.getInstance().verifyPort).scanIP(object : WIFIUtil.ScanListener
 				{
@@ -129,7 +129,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 					}
 				})
 			}
-			progressDialog.setOnCancelListener {
+			spotsDialog.setOnCancelListener {
 				Logs.i(TAG, "openAP: 监听到返回键")
 				task.cancel(true)
 			}
@@ -138,8 +138,8 @@ class FileTransferConfigureActivity : AppCompatActivity()
 
 	private fun openAP()
 	{
-		progressDialog.setMessage(getString(R.string.hint_socket_wait_server))
-		progressDialog.show()
+		spotsDialog.setMessage(getString(R.string.hint_socket_wait_server))
+		spotsDialog.show()
 		val task = singleThreadPool.submit {
 			Logs.i(TAG, "openAP: 创建服务端")
 			val message_create = Message()
@@ -148,7 +148,7 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			{
 				Thread.sleep(100)
 				Logs.i(TAG, "openAP: 创建服务端失败")
-				progressDialog.dismiss()
+				spotsDialog.dismiss()
 				Toast.makeText(this, R.string.hint_socket_timeout, Toast.LENGTH_SHORT)
 						.show()
 				return@submit
@@ -176,11 +176,11 @@ class FileTransferConfigureActivity : AppCompatActivity()
 			{
 				Logs.e(TAG, "openServer: 连接错误")
 				socketUtil.serverDisconnect()
-				progressDialog.dismiss()
+				spotsDialog.dismiss()
 			}
 			Thread.sleep(100)
 		}
-		progressDialog.setOnCancelListener {
+		spotsDialog.setOnCancelListener {
 			Logs.i(TAG, "openAP: 监听到返回键")
 			task.cancel(true)
 		}

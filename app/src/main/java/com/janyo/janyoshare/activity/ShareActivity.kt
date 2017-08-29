@@ -20,23 +20,30 @@ class ShareActivity : AppCompatActivity()
 		val type = intent.type
 		if (action == Intent.ACTION_SEND && type != null)
 		{
-			val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-			Logs.i(TAG, "onCreate: " + uri)
-			val transferFile = TransferFile()
-			transferFile.fileUri = uri.toString()
-			val file = File(uri.path)
-			transferFile.fileName = file.name
-			transferFile.fileSize = file.length()
-			FileTransferHelper.getInstance().fileList.add(transferFile)
-			val intent = Intent(this, FileTransferConfigureActivity::class.java)
-			intent.putExtra("action", 1)
-			startActivity(intent)
-			finish()
+			try
+			{
+				val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+				Logs.i(TAG, "onCreate: " + uri)
+				val transferFile = TransferFile()
+				transferFile.fileUri = uri.toString()
+				val file = File(uri.path)
+				transferFile.fileName = file.name
+				transferFile.fileSize = file.length()
+				FileTransferHelper.getInstance().fileList.add(transferFile)
+				val intent = Intent(this, FileTransferConfigureActivity::class.java)
+				intent.putExtra("action", 1)
+				startActivity(intent)
+			}
+			catch (e: Exception)
+			{
+				Logs.wtf(TAG, "onCreate: ", e)
+			}
 		}
 		else
 		{
 			Toast.makeText(this, "无效的文件！", Toast.LENGTH_SHORT)
 					.show()
 		}
+		finish()
 	}
 }

@@ -45,6 +45,8 @@
     <string name="action_upload_file">点击上传日志文件</string>
     <string name="action_restart">重启应用</string>
     <string name="action_exit">退出应用</string>
+    <string name="action_select_all">全选</string>
+    <string name="action_select_none">反选</string>
 
     <string name="how_to_use">如何使用</string>
     <string name="about">关于</string>
@@ -189,6 +191,6 @@
     <string name="title_activity_file_transfer">文件传输</string>
     <string name="title_activity_file_transfer_configure">文件传输</string>
     <string name="title_activity_file_transfer_send">通过JY Share面对面分享</string>
-    <string name="action_select_all">全选</string>
-    <string name="action_select_none">反选</string>
+    <string name="title_fragment_user">用户软件</string>
+    <string name="title_fragment_system">系统软件</string>
 </resources>
