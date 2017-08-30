@@ -26,10 +26,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.Switch
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.janyo.janyoshare.fragment.AppFragment
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.adapter.ViewPagerAdapter
@@ -53,6 +50,7 @@ import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.handler.PayHandler
 import dmax.dialog.SpotsDialog
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
@@ -64,8 +62,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	private val PERMISSION_CODE = 233
 	private var settings = Settings.getInstance(APP.getInstance())
 	private var oneClickTime: Long = 0
-	private var isGooglePlayPay = false
 	private var isGooglePlayAvailable = true
+	private var isGooglePlayPay = false
 	var menu: Menu? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -450,13 +448,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			}
 			R.id.action_support ->
 			{
-				val method: Int = if (isGooglePlayAvailable)
+				val method = if (isGooglePlayAvailable)
 					R.array.pay_method
 				else
 					R.array.pay_method_without_play
+				val list = ArrayList<String>()
+				val supportList = resources.getStringArray(R.array.support_list)
+				list.addAll(resources.getStringArray(method))
+				list.addAll(supportList)
 				AlertDialog.Builder(this)
 						.setTitle(R.string.pay_method_title)
-						.setItems(method, { _, choose ->
+						.setItems(Array(list.size, { i -> list[i] }), { _, choose ->
 							val message = Message()
 							when (choose)
 							{
@@ -464,19 +466,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 								{
 									message.what = PayHandler.PAY_ALIPAY
 									isGooglePlayPay = false
+									payHandler.sendMessage(message)
 								}
 								1 ->
 								{
 									message.what = PayHandler.PAY_WEIXIN
 									isGooglePlayPay = false
+									payHandler.sendMessage(message)
 								}
 								2 ->
 								{
-									message.what = PayHandler.PAY_PLAY
-									isGooglePlayPay = true
+									if (isGooglePlayAvailable)
+									{
+										message.what = PayHandler.PAY_PLAY
+										isGooglePlayPay = true
+										payHandler.sendMessage(message)
+									}
 								}
 							}
-							payHandler.sendMessage(message)
 						})
 						.show()
 			}
