@@ -116,6 +116,7 @@
     <string name="hint_upload_log_done">日志已经成功反馈给开发者，即将重启应用！</string>
     <string name="hint_upload_log_error">日志上传失败！</string>
     <string name="hint_copy_info">信息复制成功！</string>
+    <string name="hint_text_support_title">捐赠名单</string>
 
     <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
@@ -177,11 +178,13 @@
         <item>支付宝转账</item>
         <item>微信转账</item>
         <item>Google Play内购</item>
+        <item> </item>
     </string-array>
 
     <string-array name="pay_method_without_play">
         <item>支付宝转账</item>
         <item>微信转账</item>
+        <item> </item>
     </string-array>
 
     <string-array name="become_test">

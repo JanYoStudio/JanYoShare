@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="support_list">
+        <item>捐赠列表（以下排名不分先后）</item>
+        <item>/@Kiva</item><!--@Kiva-$0.99-->
+        <item>/@kingwae</item><!--@kingwae-￥1.88-->
+    </string-array>
+</resources>
