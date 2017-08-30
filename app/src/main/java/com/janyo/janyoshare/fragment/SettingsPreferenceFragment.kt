@@ -241,7 +241,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 				{
 				}
 			})
-			AlertDialog.Builder(activity)
+			val dialog = AlertDialog.Builder(activity)
 					.setTitle(R.string.hint_custom_name_format_title)
 					.setView(view)
 					.setPositiveButton(R.string.action_done, { _, _ ->
@@ -250,7 +250,17 @@ class SettingsPreferenceFragment : PreferenceFragment()
 						customNameFormat.summary = temp
 					})
 					.setNegativeButton(R.string.action_cancel, null)
-					.show()
+					.setNeutralButton(R.string.action_insert, null)
+					.create()
+			dialog.show()
+			if (dialog.getButton(AlertDialog.BUTTON_NEUTRAL) != null)
+			{
+				dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+					val temp = textInputLayout.editText!!.text.toString() + "%"
+					textInputLayout.editText!!.setText(temp)
+					textInputLayout.editText!!.setSelection(temp.length)
+				}
+			}
 			false
 		}
 		longClickDo.setOnPreferenceClickListener {
