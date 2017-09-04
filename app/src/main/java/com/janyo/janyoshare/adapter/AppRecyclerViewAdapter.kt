@@ -16,6 +16,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 
@@ -76,7 +77,7 @@ class AppRecyclerViewAdapter(private val context: Context,
 		else
 		{
 			if (installApp.iconPath != null)
-				Glide.with(context).load(installApp.iconPath).into(holder.imageView)
+				Glide.with(context).load(installApp.iconPath).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.imageView)
 			else
 				holder.imageView.setImageDrawable(installApp.icon)
 		}
