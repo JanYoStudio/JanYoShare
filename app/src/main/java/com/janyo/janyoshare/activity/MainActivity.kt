@@ -360,7 +360,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 						.setSingleChoiceItems(R.array.sort, index) { _, i -> index = i }
 						.setPositiveButton(R.string.action_done) { _, _ ->
 							settings.sort = index
-							currentFragment.swipeRefreshLayout.isRefreshing = true
 							currentFragment.refreshList()
 						}
 						.show()

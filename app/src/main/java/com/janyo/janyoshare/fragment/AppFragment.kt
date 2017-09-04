@@ -35,7 +35,7 @@ class AppFragment : Fragment()
 	private var settings = Settings.getInstance(APP.getInstance())
 	private var index = 0
 	private var isReadyTag = false
-	lateinit var swipeRefreshLayout: SwipeRefreshLayout
+	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 	lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
 	lateinit var exportHandler: ExportHandler
 	val installAppList = ArrayList<InstallApp>()
