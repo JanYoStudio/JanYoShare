@@ -82,7 +82,4 @@
     <string name="title_disable_icon">禁用图标</string>
     <string name="summary_disable_icon">一定程度上可以加快软件打开时加载速度</string>
 
-    <string name="key_clean_icon_cache">key_clean_icon_cache</string>
-    <string name="title_clean_icon_cache">清除图标缓存</string>
-
 </resources>
