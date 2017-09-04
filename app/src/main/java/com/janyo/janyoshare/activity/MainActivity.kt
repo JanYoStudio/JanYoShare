@@ -41,6 +41,8 @@ import java.io.File
 import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.gson.Gson
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.callback.ExportListener
@@ -228,6 +230,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				})
 
 		setSupportActionBar(toolbar)
+		showcase()
 
 		if (settings.isFirst)
 		{
@@ -287,7 +290,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	{
 		Logs.i(TAG, "onCreateOptionsMenu: 创建菜单")
 		menuInflater.inflate(R.menu.menu_main, menu)
-		this.menu = menu
 
 		val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
@@ -566,5 +568,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			Logs.e(TAG, "onDestroy: 销毁失败")
 		}
 		super.onDestroy()
+	}
+
+	private fun showcase()
+	{
+		val tapTargetSequence = TapTargetSequence(this)
+				.targets(
+						TapTarget.forToolbarNavigationIcon(toolbar, "测试toolbar", "描述"),
+						TapTarget.forToolbarMenuItem(toolbar, R.id.action_search, "测试按钮", "描述")
+				)
+				.listener(object : TapTargetSequence.Listener
+				{
+					override fun onSequenceCanceled(lastTarget: TapTarget?)
+					{
+						Logs.i(TAG, "onSequenceCanceled: ")
+					}
+
+					override fun onSequenceFinish()
+					{
+						Logs.i(TAG, "onSequenceFinish: ")
+					}
+
+					override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean)
+					{
+						Logs.i(TAG, "onSequenceStep: ")
+					}
+				})
+		tapTargetSequence.start()
 	}
 }
