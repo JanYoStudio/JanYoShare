@@ -16,12 +16,13 @@ class UploadLogHandler : Handler()
 	lateinit var coordinatorLayout: View
 	lateinit var spotsDialog: SpotsDialog
 	lateinit var activity: Activity
-	lateinit var response: Response
+	var response: Response? = null
 
 	override fun handleMessage(msg: Message)
 	{
 		spotsDialog.dismiss()
-		if (response.code == 0)
+		val code = response?.code ?: -1
+		if (code == 0)
 		{
 			Snackbar.make(coordinatorLayout, R.string.hint_upload_log_done, Snackbar.LENGTH_SHORT)
 					.addCallback(object : Snackbar.Callback()
@@ -35,7 +36,7 @@ class UploadLogHandler : Handler()
 		}
 		else
 		{
-			Logs.e(TAG, "onResponse: " + response.message)
+			Logs.e(TAG, "onResponse: " + response?.message)
 			Snackbar.make(coordinatorLayout, R.string.hint_upload_log_error, Snackbar.LENGTH_SHORT)
 					.addCallback(object : Snackbar.Callback()
 					{

@@ -24,6 +24,14 @@ object JYFileUtil
 {
 	private val TAG = "JYFileUtil"
 
+	fun cleanIconCache(context: Context)
+	{
+		val dirPath = context.cacheDir.absolutePath + File.separator + "icon" + File.separator
+		val dir = File(dirPath)
+		if (dir.exists())
+			dir.delete()
+	}
+
 	fun cleanFileDir(dir: String): Boolean
 	{
 		val file = File(Environment.getExternalStorageDirectory().absolutePath + File.separator + dir + File.separator)
@@ -68,7 +76,8 @@ object JYFileUtil
 		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), format.toFormat(installApp) + "." + extensionName).absolutePath)
 	}
 
-	fun fileToSD(inputPath: String, fileName: String, dir: String, extensionName: String): Int
+	private fun fileToSD(inputPath: String, fileName: String, dir: String,
+						 extensionName: String): Int
 	{
 		return fileCopy(inputPath, File(Environment.getExternalStoragePublicDirectory(dir), fileName + "." + extensionName).absolutePath)
 	}
