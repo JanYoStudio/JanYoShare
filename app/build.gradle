@@ -87,7 +87,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.github.Mystery00:ToolsDemo:1.8.4'
     compile 'com.google.code.gson:gson:2.8.1'
-    implementation files('libs/ftp4j-1.7.2.jar')
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     implementation project(':SpotsDialog')
 }
 
