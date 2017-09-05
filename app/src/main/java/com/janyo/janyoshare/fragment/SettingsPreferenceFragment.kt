@@ -17,11 +17,13 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.R
+import com.janyo.janyoshare.activity.SettingsActivity
 import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.SettingHandler
@@ -67,13 +69,20 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	private lateinit var spotsDialog: SpotsDialog
 	private var clickTime = 0
 
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+							  savedInstanceState: Bundle?): View
+	{
+		initialization()
+		monitor()
+		return super.onCreateView(inflater, container, savedInstanceState)
+	}
+
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 		Logs.i(TAG, "onCreate: 创建settings的fragment")
 		addPreferencesFromResource(R.xml.preferences)
-		initialization()
-		monitor()
+		coordinatorLayout = (activity as SettingsActivity).coordinatorLayout
 	}
 
 	private fun initialization()
@@ -421,16 +430,8 @@ class SettingsPreferenceFragment : PreferenceFragment()
 			false
 		}
 		howToUse.setOnPreferenceClickListener {
-			val view = LayoutInflater.from(activity).inflate(R.layout.dialog_help, LinearLayout(activity), false)
-			val textView = view.findViewById<TextView>(R.id.autoCleanWarn)
-			if (settings.isAutoClean)
-			{
-				textView.visibility = View.VISIBLE
-			}
-			AlertDialog.Builder(activity)
-					.setTitle(" ")
-					.setView(view)
-					.setPositiveButton(R.string.action_done, null)
+			settings.isFirstRun = true
+			Snackbar.make(coordinatorLayout, R.string.hint_how_to_use_action, Snackbar.LENGTH_SHORT)
 					.show()
 			false
 		}
