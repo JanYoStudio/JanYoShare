@@ -12,7 +12,7 @@ apply plugin: 'kotlin-android-extensions'
 def JY_major = 3
 def JY_minor = 0
 def JY_patch = 0
-def JY_beta = 3
+def JY_beta = 4
 def JY_alpha = 3
 
 autoVersion {
