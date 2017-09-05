@@ -553,12 +553,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 	private fun showcase()
 	{
-		val tapTargetSequence = TapTargetSequence(this)
+		TapTargetSequence(this)
 				.targets(
-						TapTarget.forToolbarNavigationIcon(toolbar, "test", "描述")
-								.id(1),
-						TapTarget.forToolbarMenuItem(toolbar, R.id.action_search, "测试按钮", "描述")
-								.id(2))
+						TapTarget.forToolbarMenuItem(toolbar, R.id.action_search, getString(R.string.hint_showcase_action_search)),
+						TapTarget.forToolbarMenuItem(toolbar, R.id.action_clear, getString(R.string.hint_showcase_action_clear), getString(R.string.hint_showcase_desc_action_clear)),
+						TapTarget.forToolbarNavigationIcon(toolbar, getString(R.string.hint_showcase_nav_icon)))
 				.continueOnCancel(true)
 				.listener(object : TapTargetSequence.Listener
 				{
@@ -576,8 +575,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 					override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean)
 					{
 					}
-				})
-		tapTargetSequence.start()
+				}).start()
 	}
 
 	private fun showDialog()
