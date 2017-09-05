@@ -24,7 +24,6 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.*
 import com.janyo.janyoshare.fragment.AppFragment
 import com.janyo.janyoshare.R
@@ -228,39 +227,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				})
 
 		setToolbar()
-		showcase()
 
 		if (settings.isFirstRun)
 		{
-			val view_howToUse = LayoutInflater.from(this).inflate(R.layout.dialog_help, NestedScrollView(this), false)
-			val textView = view_howToUse.findViewById<TextView>(R.id.autoCleanWarn)
-			if (settings.isAutoClean)
-			{
-				textView.visibility = View.VISIBLE
-			}
-			AlertDialog.Builder(this)
-					.setTitle(" ")
-					.setView(view_howToUse)
-					.setPositiveButton(R.string.action_done, null)
-					.setOnDismissListener {
-						val view_license = LayoutInflater.from(this).inflate(R.layout.dialog_license, NestedScrollView(this), false)
-						val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
-						val text_license_point2 = view_license.findViewById<TextView>(R.id.license_point2)
-						val text_license_point3 = view_license.findViewById<TextView>(R.id.license_point3)
-						val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
-						point!!.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
-						text_license_point1.setCompoundDrawables(point, null, null, null)
-						text_license_point2.setCompoundDrawables(point, null, null, null)
-						text_license_point3.setCompoundDrawables(point, null, null, null)
-						AlertDialog.Builder(this)
-								.setTitle(" ")
-								.setView(view_license)
-								.setPositiveButton(R.string.action_done, { _, _ ->
-									settings.isFirstRun = false
-								})
-								.show()
-					}
-					.show()
+			showcase()
+			settings.isFirstRun = false
 		}
 	}
 
@@ -593,19 +564,39 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				{
 					override fun onSequenceCanceled(lastTarget: TapTarget?)
 					{
-						Logs.i(TAG, "onSequenceCanceled: ")
 					}
 
 					override fun onSequenceFinish()
 					{
 						Logs.i(TAG, "onSequenceFinish: ")
+						if (settings.isFirst)
+							showDialog()
 					}
 
 					override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean)
 					{
-						Logs.i(TAG, "onSequenceStep: ")
 					}
 				})
 		tapTargetSequence.start()
+	}
+
+	private fun showDialog()
+	{
+		val view_license = LayoutInflater.from(this).inflate(R.layout.dialog_license, NestedScrollView(this), false)
+		val text_license_point1 = view_license.findViewById<TextView>(R.id.license_point1)
+		val text_license_point2 = view_license.findViewById<TextView>(R.id.license_point2)
+		val text_license_point3 = view_license.findViewById<TextView>(R.id.license_point3)
+		val point = VectorDrawableCompat.create(resources, R.drawable.ic_point, null)
+		point!!.setBounds(0, 0, point.minimumWidth, point.minimumHeight)
+		text_license_point1.setCompoundDrawables(point, null, null, null)
+		text_license_point2.setCompoundDrawables(point, null, null, null)
+		text_license_point3.setCompoundDrawables(point, null, null, null)
+		AlertDialog.Builder(this)
+				.setTitle(" ")
+				.setView(view_license)
+				.setPositiveButton(R.string.action_done) { _, _ ->
+					settings.isFirst = false
+				}
+				.show()
 	}
 }

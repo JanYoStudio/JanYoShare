@@ -41,6 +41,10 @@ class Settings private constructor()
 		get() = sharedPreferences.getBoolean("isFirstRun", true)
 		set(isFirstRun) = sharedPreferences.edit().putBoolean("isFirstRun", isFirstRun).apply()
 
+	var isFirst: Boolean
+		get() = sharedPreferences.getBoolean("isFirst", true)
+		set(isFirst) = sharedPreferences.edit().putBoolean("isFirst", isFirst).apply()
+
 	var isDeveloperModeEnable: Boolean
 		get() = sharedPreferences.getBoolean("isDeveloperModeEnable", false)
 		set(isDeveloperModeEnable)

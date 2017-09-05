@@ -17,7 +17,7 @@ class SettingsActivity : PreferenceActivity()
 {
 	private val TAG = "SettingsActivity"
 	private lateinit var toolbar: Toolbar
-	private lateinit var coordinatorLayout: CoordinatorLayout
+	lateinit var coordinatorLayout: CoordinatorLayout
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
