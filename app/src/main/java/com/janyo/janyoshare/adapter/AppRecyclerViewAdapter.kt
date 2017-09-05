@@ -32,6 +32,7 @@ import com.janyo.janyoshare.util.Settings
 import com.mystery0.tools.FileUtil.FileUtil
 import com.mystery0.tools.Logs.Logs
 import dmax.dialog.SpotsDialog
+import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -104,18 +105,18 @@ class AppRecyclerViewAdapter(private val context: Context,
 			holder.checkBox.isChecked = true
 		}
 		holder.checkBox.setOnCheckedChangeListener { _, checked ->
-			val menu = (context as MainActivity).menu
+			val menu = (context as MainActivity).toolbar.menu
+			val action_search = menu!!.findItem(R.id.action_search)
+			val action_sort = menu.findItem(R.id.action_sort)
+			val action_clear = menu.findItem(R.id.action_clear)
+			val action_select_all = menu.findItem(R.id.action_select_all)
+			val action_select_none = menu.findItem(R.id.action_select_none)
+			val action_export = menu.findItem(R.id.action_export)
+			val action_send = menu.findItem(R.id.action_send)
 			if (checked)
 			{
 				if (multiChoiceList.size == 0)
 				{
-					val action_search = menu!!.findItem(R.id.action_search)
-					val action_sort = menu.findItem(R.id.action_sort)
-					val action_clear = menu.findItem(R.id.action_clear)
-					val action_select_all = menu.findItem(R.id.action_select_all)
-					val action_select_none = menu.findItem(R.id.action_select_none)
-					val action_export = menu.findItem(R.id.action_export)
-					val action_send = menu.findItem(R.id.action_send)
 					action_search.isVisible = false
 					action_sort.isVisible = false
 					action_clear.isVisible = false
@@ -135,7 +136,13 @@ class AppRecyclerViewAdapter(private val context: Context,
 					multiChoiceList.remove(installApp)
 				if (multiChoiceList.size == 0)
 				{
-					(context as Activity).invalidateOptionsMenu()
+					action_search.isVisible = true
+					action_sort.isVisible = true
+					action_clear.isVisible = true
+					action_select_all.isVisible = false
+					action_select_none.isVisible = false
+					action_export.isVisible = false
+					action_send.isVisible = false
 				}
 			}
 		}
