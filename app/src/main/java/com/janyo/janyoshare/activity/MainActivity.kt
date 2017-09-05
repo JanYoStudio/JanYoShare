@@ -23,7 +23,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
@@ -66,7 +65,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	private var oneClickTime: Long = 0
 	private var isGooglePlayAvailable = true
 	private var isGooglePlayPay = false
-	var menu: Menu? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -229,7 +227,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 					}
 				})
 
-		setSupportActionBar(toolbar)
+		setToolbar()
 		showcase()
 
 		if (settings.isFirst)
@@ -286,11 +284,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		}
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu): Boolean
+	private fun setToolbar()
 	{
-		Logs.i(TAG, "onCreateOptionsMenu: 创建菜单")
-		menuInflater.inflate(R.menu.menu_main, menu)
-
+		toolbar.inflateMenu(R.menu.menu_main)
+		val menu = toolbar.menu
 		val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
 		searchView.setOnQueryTextFocusChangeListener { _, b ->
@@ -303,7 +300,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			}
 			else
 			{
-				invalidateOptionsMenu()
+				action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+				action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 			}
 		}
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
@@ -341,86 +339,234 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				return false
 			}
 		})
-		return true
+		toolbar.setOnMenuItemClickListener { item ->
+			when (item.itemId)
+			{
+				android.R.id.home ->
+				{
+					drawer_layout.openDrawer(GravityCompat.START)
+				}
+				R.id.action_clear -> Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
+						.show()
+				R.id.action_sort ->
+				{
+					var index = settings.sort
+					AlertDialog.Builder(this)
+							.setTitle(R.string.hint_select_sort)
+							.setSingleChoiceItems(R.array.sort, index) { _, i -> index = i }
+							.setPositiveButton(R.string.action_done) { _, _ ->
+								settings.sort = index
+								currentFragment.refreshList()
+							}
+							.show()
+				}
+				R.id.action_select_all ->
+				{
+					val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+					list.clear()
+					list.addAll(currentFragment.showList)
+					currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+				}
+				R.id.action_select_none ->
+				{
+					val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+					list.clear()
+					currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+					val action_clear = menu.findItem(R.id.action_clear)
+					val action_sort = menu.findItem(R.id.action_sort)
+					val action_search = menu.findItem(R.id.action_search)
+					val action_select_all = menu.findItem(R.id.action_select_all)
+					val action_select_none = menu.findItem(R.id.action_select_none)
+					val action_export = menu.findItem(R.id.action_export)
+					val action_send = menu.findItem(R.id.action_send)
+					action_search.isVisible = true
+					action_sort.isVisible = true
+					action_clear.isVisible = true
+					action_select_all.isVisible = false
+					action_select_none.isVisible = false
+					action_export.isVisible = false
+					action_send.isVisible = false
+					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+				}
+				R.id.action_export ->
+				{
+					val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+					spotsDialog.show()
+					currentFragment.exportAPK(list, object : ExportListener
+					{
+						override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
+						{
+							spotsDialog.dismiss()
+							Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
+									.show()
+							currentFragment.exportHandler.sendEmptyMessage(0)
+						}
+					})
+				}
+				R.id.action_send ->
+				{
+					val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+					spotsDialog.show()
+					currentFragment.exportAPK(list, object : ExportListener
+					{
+						override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
+						{
+							spotsDialog.dismiss()
+							Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
+									.addCallback(object : Snackbar.Callback()
+									{
+										override fun onDismissed(transientBottomBar: Snackbar?,
+																 event: Int)
+										{
+											JYFileUtil.doShare(this@MainActivity, fileList)
+											currentFragment.exportHandler.sendEmptyMessage(0)
+										}
+									})
+									.show()
+						}
+					})
+				}
+			}
+			true
+		}
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem): Boolean
-	{
-		when (item.itemId)
-		{
-			android.R.id.home ->
-			{
-				drawer_layout.openDrawer(GravityCompat.START)
-			}
-			R.id.action_clear -> Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
-					.show()
-			R.id.action_sort ->
-			{
-				var index = settings.sort
-				AlertDialog.Builder(this)
-						.setTitle(R.string.hint_select_sort)
-						.setSingleChoiceItems(R.array.sort, index) { _, i -> index = i }
-						.setPositiveButton(R.string.action_done) { _, _ ->
-							settings.sort = index
-							currentFragment.refreshList()
-						}
-						.show()
-			}
-			R.id.action_select_all ->
-			{
-				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
-				list.clear()
-				list.addAll(currentFragment.showList)
-				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
-			}
-			R.id.action_select_none ->
-			{
-				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
-				list.clear()
-				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
-				invalidateOptionsMenu()
-			}
-			R.id.action_export ->
-			{
-				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
-				spotsDialog.show()
-				currentFragment.exportAPK(list, object : ExportListener
-				{
-					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
-					{
-						spotsDialog.dismiss()
-						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
-								.show()
-						currentFragment.exportHandler.sendEmptyMessage(0)
-					}
-				})
-			}
-			R.id.action_send ->
-			{
-				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
-				spotsDialog.show()
-				currentFragment.exportAPK(list, object : ExportListener
-				{
-					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
-					{
-						spotsDialog.dismiss()
-						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
-								.addCallback(object : Snackbar.Callback()
-								{
-									override fun onDismissed(transientBottomBar: Snackbar?,
-															 event: Int)
-									{
-										JYFileUtil.doShare(this@MainActivity, fileList)
-										currentFragment.exportHandler.sendEmptyMessage(0)
-									}
-								})
-								.show()
-					}
-				})
-			}
-		}
-		return true
-	}
+//	override fun onCreateOptionsMenu(menu: Menu): Boolean
+//	{
+//		Logs.i(TAG, "onCreateOptionsMenu: 创建菜单")
+//		menuInflater.inflate(R.menu.menu_main, menu)
+//
+//		val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
+//		searchView.setOnQueryTextFocusChangeListener { _, b ->
+//			val action_clear = menu.findItem(R.id.action_clear)
+//			val action_sort = menu.findItem(R.id.action_sort)
+//			if (b)
+//			{
+//				action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+//				action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+//			}
+//			else
+//			{
+//				invalidateOptionsMenu()
+//			}
+//		}
+//		searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+//		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener
+//		{
+//			override fun onQueryTextSubmit(query: String): Boolean
+//			{
+//				currentFragment.showList.clear()
+//				if (query.isNotEmpty())
+//				{
+//					val searchList = AppManager.searchApps(currentFragment.installAppList, query)
+//					currentFragment.showList.addAll(searchList)
+//				}
+//				else
+//				{
+//					currentFragment.showList.addAll(currentFragment.installAppList)
+//				}
+//				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+//				return true
+//			}
+//
+//			override fun onQueryTextChange(newText: String): Boolean
+//			{
+//				currentFragment.showList.clear()
+//				if (newText.isNotEmpty())
+//				{
+//					val searchList = AppManager.searchApps(currentFragment.installAppList, newText)
+//					currentFragment.showList.addAll(searchList)
+//				}
+//				else
+//				{
+//					currentFragment.showList.addAll(currentFragment.installAppList)
+//				}
+//				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+//				return false
+//			}
+//		})
+//		return true
+//	}
+
+//	override fun onOptionsItemSelected(item: MenuItem): Boolean
+//	{
+//		when (item.itemId)
+//		{
+//			android.R.id.home ->
+//			{
+//				drawer_layout.openDrawer(GravityCompat.START)
+//			}
+//			R.id.action_clear -> Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
+//					.show()
+//			R.id.action_sort ->
+//			{
+//				var index = settings.sort
+//				AlertDialog.Builder(this)
+//						.setTitle(R.string.hint_select_sort)
+//						.setSingleChoiceItems(R.array.sort, index) { _, i -> index = i }
+//						.setPositiveButton(R.string.action_done) { _, _ ->
+//							settings.sort = index
+//							currentFragment.refreshList()
+//						}
+//						.show()
+//			}
+//			R.id.action_select_all ->
+//			{
+//				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+//				list.clear()
+//				list.addAll(currentFragment.showList)
+//				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+//			}
+//			R.id.action_select_none ->
+//			{
+//				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+//				list.clear()
+//				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+//				invalidateOptionsMenu()
+//			}
+//			R.id.action_export ->
+//			{
+//				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+//				spotsDialog.show()
+//				currentFragment.exportAPK(list, object : ExportListener
+//				{
+//					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
+//					{
+//						spotsDialog.dismiss()
+//						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
+//								.show()
+//						currentFragment.exportHandler.sendEmptyMessage(0)
+//					}
+//				})
+//			}
+//			R.id.action_send ->
+//			{
+//				val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
+//				spotsDialog.show()
+//				currentFragment.exportAPK(list, object : ExportListener
+//				{
+//					override fun done(finish: Int, error: Int, fileList: ArrayList<File>)
+//					{
+//						spotsDialog.dismiss()
+//						Snackbar.make(coordinatorLayout, getString(R.string.hint_copy_done_with_number, finish, error), Snackbar.LENGTH_SHORT)
+//								.addCallback(object : Snackbar.Callback()
+//								{
+//									override fun onDismissed(transientBottomBar: Snackbar?,
+//															 event: Int)
+//									{
+//										JYFileUtil.doShare(this@MainActivity, fileList)
+//										currentFragment.exportHandler.sendEmptyMessage(0)
+//									}
+//								})
+//								.show()
+//					}
+//				})
+//			}
+//		}
+//		return true
+//	}
 
 	override fun onNavigationItemSelected(item: MenuItem): Boolean
 	{
@@ -574,8 +720,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	{
 		val tapTargetSequence = TapTargetSequence(this)
 				.targets(
-						TapTarget.forToolbarNavigationIcon(toolbar, "测试toolbar", "描述"),
+						TapTarget.forToolbarNavigationIcon(toolbar, "测试toolbar", "描述")
+								.cancelable(false)
+								.id(1),
 						TapTarget.forToolbarMenuItem(toolbar, R.id.action_search, "测试按钮", "描述")
+								.cancelable(false)
+								.id(2)
 				)
 				.listener(object : TapTargetSequence.Listener
 				{
