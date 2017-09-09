@@ -27,6 +27,7 @@ class ShareActivity : AppCompatActivity()
 				val transferFile = TransferFile()
 				transferFile.fileUri = uri.toString()
 				val file = File(uri.path)
+				transferFile.filePath = uri.path
 				transferFile.fileName = file.name
 				transferFile.fileSize = file.length()
 				FileTransferHelper.getInstance().fileList.add(transferFile)
