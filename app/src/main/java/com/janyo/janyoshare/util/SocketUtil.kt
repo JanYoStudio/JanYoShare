@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import com.janyo.janyoshare.classes.TransferFile
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.Logs.Logs
 import java.io.*
 import java.net.ConnectException
 import java.net.ServerSocket

@@ -5,9 +5,9 @@ import android.app.Application
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
 import com.janyo.janyoshare.util.Settings
-import com.mystery0.tools.CrashHandler.CrashHandler
-import com.mystery0.tools.Logs.Logs
-import com.mystery0.tools.SnackBar.ASnackBar
+import vip.mystery0.tools.CrashHandler.CrashHandler
+import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.SnackBar.ASnackBar
 import java.io.File
 
 class APP : Application()

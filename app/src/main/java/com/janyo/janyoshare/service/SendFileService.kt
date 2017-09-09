@@ -10,7 +10,7 @@ import com.janyo.janyoshare.handler.TransferHelperHandler
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.TransferFileNotification
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.Logs.Logs
 import java.util.concurrent.Executors
 
 class SendFileService : Service()
