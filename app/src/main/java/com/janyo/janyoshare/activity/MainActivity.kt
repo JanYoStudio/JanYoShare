@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 							map.put("model", model)
 							HttpUtil(this@MainActivity)
 									.setRequestQueue(Volley.newRequestQueue(applicationContext))
-									.setUrl("http://123.206.186.70/php/uploadLog/upload_file.php")
+									.setUrl("http://janyo.pw/uploadLog.php")
 									.setRequestMethod(HttpUtil.RequestMethod.POST)
 									.setFileRequest(HttpUtil.FileRequest.UPLOAD)
 									.isFileRequest(true)
