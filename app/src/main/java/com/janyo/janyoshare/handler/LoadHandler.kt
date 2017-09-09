@@ -5,7 +5,7 @@ import android.os.Message
 import android.support.v4.widget.SwipeRefreshLayout
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 import com.janyo.janyoshare.classes.InstallApp
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.Logs.Logs
 
 class LoadHandler(private val showList: MutableList<InstallApp>,
 				  private val installAppList: MutableList<InstallApp>,

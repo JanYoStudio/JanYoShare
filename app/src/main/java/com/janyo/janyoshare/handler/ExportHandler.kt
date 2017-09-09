@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Message
 import com.janyo.janyoshare.adapter.AppRecyclerViewAdapter
 
-
 class ExportHandler(private val adapter: AppRecyclerViewAdapter,
 					private var activity: Activity) : Handler()
 {

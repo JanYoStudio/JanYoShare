@@ -13,7 +13,7 @@ import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
-import com.mystery0.tools.FileUtil.FileUtil
+import vip.mystery0.tools.FileUtil.FileUtil
 import java.io.File
 import java.io.Serializable
 

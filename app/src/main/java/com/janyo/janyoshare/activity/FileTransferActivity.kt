@@ -22,8 +22,8 @@ import com.janyo.janyoshare.service.ReceiveFileService
 import com.janyo.janyoshare.service.SendFileService
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.Settings
-import com.mystery0.tools.FileUtil.FileUtil
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.FileUtil.FileUtil
+import vip.mystery0.tools.Logs.Logs
 
 import kotlinx.android.synthetic.main.activity_file_transfer.*
 import java.io.File

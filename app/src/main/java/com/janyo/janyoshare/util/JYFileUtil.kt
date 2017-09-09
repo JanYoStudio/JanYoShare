@@ -15,7 +15,7 @@ import android.support.v4.content.FileProvider
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.Logs.Logs
 import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList

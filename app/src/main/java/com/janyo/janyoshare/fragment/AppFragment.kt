@@ -19,7 +19,7 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
 import com.janyo.janyoshare.util.*
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.Logs.Logs
 import java.io.File
 
 import java.util.ArrayList

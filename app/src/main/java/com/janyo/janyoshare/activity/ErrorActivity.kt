@@ -10,8 +10,8 @@ import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.handler.UploadLogHandler
 import com.janyo.janyoshare.util.Settings
-import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
-import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
+import vip.mystery0.tools.MysteryNetFrameWork.HttpUtil
+import vip.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_error.*
 import java.io.File

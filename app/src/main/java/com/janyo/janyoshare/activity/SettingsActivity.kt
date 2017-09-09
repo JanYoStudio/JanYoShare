@@ -11,7 +11,7 @@ import com.janyo.janyoshare.R
 import com.janyo.janyoshare.fragment.SettingsPreferenceFragment
 
 import com.janyo.janyoshare.util.Settings
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.Logs.Logs
 
 class SettingsActivity : PreferenceActivity()
 {

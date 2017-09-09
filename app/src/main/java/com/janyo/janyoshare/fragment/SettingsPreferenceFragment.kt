@@ -29,8 +29,8 @@ import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.SettingHandler
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.Settings
-import com.mystery0.tools.Logs.Logs
-import com.mystery0.tools.SnackBar.ASnackBar
+import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.SnackBar.ASnackBar
 import dmax.dialog.SpotsDialog
 import java.util.*
 import java.util.regex.Pattern

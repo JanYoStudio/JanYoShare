@@ -31,13 +31,13 @@ import com.janyo.janyoshare.adapter.ViewPagerAdapter
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
-import com.mystery0.tools.CrashHandler.CrashHandler
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.CrashHandler.CrashHandler
+import vip.mystery0.tools.Logs.Logs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.File
-import com.mystery0.tools.MysteryNetFrameWork.ResponseListener
-import com.mystery0.tools.MysteryNetFrameWork.HttpUtil
+import vip.mystery0.tools.MysteryNetFrameWork.ResponseListener
+import vip.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
@@ -49,6 +49,8 @@ import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.handler.PayHandler
 import dmax.dialog.SpotsDialog
+import vip.mystery0.tools.CrashHandler.AutoCleanListener
+import vip.mystery0.tools.CrashHandler.CatchExceptionListener
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -155,7 +157,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 					.show()
 		}
 		CrashHandler.getInstance(this)
-				.clean(object : CrashHandler.AutoCleanListener
+				.clean(object : AutoCleanListener
 				{
 					override fun done()
 					{
@@ -168,7 +170,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 					}
 				})
 		CrashHandler.getInstance(this)
-				.sendException(object : CrashHandler.CatchExceptionListener
+				.sendException(object : CatchExceptionListener
 				{
 					override fun onException(date: String, file: File, appVersionName: String,
 											 appVersionCode: Int, AndroidVersion: String,
