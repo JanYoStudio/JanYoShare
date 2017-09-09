@@ -8,7 +8,7 @@ import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.janyo.janyoshare.R
-import com.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.Logs.Logs
 import java.io.File
 
 class RenameActivity : AppCompatActivity()
