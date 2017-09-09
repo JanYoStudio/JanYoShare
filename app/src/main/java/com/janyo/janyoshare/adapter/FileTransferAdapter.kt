@@ -1,5 +1,6 @@
 package com.janyo.janyoshare.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
@@ -28,16 +30,25 @@ class FileTransferAdapter(val context: Context,
 		holder.progressBar.max = 100
 		holder.progressBar.progress = transferFile.transferProgress
 		var path = ""
-		when (FileTransferHelper.getInstance().tag)
+		try
 		{
-			1 ->
+			when (FileTransferHelper.getInstance().tag)
 			{
-				path = transferFile.filePath!!
+				1 ->
+				{
+					path = transferFile.filePath!!
+				}
+				2 ->
+				{
+					path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, "JY Share")
+				}
 			}
-			2 ->
-			{
-				path = JYFileUtil.getSaveFilePath(transferFile.fileName!!, "JY Share")
-			}
+		}
+		catch (e: Exception)
+		{
+			Toast.makeText(context, R.string.hint_file_transfer_path_error, Toast.LENGTH_SHORT)
+					.show()
+			(context as Activity).finish()
 		}
 		holder.filePath.text = path
 		if (transferFile.transferProgress == 100 || FileTransferHelper.getInstance().tag == 1)

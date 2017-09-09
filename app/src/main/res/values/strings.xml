@@ -123,6 +123,7 @@
     <string name="hint_showcase_action_clear">单击这个按钮，可以手动清除缓存文件夹类的临时文件（不包括日志）。</string>
     <string name="hint_showcase_desc_action_clear">当然，如果你在设置中打开了自动清理，软件将会在每次运行时自动清除上一次产生的临时文件。</string>
     <string name="hint_showcase_nav_icon">在这里你可以进行更多的操作。</string>
+    <string name="hint_file_transfer_path_error">文件异常！</string>
 
     <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
