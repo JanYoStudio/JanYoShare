@@ -84,8 +84,14 @@ class ErrorActivity : AppCompatActivity()
 					{
 						override fun onResponse(code: Int, message: String?)
 						{
-							val response = Gson().fromJson(message, Response::class.java)
-							uploadLogHandler.response = response
+							try
+							{
+								val response = Gson().fromJson(message, Response::class.java)
+								uploadLogHandler.response = response
+							}
+							catch (e: Exception)
+							{
+							}
 							uploadLogHandler.sendEmptyMessage(0)
 						}
 					})
