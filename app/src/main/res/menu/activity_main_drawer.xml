@@ -10,15 +10,30 @@
         android:title="@string/action_file_transfer"/>
 
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/action_settings"/>
+        android:id="@+id/action_clear"
+        android:icon="@drawable/ic_clear_all"
+        android:title="@string/action_clear_all"/>
 
     <item
         android:id="@+id/action_night"
         android:icon="@drawable/ic_day_night"
         android:title="@string/action_dayNight"
         app:actionLayout="@layout/switch_item"/>
+
+    <item
+        android:id="@+id/action_license"
+        android:icon="@drawable/ic_license"
+        android:title="@string/title_license"/>
+
+    <item
+        android:id="@+id/action_support"
+        android:icon="@drawable/ic_support"
+        android:title="@string/title_support"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings"/>
 
     <item android:title="@string/janyo_studio">
         <menu>
@@ -30,15 +45,5 @@
             <item android:title="@string/kiva"/>
         </menu>
     </item>
-
-    <item
-        android:id="@+id/action_license"
-        android:icon="@drawable/ic_license"
-        android:title="@string/title_license"/>
-
-    <item
-        android:id="@+id/action_support"
-        android:icon="@drawable/ic_support"
-        android:title="@string/title_support"/>
 
 </menu>

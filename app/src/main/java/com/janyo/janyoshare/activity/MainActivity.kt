@@ -1,8 +1,6 @@
 package com.janyo.janyoshare.activity
 
 import android.Manifest
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -41,6 +39,7 @@ import vip.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.gson.Gson
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.callback.ExportListener
@@ -261,27 +260,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	{
 		toolbar.inflateMenu(R.menu.menu_main)
 		val menu = toolbar.menu
-		val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 		val searchView = menu.findItem(R.id.action_search).actionView as SearchView
-		searchView.setOnQueryTextFocusChangeListener { _, b ->
-			val action_clear = menu.findItem(R.id.action_clear)
-			val action_sort = menu.findItem(R.id.action_sort)
-			if (b)
+		searchView.isIconified = true
+		menu.findItem(R.id.action_search).setOnActionExpandListener(object : MenuItem.OnActionExpandListener
+		{
+			override fun onMenuItemActionExpand(item: MenuItem?): Boolean
 			{
-				action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-				action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-			}
-			else
-			{
-				action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+				Logs.i(TAG, "onMenuItemActionExpand: ")
+				val action_sort = menu.findItem(R.id.action_sort)
 				action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+				return true
 			}
-		}
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+			override fun onMenuItemActionCollapse(item: MenuItem?): Boolean
+			{
+				Logs.i(TAG, "onMenuItemActionCollapse: ")
+				val action_sort = menu.findItem(R.id.action_sort)
+				action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+				return true
+			}
+
+		})
 		searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener
 		{
 			override fun onQueryTextSubmit(query: String): Boolean
 			{
+				Logs.i(TAG, "onQueryTextSubmit: " + query)
 				currentFragment.showList.clear()
 				if (query.isNotEmpty())
 				{
@@ -298,6 +302,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 			override fun onQueryTextChange(newText: String): Boolean
 			{
+				Logs.i(TAG, "onQueryTextChange: " + newText)
 				currentFragment.showList.clear()
 				if (newText.isNotEmpty())
 				{
@@ -319,8 +324,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				{
 					drawer_layout.openDrawer(GravityCompat.START)
 				}
-				R.id.action_clear -> Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
-						.show()
 				R.id.action_sort ->
 				{
 					var index = settings.sort
@@ -345,7 +348,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 					val list = currentFragment.appRecyclerViewAdapter.multiChoiceList
 					list.clear()
 					currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
-					val action_clear = menu.findItem(R.id.action_clear)
 					val action_sort = menu.findItem(R.id.action_sort)
 					val action_search = menu.findItem(R.id.action_search)
 					val action_select_all = menu.findItem(R.id.action_select_all)
@@ -354,13 +356,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 					val action_send = menu.findItem(R.id.action_send)
 					action_search.isVisible = true
 					action_sort.isVisible = true
-					action_clear.isVisible = true
 					action_select_all.isVisible = false
 					action_select_none.isVisible = false
 					action_export.isVisible = false
 					action_send.isVisible = false
-					action_clear.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-					action_sort.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 				}
 				R.id.action_export ->
 				{
@@ -407,9 +406,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 	override fun onNavigationItemSelected(item: MenuItem): Boolean
 	{
+		drawer_layout.closeDrawer(GravityCompat.START)
 		when (item.itemId)
 		{
 			R.id.action_file_transfer -> startActivity(Intent(this, FileTransferConfigureActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
+			R.id.action_clear -> Snackbar.make(coordinatorLayout, String.format(getString(R.string.hint_clear_file), (if (JYFileUtil.cleanFileDir(getString(R.string.app_name))) "成功" else "失败")), Snackbar.LENGTH_SHORT)
+					.show()
 			R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
 			R.id.action_license ->
 			{
@@ -471,9 +473,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 						})
 						.show()
 			}
-			else -> return true
 		}
-		drawer_layout.closeDrawer(GravityCompat.START)
 		return true
 	}
 
@@ -558,7 +558,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		TapTargetSequence(this)
 				.targets(
 						TapTarget.forToolbarMenuItem(toolbar, R.id.action_search, getString(R.string.hint_showcase_action_search)),
-						TapTarget.forToolbarMenuItem(toolbar, R.id.action_clear, getString(R.string.hint_showcase_action_clear), getString(R.string.hint_showcase_desc_action_clear)),
 						TapTarget.forToolbarNavigationIcon(toolbar, getString(R.string.hint_showcase_nav_icon)))
 				.continueOnCancel(true)
 				.listener(object : TapTargetSequence.Listener
