@@ -90,7 +90,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 						message.obj = ipv4
 						receiveHandler.sendMessage(message)
 						Thread.sleep(100)
-						Logs.i(TAG, "openAP: 100阻塞线程")
 
 						val resultMessage = socketUtil.receiveMessage()
 						if (resultMessage == "null")
@@ -109,7 +108,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 						message_verify.obj = map
 						receiveHandler.sendMessage(message_verify)
 						Thread.sleep(100)
-						Logs.i(TAG, "onScan: 100阻塞线程")
 					}
 
 					override fun onError(e: Exception)
@@ -125,7 +123,6 @@ class FileTransferConfigureActivity : AppCompatActivity()
 						message.obj = isDeviceFind
 						receiveHandler.sendMessage(message)
 						Thread.sleep(100)
-						Logs.i(TAG, "onFinish: 100阻塞线程")
 					}
 				})
 			}
