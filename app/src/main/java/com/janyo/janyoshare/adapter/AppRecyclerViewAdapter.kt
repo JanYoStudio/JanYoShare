@@ -108,7 +108,6 @@ class AppRecyclerViewAdapter(private val context: Context,
 			val menu = (context as MainActivity).toolbar.menu
 			val action_search = menu!!.findItem(R.id.action_search)
 			val action_sort = menu.findItem(R.id.action_sort)
-			val action_clear = menu.findItem(R.id.action_clear)
 			val action_select_all = menu.findItem(R.id.action_select_all)
 			val action_select_none = menu.findItem(R.id.action_select_none)
 			val action_export = menu.findItem(R.id.action_export)
@@ -119,7 +118,6 @@ class AppRecyclerViewAdapter(private val context: Context,
 				{
 					action_search.isVisible = false
 					action_sort.isVisible = false
-					action_clear.isVisible = false
 					action_select_all.isVisible = true
 					action_select_none.isVisible = true
 					action_export.isVisible = true
@@ -138,7 +136,6 @@ class AppRecyclerViewAdapter(private val context: Context,
 				{
 					action_search.isVisible = true
 					action_sort.isVisible = true
-					action_clear.isVisible = true
 					action_select_all.isVisible = false
 					action_select_none.isVisible = false
 					action_export.isVisible = false
