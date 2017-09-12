@@ -41,6 +41,7 @@ class WIFIUtil(var context: Context, private val port: Int)
 	fun scanIP(scanListener: ScanListener)
 	{
 		getLocalAddress()
+		Logs.i(TAG, "scanIP: " + localAddress)
 		var isDeviceFind = false
 		val localAddressIndex = localAddress.substring(0, localAddress.lastIndexOf(".") + 1)
 		if (localAddressIndex == "")

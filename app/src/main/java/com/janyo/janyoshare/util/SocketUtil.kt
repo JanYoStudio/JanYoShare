@@ -36,6 +36,7 @@ class SocketUtil
 		}
 		catch (e: ConnectException)
 		{
+			e.printStackTrace()
 			false
 		}
 	}
