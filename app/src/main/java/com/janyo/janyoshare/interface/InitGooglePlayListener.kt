@@ -1,4 +1,4 @@
-package com.janyo.janyoshare.callback
+package com.janyo.janyoshare.`interface`
 
 interface InitGooglePlayListener
 {
