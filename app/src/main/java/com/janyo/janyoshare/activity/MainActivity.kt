@@ -39,7 +39,6 @@ import vip.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import com.android.volley.toolbox.Volley
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
-import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.gson.Gson
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.callback.ExportListener
