@@ -1,4 +1,4 @@
-package com.janyo.janyoshare.service
+package com.janyo.janyoshare.service.qstile
 
 import android.content.Intent
 import android.os.Build

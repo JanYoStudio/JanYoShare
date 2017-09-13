@@ -83,7 +83,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
-            android:name=".service.ShareTileService"
+            android:name=".service.qstile.ShareTileService"
             android:icon="@drawable/ic_share"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -92,7 +92,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".service.FileTransferTileService"
+            android:name=".service.qstile.FileTransferTileService"
             android:icon="@drawable/ic_file_transfer"
             android:label="@string/title_activity_file_transfer_configure"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
