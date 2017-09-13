@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Message
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.graphics.drawable.VectorDrawableCompat
@@ -41,11 +40,11 @@ import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.gson.Gson
 import com.janyo.janyoshare.APP
-import com.janyo.janyoshare.callback.ExportListener
-import com.janyo.janyoshare.callback.InitGooglePlayListener
+import com.janyo.janyoshare.`interface`.ExportListener
+import com.janyo.janyoshare.`interface`.InitGooglePlayListener
 import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
-import com.janyo.janyoshare.handler.PayHandler
+import com.janyo.janyoshare.util.pay.method.PayContext
 import dmax.dialog.SpotsDialog
 import vip.mystery0.tools.CrashHandler.AutoCleanListener
 import vip.mystery0.tools.CrashHandler.CatchExceptionListener
@@ -56,7 +55,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 {
 	private lateinit var currentFragment: AppFragment
 	private lateinit var img_janyo: ImageView
-	private lateinit var payHandler: PayHandler
+	private lateinit var payContext: PayContext
 	private lateinit var spotsDialog: SpotsDialog
 	private val TAG = "MainActivity"
 	private val PERMISSION_CODE = 233
@@ -85,8 +84,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		spotsDialog.setCancelable(false)
 		spotsDialog.setMessage(getString(R.string.copy_file_loading))
 
-		payHandler = PayHandler(this, Volley.newRequestQueue(this))
-		payHandler.initGooglePlay(object : InitGooglePlayListener
+		payContext = PayContext(this)
+		payContext.initGooglePlay(object : InitGooglePlayListener
 		{
 			override fun onSuccess()
 			{
@@ -444,28 +443,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				AlertDialog.Builder(this)
 						.setTitle(R.string.pay_method_title)
 						.setItems(Array(list.size, { i -> list[i] }), { _, choose ->
-							val message = Message()
 							when (choose)
 							{
 								0 ->
 								{
-									message.what = PayHandler.PAY_ALIPAY
+									payContext.setMethod(PayContext.PAY_ALIPAY)
 									isGooglePlayPay = false
-									payHandler.sendMessage(message)
+									payContext.showPay()
 								}
 								1 ->
 								{
-									message.what = PayHandler.PAY_WEIXIN
+									payContext.setMethod(PayContext.PAY_WEIXIN)
 									isGooglePlayPay = false
-									payHandler.sendMessage(message)
+									payContext.showPay()
 								}
 								2 ->
 								{
 									if (isGooglePlayAvailable)
 									{
-										message.what = PayHandler.PAY_PLAY
+										payContext.setMethod(PayContext.PAY_PLAY)
 										isGooglePlayPay = true
-										payHandler.sendMessage(message)
+										payContext.showPay()
 									}
 								}
 							}
@@ -533,7 +531,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
 	{
-		if (!isGooglePlayPay && payHandler.onPayResult(requestCode, resultCode, data))
+		if (!isGooglePlayPay && payContext.onPayResult(requestCode, resultCode, data))
 			super.onActivityResult(requestCode, resultCode, data)
 		else
 			Logs.i(TAG, "onActivityResult handled by IABUtil.")
@@ -543,7 +541,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 	{
 		try
 		{
-			payHandler.playDestroy()
+			payContext.playDestroy()
 		}
 		catch (e: Exception)
 		{

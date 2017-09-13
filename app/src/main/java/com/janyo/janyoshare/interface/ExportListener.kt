@@ -1,4 +1,4 @@
-package com.janyo.janyoshare.callback
+package com.janyo.janyoshare.`interface`
 
 import java.io.File
 import java.util.ArrayList
