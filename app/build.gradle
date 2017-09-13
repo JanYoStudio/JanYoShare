@@ -28,7 +28,7 @@ android {
         versionName autoVersion.name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        setProperty("archivesBaseName", "JY Share-$versionName")
+        setProperty("archivesBaseName", "JY Share-$versionCode")
     }
     buildTypes {
         debug {
@@ -63,7 +63,7 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:26.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.github.Mystery00.ToolsDemo:tools:2.0.1'
+    compile 'com.github.Mystery00.ToolsDemo:tools:2.0.3'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     implementation project(':SpotsDialog')
@@ -71,4 +71,12 @@ dependencies {
 
 repositories {
     mavenCentral()
+}
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.0.3'
+    }
 }
