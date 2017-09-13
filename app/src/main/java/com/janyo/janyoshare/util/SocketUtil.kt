@@ -2,7 +2,6 @@ package com.janyo.janyoshare.util
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import com.janyo.janyoshare.classes.TransferFile
 import vip.mystery0.tools.Logs.Logs
 import java.io.*
@@ -12,7 +11,6 @@ import java.net.Socket
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-
 
 class SocketUtil
 {
