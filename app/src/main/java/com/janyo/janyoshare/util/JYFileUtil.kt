@@ -10,7 +10,7 @@ import android.support.v4.content.FileProvider
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
-import com.janyo.janyoshare.util.drawable.DrawableSaver
+import com.janyo.janyoshare.util.drawable.DrawableFactory
 import vip.mystery0.tools.Logs.Logs
 import java.io.*
 import java.util.*
@@ -265,7 +265,7 @@ object JYFileUtil
 			applicationInfo.sourceDir = apkPath
 			applicationInfo.publicSourceDir = apkPath
 			path = context.cacheDir.absolutePath + File.separator + applicationInfo.packageName
-			DrawableSaver.getInstance().save(applicationInfo.loadIcon(packageManager), path)
+			DrawableFactory.getInstance().save(applicationInfo.loadIcon(packageManager), path)
 			return path
 		}
 		return "null"

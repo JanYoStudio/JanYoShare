@@ -100,4 +100,8 @@ class Settings private constructor()
 	var isDisableIcon: Boolean
 		get() = sharedPreferences.getBoolean("isDisableIcon", false)
 		set(isDisableIcon) = sharedPreferences.edit().putBoolean("isDisableIcon", isDisableIcon).apply()
+
+	var iconCropType: Int
+		get() = sharedPreferences.getInt("iconCropType", 0)
+		set(iconCropType) = sharedPreferences.edit().putInt("iconCropType", iconCropType).apply()
 }

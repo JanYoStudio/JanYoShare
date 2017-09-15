@@ -2,6 +2,7 @@ package com.janyo.janyoshare.fragment
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.preference.Preference
@@ -46,6 +47,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 	private lateinit var excludeList: Preference
 	private lateinit var customNameFormat: Preference
 	private lateinit var longClickDo: Preference
+	private lateinit var iconCropType: Preference
 	private lateinit var developerMode: PreferenceCategory
 	private lateinit var developerModeEnable: SwitchPreference
 	private lateinit var enableExcludeNameList: SwitchPreference
@@ -92,6 +94,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 		excludeList = findPreference(getString(R.string.key_exclude_list))
 		customNameFormat = findPreference(getString(R.string.key_custom_name_format))
 		longClickDo = findPreference(getString(R.string.key_long_click_do))
+		iconCropType = findPreference(getString(R.string.key_icon_crop_type))
 		developerMode = findPreference(getString(R.string.key_developer_mode)) as PreferenceCategory
 		developerModeEnable = findPreference(getString(R.string.key_developer_mode_enable)) as SwitchPreference
 		enableExcludeNameList = findPreference(getString(R.string.key_enable_exclude_name)) as SwitchPreference
@@ -162,6 +165,15 @@ class SettingsPreferenceFragment : PreferenceFragment()
 		else
 		{
 			clickTime = 7
+		}
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+		{
+			preferenceScreen.removePreference(iconCropType)
+		}
+		else
+		{
+			iconCropType.summary = resources.getStringArray(R.array.icon_crop_type)[settings.iconCropType]
 		}
 	}
 
@@ -278,6 +290,16 @@ class SettingsPreferenceFragment : PreferenceFragment()
 					.setItems(R.array.long_click_do, { _, position ->
 						settings.longClickDo = position
 						longClickDo.summary = resources.getStringArray(R.array.long_click_do)[settings.longClickDo]
+					})
+					.show()
+			false
+		}
+		iconCropType.setOnPreferenceClickListener {
+			AlertDialog.Builder(activity)
+					.setTitle(R.string.hint_icon_crop_type)
+					.setItems(R.array.icon_crop_type, { _, position ->
+						settings.iconCropType = position
+						iconCropType.summary = resources.getStringArray(R.array.icon_crop_type)[settings.iconCropType]
 					})
 					.show()
 			false

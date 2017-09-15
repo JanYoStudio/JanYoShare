@@ -11,16 +11,18 @@ class BitmapCropContext
 
 	companion object
 	{
-		val SQUARE = 1
-		val CIRCLE = 2
+		val DEFAULT = 0
+		val CIRCLE = 1
+		val SQUARE = 2
 	}
 
 	fun setCropType(type: Int)
 	{
 		bitmapCrop = when (type)
 		{
-			1 -> SquareBitmapCrop()
-			2 -> CircleBitmapCrop()
+			0 -> DefaultBitmapCrop()
+			1 -> CircleBitmapCrop()
+			2 -> SquareBitmapCrop()
 			else -> throw NullPointerException("the type is null")
 		}
 	}
