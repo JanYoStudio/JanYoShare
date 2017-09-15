@@ -28,7 +28,7 @@ android {
         versionName autoVersion.name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        setProperty("archivesBaseName", "JY Share-$versionCode")
+        setProperty("archivesBaseName", "JY Share-$versionName")
     }
     buildTypes {
         debug {
