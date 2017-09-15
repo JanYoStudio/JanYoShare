@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.TransferFile
 import com.janyo.janyoshare.util.FileTransferHelper
@@ -58,12 +59,14 @@ class FileTransferAdapter(val context: Context,
 				{
 					Glide.with(context)
 							.load(path)
+							.diskCacheStrategy(DiskCacheStrategy.NONE)
 							.into(holder.fileImg)
 				}
 				"apk" ->
 				{
 					Glide.with(context)
 							.load(JYFileUtil.getApkIconPath(context, path))
+							.diskCacheStrategy(DiskCacheStrategy.NONE)
 							.into(holder.fileImg)
 				}
 				else ->
@@ -73,18 +76,6 @@ class FileTransferAdapter(val context: Context,
 			}
 		else
 			holder.fileImg.setImageResource(R.mipmap.ic_file)
-//		holder.itemView.setOnClickListener {
-//			val uri: Uri = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-//				FileProvider.getUriForFile(context, context.getString(R.string.authorities), File(path))
-//			else
-//				Uri.fromFile(File(path))
-//			val mimeType = context.contentResolver.getType(uri)
-//			val intent = Intent(Intent.ACTION_VIEW)
-//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//			intent.setDataAndType(uri, mimeType)
-//			JYFileUtil.grantUriPermission(context, intent, uri)
-//			context.startActivity(intent)
-//		}
 	}
 
 	override fun getItemCount(): Int

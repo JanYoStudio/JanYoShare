@@ -299,6 +299,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 					.setTitle(R.string.hint_icon_crop_type)
 					.setItems(R.array.icon_crop_type, { _, position ->
 						settings.iconCropType = position
+						settings.imgVersion++
 						iconCropType.summary = resources.getStringArray(R.array.icon_crop_type)[settings.iconCropType]
 					})
 					.show()
@@ -329,6 +330,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 									set.add(it)
 								}
 						settings.excludeNameList = set
+						settings.imgVersion++
 					})
 					.setNegativeButton(R.string.action_cancel, null)
 					.show()
@@ -356,6 +358,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 						if (temp > 0f)
 						{
 							settings.excludeSize = (temp * 1048576).toLong()
+							settings.imgVersion++
 							excludeSize.summary = temp.toString()
 						}
 						else
@@ -395,6 +398,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 							return@setPositiveButton
 						}
 						settings.excludeRegularExpression = pattern
+						settings.imgVersion++
 						excludeRegularExpression.summary = pattern
 					})
 					.setNegativeButton(R.string.action_cancel, null)
@@ -441,6 +445,7 @@ class SettingsPreferenceFragment : PreferenceFragment()
 		disableIcon.setOnPreferenceChangeListener { _, _ ->
 			val isDisableIcon = !disableIcon.isChecked
 			settings.isDisableIcon = isDisableIcon
+			settings.imgVersion++
 			true
 		}
 		about.setOnPreferenceClickListener {

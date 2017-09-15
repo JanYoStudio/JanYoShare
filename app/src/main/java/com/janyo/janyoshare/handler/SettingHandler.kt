@@ -37,6 +37,7 @@ class SettingHandler(private val context: Context,
 							.filter { checkedItems[it] }
 							.forEach { set.add(list[it].packageName!!) }
 					settings.excludeList = set
+					settings.imgVersion++
 					excludeList.summary = context.getString(R.string.summary_exclude_list, set.size)
 				})
 				.show()
