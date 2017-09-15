@@ -47,8 +47,9 @@ class DrawableFactory private constructor()
 				val bitmapCropContext = BitmapCropContext()
 				when (settings.iconCropType)
 				{
-					1 -> bitmapCropContext.setCropType(BitmapCropContext.CIRCLE)
-					2 -> bitmapCropContext.setCropType(BitmapCropContext.SQUARE)
+					1 -> bitmapCropContext.setCropType(BitmapCropContext.ROUND)
+					2 -> bitmapCropContext.setCropType(BitmapCropContext.RECTANGLE)
+					3 -> bitmapCropContext.setCropType(BitmapCropContext.ROUND_RECTANGLE)
 					else -> bitmapCropContext.setCropType(BitmapCropContext.DEFAULT)
 				}
 				bitmap = bitmapCropContext.crop(bitmap)

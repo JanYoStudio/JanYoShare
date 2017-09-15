@@ -57,5 +57,6 @@
         <item>默认样式</item>
         <item>圆形</item>
         <item>方形</item>
+        <item>圆角矩形</item>
     </string-array>
 </resources>
