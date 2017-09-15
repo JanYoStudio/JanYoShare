@@ -330,6 +330,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 							.setSingleChoiceItems(R.array.sort, index) { _, i -> index = i }
 							.setPositiveButton(R.string.action_done) { _, _ ->
 								settings.sort = index
+								settings.imgVersion
 								currentFragment.refreshList()
 							}
 							.show()

@@ -262,11 +262,11 @@ object JYFileUtil
 		if (packageInfo != null)
 		{
 			val applicationInfo = packageInfo.applicationInfo
+			val drawableFactory = DrawableFactory(Settings.getInstance(context))
 			applicationInfo.sourceDir = apkPath
 			applicationInfo.publicSourceDir = apkPath
 			path = context.cacheDir.absolutePath + File.separator + applicationInfo.packageName
-			DrawableFactory.getInstance().save(applicationInfo.loadIcon(packageManager), path)
-			return path
+			return if (drawableFactory.save(applicationInfo.loadIcon(packageManager), path)) path else "null"
 		}
 		return "null"
 	}

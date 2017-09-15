@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
-import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.util.Settings
 import com.janyo.janyoshare.util.bitmap.BitmapCropContext
 import java.io.File
@@ -14,20 +13,19 @@ import java.io.IOException
 /**
  * Created by mystery0.
  */
-class DrawableFactory private constructor()
+class DrawableFactory(settings: Settings)
 {
 	private val drawableConvertContext = DrawableConvertContext()
-	private val settings = Settings.getInstance(APP.getInstance())
+	private val bitmapCropContext = BitmapCropContext()
 
-	companion object
+	init
 	{
-		private var drawableFactory: DrawableFactory? = null
-
-		fun getInstance(): DrawableFactory
+		when (settings.iconCropType)
 		{
-			if (drawableFactory == null)
-				drawableFactory = DrawableFactory()
-			return drawableFactory!!
+			1 -> bitmapCropContext.setCropType(BitmapCropContext.ROUND)
+			2 -> bitmapCropContext.setCropType(BitmapCropContext.RECTANGLE)
+			3 -> bitmapCropContext.setCropType(BitmapCropContext.ROUND_RECTANGLE)
+			else -> bitmapCropContext.setCropType(BitmapCropContext.DEFAULT)
 		}
 	}
 
@@ -44,17 +42,9 @@ class DrawableFactory private constructor()
 			var bitmap = drawableConvertContext.convert(drawable) ?: return false
 			if (drawable is AdaptiveIconDrawable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			{
-				val bitmapCropContext = BitmapCropContext()
-				when (settings.iconCropType)
-				{
-					1 -> bitmapCropContext.setCropType(BitmapCropContext.ROUND)
-					2 -> bitmapCropContext.setCropType(BitmapCropContext.RECTANGLE)
-					3 -> bitmapCropContext.setCropType(BitmapCropContext.ROUND_RECTANGLE)
-					else -> bitmapCropContext.setCropType(BitmapCropContext.DEFAULT)
-				}
 				bitmap = bitmapCropContext.crop(bitmap)
 			}
-			bitmap.compress(Bitmap.CompressFormat.PNG, 10, out)
+			bitmap.compress(Bitmap.CompressFormat.PNG, 1, out)
 			out.close()
 		}
 		catch (e: IOException)
