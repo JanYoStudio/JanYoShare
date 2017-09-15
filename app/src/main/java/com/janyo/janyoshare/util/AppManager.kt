@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 
 import com.janyo.janyoshare.classes.InstallApp
+import com.janyo.janyoshare.util.drawable.DrawableSaver
 
 import java.io.File
 import java.util.ArrayList
@@ -36,7 +37,7 @@ object AppManager
 					installApp.sourceDir = packageInfo.applicationInfo.sourceDir
 					installApp.packageName = packageInfo.applicationInfo.packageName
 					val path = context.cacheDir.absolutePath + File.separator + "icon" + File.separator + installApp.packageName
-					if (JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path))
+					if (DrawableSaver.getInstance().save(packageInfo.applicationInfo.loadIcon(packageManager), path))
 					{
 						installApp.iconPath = path
 					}
@@ -67,7 +68,7 @@ object AppManager
 					if (!settings.isDisableIcon)
 					{
 						val path = context.cacheDir.absolutePath + File.separator + "icon" + File.separator + installApp.packageName
-						if (JYFileUtil.saveDrawableToSd(packageInfo.applicationInfo.loadIcon(packageManager), path))
+						if (DrawableSaver.getInstance().save(packageInfo.applicationInfo.loadIcon(packageManager), path))
 						{
 							installApp.iconPath = path
 						}
