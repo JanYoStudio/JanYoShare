@@ -124,6 +124,7 @@
     <string name="hint_showcase_desc_action_clear">当然，如果你在设置中打开了自动清理，软件将会在每次运行时自动清除上一次产生的临时文件。</string>
     <string name="hint_showcase_nav_icon">在这里你可以进行更多的操作。</string>
     <string name="hint_file_transfer_path_error">文件异常！</string>
+    <string name="hint_icon_crop_type">请选择图标样式</string>
 
     <string name="address_open_source">https://github.com/JanYoStudio/JanYoShare</string>
     <string name="address_check_update">https://play.google.com/store/apps/details?id=com.janyo.janyoshare</string>
@@ -145,59 +146,6 @@
     <string name="license_text5">源代码允许自由使用、添加至自己的项目，但必须注明来源，以及源的授权协议。</string>
     <string name="license_text6">在从事盈利、商用活动中，针对产品的传播复制需注明来源，以及源的授权协议。</string>
     <string name="license_text7">针对产品授权、答疑可电邮至工作室官方电子邮箱 : mystery0dyl520@gmail.com</string>
-
-    <string-array name="sort">
-        <item>默认排序</item>
-        <item>按名称排序</item>
-        <item>按大小排序</item>
-        <item>按包名排序</item>
-        <item>按安装时间排序</item>
-        <item>按更新时间排序</item>
-    </string-array>
-
-    <string-array name="copy_do">
-        <item>仅提取</item>
-        <item>提取并分享</item>
-        <item>重命名并分享</item>
-        <item>修改扩展名后分享</item>
-        <item>提取后和数据包一起分享</item>
-        <item>面对面分享</item>
-        <item>复制信息</item>
-    </string-array>
-
-    <string-array name="copy_info">
-        <item>复制软件名称</item>
-        <item>复制包名</item>
-        <item>复制版本名称</item>
-        <item>复制版本号</item>
-    </string-array>
-
-    <string-array name="long_click_do">
-        <item>无操作</item>
-        <item>提取并分享</item>
-        <item>重命名并分享</item>
-        <item>修改扩展名后分享</item>
-        <item>提取后和数据包一起分享</item>
-        <item>面对面分享</item>
-    </string-array>
-
-    <string-array name="pay_method">
-        <item>支付宝转账</item>
-        <item>微信转账</item>
-        <item>Google Play内购</item>
-        <item> </item>
-    </string-array>
-
-    <string-array name="pay_method_without_play">
-        <item>支付宝转账</item>
-        <item>微信转账</item>
-        <item> </item>
-    </string-array>
-
-    <string-array name="become_test">
-        <item>加入内测群</item>
-        <item>成为Google Play测试人员</item>
-    </string-array>
 
     <string name="title_activity_file_transfer">文件传输</string>
     <string name="title_activity_file_transfer_configure">文件传输</string>

@@ -82,4 +82,7 @@
     <string name="title_disable_icon">禁用图标</string>
     <string name="summary_disable_icon">一定程度上可以加快软件打开时加载速度</string>
 
+    <string name="key_icon_crop_type">key_icon_crop_type</string>
+    <string name="title_icon_crop_type">图标样式裁剪（需要Android O以上）</string>
+
 </resources>
