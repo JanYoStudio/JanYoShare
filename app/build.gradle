@@ -12,7 +12,7 @@ apply plugin: 'vip.mystery0.autoversion'
 autoVersion {
     major 3
     minor 0
-    patch 1
+    patch 2
     beta 0
     alpha 0
 }

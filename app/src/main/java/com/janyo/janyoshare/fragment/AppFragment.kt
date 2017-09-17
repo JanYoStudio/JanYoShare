@@ -18,6 +18,7 @@ import com.janyo.janyoshare.`interface`.ExportListener
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.handler.ExportHandler
 import com.janyo.janyoshare.handler.LoadHandler
+import com.janyo.janyoshare.handler.SearchHandler
 import com.janyo.janyoshare.util.*
 import vip.mystery0.tools.Logs.Logs
 import java.io.File
@@ -29,6 +30,7 @@ class AppFragment : Fragment()
 {
 	private lateinit var coordinatorLayout: CoordinatorLayout
 	private lateinit var loadHandler: LoadHandler
+	private lateinit var searchHandler: SearchHandler
 	private val TAG = "AppFragment"
 	private val singleThreadPool = Executors.newSingleThreadExecutor()
 	private var type = -1
@@ -38,7 +40,7 @@ class AppFragment : Fragment()
 	private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 	lateinit var appRecyclerViewAdapter: AppRecyclerViewAdapter
 	lateinit var exportHandler: ExportHandler
-	val installAppList = ArrayList<InstallApp>()
+	private val installAppList = ArrayList<InstallApp>()
 	val showList = ArrayList<InstallApp>()
 
 	override fun onCreate(savedInstanceState: Bundle?)
@@ -66,6 +68,7 @@ class AppFragment : Fragment()
 		recyclerView.layoutManager = LinearLayoutManager(activity)
 		recyclerView.adapter = appRecyclerViewAdapter
 		loadHandler = LoadHandler(showList, installAppList, appRecyclerViewAdapter, swipeRefreshLayout)
+		searchHandler = SearchHandler(appRecyclerViewAdapter)
 		exportHandler = ExportHandler(appRecyclerViewAdapter, activity)
 		swipeRefreshLayout.setOnRefreshListener { singleThreadPool.execute { refresh() } }
 		isReadyTag = true
@@ -110,7 +113,7 @@ class AppFragment : Fragment()
 			{
 				showList.addAll(installAppList)
 			}
-			appRecyclerViewAdapter.notifyDataSetChanged()
+			searchHandler.sendEmptyMessage(0)
 		}
 	}
 
