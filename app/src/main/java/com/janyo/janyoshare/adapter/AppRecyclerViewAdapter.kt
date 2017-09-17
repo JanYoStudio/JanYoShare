@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.signature.StringSignature
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 
@@ -73,12 +74,12 @@ class AppRecyclerViewAdapter(private val context: Context,
 		holder.textView_versionName.text = installApp.versionName
 		if (settings.isDisableIcon)
 		{
-			holder.imageView.setImageResource(R.mipmap.ic_launcher)
+			Glide.with(context).load(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.NONE).signature(StringSignature(settings.imgVersion.toString())).into(holder.imageView)
 		}
 		else
 		{
 			if (installApp.iconPath != null)
-				Glide.with(context).load(installApp.iconPath).diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.imageView)
+				Glide.with(context).load(installApp.iconPath).diskCacheStrategy(DiskCacheStrategy.NONE).signature(StringSignature(settings.imgVersion.toString())).into(holder.imageView)
 			else
 				holder.imageView.setImageDrawable(installApp.icon)
 		}

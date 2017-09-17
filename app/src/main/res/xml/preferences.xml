@@ -22,6 +22,10 @@
         android:key="@string/key_long_click_do"
         android:title="@string/title_long_click_do"/>
 
+    <Preference
+        android:key="@string/key_icon_crop_type"
+        android:title="@string/title_icon_crop_type"/>
+
     <PreferenceCategory
         android:key="@string/key_developer_mode"
         android:title="@string/title_developer_mode">
