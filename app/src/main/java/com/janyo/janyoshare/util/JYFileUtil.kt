@@ -3,18 +3,14 @@ package com.janyo.janyoshare.util
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.*
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.support.annotation.RequiresApi
-import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.FileProvider
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
+import com.janyo.janyoshare.util.drawable.DrawableFactory
 import vip.mystery0.tools.Logs.Logs
 import java.io.*
 import java.util.*
@@ -178,77 +174,6 @@ object JYFileUtil
 		Share(context, file)
 	}
 
-	fun saveDrawableToSd(drawable: Drawable, path: String): Boolean
-	{
-		try
-		{
-			val file = File(path)
-			if (!file.parentFile.exists())
-			{
-				file.parentFile.mkdirs()
-			}
-			val out = FileOutputStream(file)
-			val bitmap: Bitmap
-			when
-			{
-				(drawable is BitmapDrawable) -> bitmap = drawable.bitmap
-				(drawable is VectorDrawableCompat) -> bitmap = getBitmap(drawable)
-				(drawable is VectorDrawable) -> bitmap = getBitmap(drawable)
-				else ->
-				{
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && drawable is AdaptiveIconDrawable)
-					{
-						bitmap = getBitmap(drawable)
-					}
-					else
-					{
-						Logs.i(TAG, "saveDrawableToSd: SDK版本低于26或者不支持的drawable")
-						return false
-					}
-				}
-			}
-			bitmap.compress(Bitmap.CompressFormat.PNG, 10, out)
-			out.close()
-		}
-		catch (e: IOException)
-		{
-			e.printStackTrace()
-			return false
-		}
-		return true
-	}
-
-	private fun getBitmap(vectorDrawable: VectorDrawable): Bitmap
-	{
-		val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth,
-				vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-		val canvas = Canvas(bitmap)
-		vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
-		vectorDrawable.draw(canvas)
-		return bitmap
-	}
-
-	private fun getBitmap(vectorDrawableCompat: VectorDrawableCompat): Bitmap
-	{
-		val bitmap = Bitmap.createBitmap(vectorDrawableCompat.intrinsicWidth,
-				vectorDrawableCompat.intrinsicHeight, Bitmap.Config.ARGB_8888)
-		val canvas = Canvas(bitmap)
-		vectorDrawableCompat.setBounds(0, 0, canvas.width, canvas.height)
-		vectorDrawableCompat.draw(canvas)
-		return bitmap
-	}
-
-	@RequiresApi(Build.VERSION_CODES.O)
-	private fun getBitmap(adaptiveIconDrawable: AdaptiveIconDrawable): Bitmap
-	{
-		val layerDrawable = LayerDrawable(arrayOf(adaptiveIconDrawable.background, adaptiveIconDrawable.foreground))
-		val bitmap = Bitmap.createBitmap(layerDrawable.intrinsicWidth, layerDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-		val canvas = Canvas(bitmap)
-		layerDrawable.setBounds(0, 0, canvas.width, canvas.height)
-		layerDrawable.draw(canvas)
-		return bitmap
-	}
-
 	private fun getFileEnd(path: String?): String
 	{
 		return path!!.substring(path.lastIndexOf(".") + 1)
@@ -337,11 +262,11 @@ object JYFileUtil
 		if (packageInfo != null)
 		{
 			val applicationInfo = packageInfo.applicationInfo
+			val drawableFactory = DrawableFactory(Settings.getInstance(context))
 			applicationInfo.sourceDir = apkPath
 			applicationInfo.publicSourceDir = apkPath
 			path = context.cacheDir.absolutePath + File.separator + applicationInfo.packageName
-			saveDrawableToSd(applicationInfo.loadIcon(packageManager), path)
-			return path
+			return if (drawableFactory.save(applicationInfo.loadIcon(packageManager), path)) path else "null"
 		}
 		return "null"
 	}
