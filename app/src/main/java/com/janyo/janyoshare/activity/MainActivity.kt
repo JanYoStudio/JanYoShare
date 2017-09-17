@@ -33,12 +33,8 @@ import vip.mystery0.tools.Logs.Logs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.File
-import vip.mystery0.tools.MysteryNetFrameWork.ResponseListener
-import vip.mystery0.tools.MysteryNetFrameWork.HttpUtil
-import com.android.volley.toolbox.Volley
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
-import com.google.gson.Gson
 import com.janyo.janyoshare.APP
 import com.janyo.janyoshare.`interface`.ExportListener
 import com.janyo.janyoshare.`interface`.InitGooglePlayListener
@@ -49,6 +45,8 @@ import com.janyo.janyoshare.util.pay.method.PayContext
 import dmax.dialog.SpotsDialog
 import vip.mystery0.tools.CrashHandler.AutoCleanListener
 import vip.mystery0.tools.CrashHandler.CatchExceptionListener
+import vip.mystery0.tools.HTTPok.HTTPokResponse
+import vip.mystery0.tools.HTTPok.HTTPokResponseListener
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -187,12 +185,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 							map.put("sdk", sdk.toString())
 							map.put("vendor", vendor)
 							map.put("model", model)
-							ExceptionUtil.sendException(this@MainActivity, map, fileMap, "http://janyo.pw/uploadLog.php",
-									object : ResponseListener
+							ExceptionUtil.sendException(map, "http://janyo.pw/uploadLog.php",
+									object : HTTPokResponseListener
 									{
-										override fun onResponse(code: Int, message: String?)
+										override fun onError(message: String?)
 										{
-											val response1 = Gson().fromJson(message, Response::class.java)
+											Logs.e(TAG, "onError: " + message)
+											ExceptionUtil.tryOther(this@MainActivity, map)
+										}
+
+										override fun onResponse(response: HTTPokResponse)
+										{
+											val response1 = response.getJSON(Response::class.java)
 											if (response1.code == 0)
 											{
 												Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
@@ -200,25 +204,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 											}
 											else
 											{
-												ExceptionUtil.sendException(this@MainActivity, map, fileMap, "http://123.206.186.70/php/uploadLog/upload_file.php",
-														object : ResponseListener
-														{
-															override fun onResponse(code: Int,
-																					message: String?)
-															{
-																val response2 = Gson().fromJson(message, Response::class.java)
-																if (response2.code == 0)
-																{
-																	Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
-																			.show()
-																}
-																else
-																{
-																	Toast.makeText(applicationContext, R.string.hint_upload_log_error, Toast.LENGTH_SHORT)
-																			.show()
-																}
-															}
-														})
+												ExceptionUtil.tryOther(this@MainActivity, map)
 											}
 										}
 									})

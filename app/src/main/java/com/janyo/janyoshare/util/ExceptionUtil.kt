@@ -2,33 +2,84 @@ package com.janyo.janyoshare.util
 
 import android.content.Context
 import android.widget.Toast
-import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.Response
+import com.janyo.janyoshare.handler.UploadLogHandler
+import vip.mystery0.tools.HTTPok.HTTPok
+import vip.mystery0.tools.HTTPok.HTTPokResponse
+import vip.mystery0.tools.HTTPok.HTTPokResponseListener
 import vip.mystery0.tools.Logs.Logs
-import vip.mystery0.tools.MysteryNetFrameWork.HttpUtil
-import vip.mystery0.tools.MysteryNetFrameWork.ResponseListener
-import java.io.File
-import java.util.HashMap
 
 /**
  * Created by myste.
  */
 object ExceptionUtil
 {
-	fun sendException(context: Context, map: Map<String, String>, fileMap: HashMap<String, File>,
-					  url: String, listener: ResponseListener)
+	private val TAG = "ExceptionUtil"
+
+	fun sendException(map: Map<String, Any>, url: String, listener: HTTPokResponseListener)
 	{
-		HttpUtil(context)
-				.setRequestQueue(Volley.newRequestQueue(context))
-				.setUrl(url)
-				.setRequestMethod(HttpUtil.RequestMethod.POST)
-				.setFileRequest(HttpUtil.FileRequest.UPLOAD)
-				.isFileRequest(true)
-				.setMap(map)
-				.setFileMap(fileMap)
-				.setResponseListener(listener)
+		HTTPok().setURL(url)
+				.setRequestMethod(HTTPok.POST)
+				.setParams(map)
+				.setListener(listener)
 				.open()
+	}
+
+	fun tryOther(map: Map<String, Any>, uploadLogHandler: UploadLogHandler)
+	{
+		ExceptionUtil.sendException(map, "http://123.206.186.70/php/uploadLog/upload_file.php", object : HTTPokResponseListener
+		{
+			override fun onError(message: String?)
+			{
+				Logs.e(TAG, "onError: " + message)
+				uploadLogHandler.sendEmptyMessage(-1)
+			}
+
+			override fun onResponse(response: HTTPokResponse)
+			{
+				try
+				{
+					val response2 = response.getJSON(Response::class.java)
+					uploadLogHandler.response = response2
+				}
+				catch (e: Exception)
+				{
+				}
+				uploadLogHandler.sendEmptyMessage(0)
+			}
+		})
+	}
+
+	fun tryOther(context: Context, map: Map<String, Any>)
+	{
+		ExceptionUtil.sendException(map, "http://123.206.186.70/php/uploadLog/upload_file.php", object : HTTPokResponseListener
+		{
+			override fun onError(message: String?)
+			{
+				Logs.e(TAG, "onError: " + message)
+				Toast.makeText(context, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
+						.show()
+			}
+
+			override fun onResponse(response: HTTPokResponse)
+			{
+				try
+				{
+					val response2 = response.getJSON(Response::class.java)
+					if (response2.code == 0)
+						Toast.makeText(context, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
+								.show()
+					else
+						Toast.makeText(context, R.string.hint_upload_log_error, Toast.LENGTH_SHORT)
+								.show()
+				}
+				catch (e: Exception)
+				{
+					Toast.makeText(context, R.string.hint_upload_log_error, Toast.LENGTH_SHORT)
+							.show()
+				}
+			}
+		})
 	}
 }
