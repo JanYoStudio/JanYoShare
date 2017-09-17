@@ -40,7 +40,7 @@ class DrawableFactory(settings: Settings)
 			}
 			val out = FileOutputStream(file)
 			var bitmap = drawableConvertContext.convert(drawable) ?: return false
-			if (drawable is AdaptiveIconDrawable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && drawable is AdaptiveIconDrawable)
 			{
 				bitmap = bitmapCropContext.crop(bitmap)
 			}
