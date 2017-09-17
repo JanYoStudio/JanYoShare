@@ -284,34 +284,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 			override fun onQueryTextSubmit(query: String): Boolean
 			{
 				Logs.i(TAG, "onQueryTextSubmit: " + query)
-				currentFragment.showList.clear()
-				if (query.isNotEmpty())
-				{
-					val searchList = AppManager.searchApps(currentFragment.installAppList, query)
-					currentFragment.showList.addAll(searchList)
-				}
-				else
-				{
-					currentFragment.showList.addAll(currentFragment.installAppList)
-				}
-				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+				currentFragment.search(query)
 				return true
 			}
 
 			override fun onQueryTextChange(newText: String): Boolean
 			{
 				Logs.i(TAG, "onQueryTextChange: " + newText)
-				currentFragment.showList.clear()
-				if (newText.isNotEmpty())
-				{
-					val searchList = AppManager.searchApps(currentFragment.installAppList, newText)
-					currentFragment.showList.addAll(searchList)
-				}
-				else
-				{
-					currentFragment.showList.addAll(currentFragment.installAppList)
-				}
-				currentFragment.appRecyclerViewAdapter.notifyDataSetChanged()
+				currentFragment.search(newText)
 				return false
 			}
 		})

@@ -90,6 +90,30 @@ class AppFragment : Fragment()
 		}
 	}
 
+	fun search(query: String)
+	{
+		singleThreadPool.execute {
+			while (true)
+			{
+				if (isReadyTag)
+					break
+				Logs.i(TAG, "clearSelected: 等待初始化")
+				Thread.sleep(200)
+			}
+			showList.clear()
+			if (query.isNotEmpty())
+			{
+				val searchList = AppManager.searchApps(installAppList, query)
+				showList.addAll(searchList)
+			}
+			else
+			{
+				showList.addAll(installAppList)
+			}
+			appRecyclerViewAdapter.notifyDataSetChanged()
+		}
+	}
+
 	fun exportAPK(list: List<InstallApp>, listener: ExportListener)
 	{
 		Logs.i(TAG, "exportAPK: " + list.size)
