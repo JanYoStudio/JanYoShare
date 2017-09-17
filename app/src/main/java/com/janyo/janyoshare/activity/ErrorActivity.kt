@@ -3,23 +3,24 @@ package com.janyo.janyoshare.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
-import com.google.gson.Gson
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.handler.UploadLogHandler
 import com.janyo.janyoshare.util.ExceptionUtil
 import com.janyo.janyoshare.util.Settings
-import vip.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_error.*
-import java.io.File
+import vip.mystery0.tools.HTTPok.HTTPokResponse
+import vip.mystery0.tools.HTTPok.HTTPokResponseListener
+import vip.mystery0.tools.Logs.Logs
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.HashMap
 
 class ErrorActivity : AppCompatActivity()
 {
+	private val TAG = "ErrorActivity"
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		val settings = Settings.getInstance(this)
@@ -60,9 +61,8 @@ class ErrorActivity : AppCompatActivity()
 		}
 		button_upload.setOnClickListener {
 			spotsDialog.show()
-			val map = HashMap<String, String>()
-			val fileMap = HashMap<String, File>()
-			fileMap.put("logFile", intent.getBundleExtra("error").getSerializable("file") as File)
+			val map = HashMap<String, Any>()
+			map.put("logFile", intent.getBundleExtra("error").getSerializable("file"))
 			map.put("date", error.time)
 			map.put("appName", getString(R.string.app_name))
 			map.put("appVersionName", error.appVersionName)
@@ -71,12 +71,18 @@ class ErrorActivity : AppCompatActivity()
 			map.put("sdk", error.sdk.toString())
 			map.put("vendor", error.vendor)
 			map.put("model", error.model)
-			ExceptionUtil.sendException(this, map, fileMap, "http://janyo.pw/uploadLog.php",
-					object : ResponseListener
+			ExceptionUtil.sendException(map, "http://janyo.pw/uploadLog.php",
+					object : HTTPokResponseListener
 					{
-						override fun onResponse(code: Int, message: String?)
+						override fun onError(message: String?)
 						{
-							val response1 = Gson().fromJson(message, Response::class.java)
+							Logs.e(TAG, "onError: " + message)
+							ExceptionUtil.tryOther(map, uploadLogHandler)
+						}
+
+						override fun onResponse(response: HTTPokResponse)
+						{
+							val response1 = response.getJSON(Response::class.java)
 							if (response1.code == 0)
 							{
 								uploadLogHandler.response = response1
@@ -84,22 +90,7 @@ class ErrorActivity : AppCompatActivity()
 							}
 							else
 							{
-								ExceptionUtil.sendException(this@ErrorActivity, map, fileMap, "http://123.206.186.70/php/uploadLog/upload_file.php",
-										object : ResponseListener
-										{
-											override fun onResponse(code: Int, message: String?)
-											{
-												try
-												{
-													val response = Gson().fromJson(message, Response::class.java)
-													uploadLogHandler.response = response
-												}
-												catch (e: Exception)
-												{
-												}
-												uploadLogHandler.sendEmptyMessage(0)
-											}
-										})
+								ExceptionUtil.tryOther(map, uploadLogHandler)
 							}
 						}
 					})
