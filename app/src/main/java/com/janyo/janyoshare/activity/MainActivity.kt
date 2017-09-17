@@ -44,6 +44,7 @@ import com.janyo.janyoshare.`interface`.ExportListener
 import com.janyo.janyoshare.`interface`.InitGooglePlayListener
 import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
+import com.janyo.janyoshare.util.ExceptionUtil
 import com.janyo.janyoshare.util.pay.method.PayContext
 import dmax.dialog.SpotsDialog
 import vip.mystery0.tools.CrashHandler.AutoCleanListener
@@ -186,31 +187,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 							map.put("sdk", sdk.toString())
 							map.put("vendor", vendor)
 							map.put("model", model)
-							HttpUtil(this@MainActivity)
-									.setRequestQueue(Volley.newRequestQueue(applicationContext))
-									.setUrl("http://janyo.pw/uploadLog.php")
-									.setRequestMethod(HttpUtil.RequestMethod.POST)
-									.setFileRequest(HttpUtil.FileRequest.UPLOAD)
-									.isFileRequest(true)
-									.setMap(map)
-									.setFileMap(fileMap)
-									.setResponseListener(object : ResponseListener
+							ExceptionUtil.sendException(this@MainActivity, map, fileMap, "http://janyo.pw/uploadLog.php",
+									object : ResponseListener
 									{
 										override fun onResponse(code: Int, message: String?)
 										{
-											val response = Gson().fromJson(message, Response::class.java)
-											if (response.code == 0)
+											val response1 = Gson().fromJson(message, Response::class.java)
+											if (response1.code == 0)
 											{
 												Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
 														.show()
 											}
 											else
 											{
-												Logs.e(TAG, "onResponse: " + message)
+												ExceptionUtil.sendException(this@MainActivity, map, fileMap, "http://123.206.186.70/php/uploadLog/upload_file.php",
+														object : ResponseListener
+														{
+															override fun onResponse(code: Int,
+																					message: String?)
+															{
+																val response2 = Gson().fromJson(message, Response::class.java)
+																if (response2.code == 0)
+																{
+																	Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
+																			.show()
+																}
+																else
+																{
+																	Toast.makeText(applicationContext, R.string.hint_upload_log_error, Toast.LENGTH_SHORT)
+																			.show()
+																}
+															}
+														})
 											}
 										}
 									})
-									.open()
 						}
 						else
 						{

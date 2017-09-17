@@ -3,14 +3,13 @@ package com.janyo.janyoshare.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
-import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.handler.UploadLogHandler
+import com.janyo.janyoshare.util.ExceptionUtil
 import com.janyo.janyoshare.util.Settings
-import vip.mystery0.tools.MysteryNetFrameWork.HttpUtil
 import vip.mystery0.tools.MysteryNetFrameWork.ResponseListener
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_error.*
@@ -72,30 +71,38 @@ class ErrorActivity : AppCompatActivity()
 			map.put("sdk", error.sdk.toString())
 			map.put("vendor", error.vendor)
 			map.put("model", error.model)
-			HttpUtil(this)
-					.setRequestQueue(Volley.newRequestQueue(applicationContext))
-					.setUrl("http://janyo.pw/uploadLog.php")
-					.setRequestMethod(HttpUtil.RequestMethod.POST)
-					.setFileRequest(HttpUtil.FileRequest.UPLOAD)
-					.isFileRequest(true)
-					.setMap(map)
-					.setFileMap(fileMap)
-					.setResponseListener(object : ResponseListener
+			ExceptionUtil.sendException(this, map, fileMap, "http://janyo.pw/uploadLog.php",
+					object : ResponseListener
 					{
 						override fun onResponse(code: Int, message: String?)
 						{
-							try
+							val response1 = Gson().fromJson(message, Response::class.java)
+							if (response1.code == 0)
 							{
-								val response = Gson().fromJson(message, Response::class.java)
-								uploadLogHandler.response = response
+								uploadLogHandler.response = response1
+								uploadLogHandler.sendEmptyMessage(0)
 							}
-							catch (e: Exception)
+							else
 							{
+								ExceptionUtil.sendException(this@ErrorActivity, map, fileMap, "http://123.206.186.70/php/uploadLog/upload_file.php",
+										object : ResponseListener
+										{
+											override fun onResponse(code: Int, message: String?)
+											{
+												try
+												{
+													val response = Gson().fromJson(message, Response::class.java)
+													uploadLogHandler.response = response
+												}
+												catch (e: Exception)
+												{
+												}
+												uploadLogHandler.sendEmptyMessage(0)
+											}
+										})
 							}
-							uploadLogHandler.sendEmptyMessage(0)
 						}
 					})
-					.open()
 		}
 	}
 }
