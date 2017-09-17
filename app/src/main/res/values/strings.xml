@@ -115,7 +115,7 @@
     <string name="hint_day_night">重启应用后全局生效！</string>
     <string name="hint_upload_log">日志文件上传中……</string>
     <string name="hint_upload_log_done">日志已经成功反馈给开发者，即将重启应用！</string>
-    <string name="hint_upload_log_error">日志上传失败！</string>
+    <string name="hint_upload_log_error">日志上传失败，请联系开发者！</string>
     <string name="hint_copy_info">信息复制成功！</string>
     <string name="hint_text_support_title">捐赠名单</string>
     <string name="hint_how_to_use_action">重启应用后将会显示引导界面！</string>
