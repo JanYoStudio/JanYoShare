@@ -81,6 +81,10 @@
             android:title="@string/title_about"/>
 
         <Preference
+            android:title="@string/title_art"
+            android:summary="@string/summary_art"/>
+
+        <Preference
             android:key="@string/key_how_to_use"
             android:title="@string/title_how_to_use"/>
 
