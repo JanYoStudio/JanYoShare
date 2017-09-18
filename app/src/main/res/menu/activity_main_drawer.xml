@@ -45,5 +45,8 @@
             <item android:title="@string/kiva"/>
         </menu>
     </item>
+    <item
+        android:icon="@drawable/ic_art"
+        android:title="@string/art"/>
 
 </menu>

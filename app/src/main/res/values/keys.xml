@@ -85,4 +85,7 @@
     <string name="key_icon_crop_type">key_icon_crop_type</string>
     <string name="title_icon_crop_type">图标样式裁剪（需要Android O以上）</string>
 
+    <string name="title_art">图标</string>
+    <string name="summary_art">@string/art</string>
+
 </resources>
