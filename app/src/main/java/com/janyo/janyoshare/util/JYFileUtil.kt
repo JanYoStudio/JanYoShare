@@ -11,7 +11,7 @@ import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.CustomFormat
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.util.drawable.DrawableFactory
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.logs.Logs
 import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList

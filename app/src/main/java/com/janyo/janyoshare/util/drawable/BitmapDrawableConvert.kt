@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable
  */
 class BitmapDrawableConvert : DrawableConvert()
 {
-	override fun Convert(drawable: Drawable): Bitmap
+	override fun convert(drawable: Drawable): Bitmap
 	{
 		return (drawable as BitmapDrawable).bitmap
 	}

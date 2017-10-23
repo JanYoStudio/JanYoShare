@@ -3,7 +3,7 @@ package com.janyo.janyoshare.util
 import android.content.Context
 import android.net.Uri
 import com.janyo.janyoshare.classes.TransferFile
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.logs.Logs
 import java.io.*
 import java.net.ConnectException
 import java.net.ServerSocket

@@ -1,7 +1,7 @@
 package com.janyo.janyoshare.util
 
 import android.content.Context
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.logs.Logs
 import java.net.NetworkInterface
 import java.util.concurrent.Executors
 

@@ -24,6 +24,6 @@ class DrawableConvertContext
 			is AdaptiveIconDrawable -> AdaptiveIconDrawableConvert()
 			else -> return null
 		}
-		return drawableConvert.Convert(drawable)
+		return drawableConvert.convert(drawable)
 	}
 }

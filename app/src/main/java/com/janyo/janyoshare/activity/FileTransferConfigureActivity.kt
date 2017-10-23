@@ -16,7 +16,7 @@ import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.Settings
 import com.janyo.janyoshare.util.SocketUtil
 import com.janyo.janyoshare.util.WIFIUtil
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.logs.Logs
 import dmax.dialog.SpotsDialog
 
 import kotlinx.android.synthetic.main.content_file_transfer_configure.*

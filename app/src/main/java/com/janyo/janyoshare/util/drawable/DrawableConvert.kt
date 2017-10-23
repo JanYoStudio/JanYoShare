@@ -8,5 +8,5 @@ import android.graphics.drawable.Drawable
  */
 abstract class DrawableConvert
 {
-	abstract fun Convert(drawable: Drawable): Bitmap?
+	abstract fun convert(drawable: Drawable): Bitmap?
 }

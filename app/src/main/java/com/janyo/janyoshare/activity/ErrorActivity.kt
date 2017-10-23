@@ -11,9 +11,9 @@ import com.janyo.janyoshare.util.ExceptionUtil
 import com.janyo.janyoshare.util.Settings
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_error.*
-import vip.mystery0.tools.HTTPok.HTTPokResponse
-import vip.mystery0.tools.HTTPok.HTTPokResponseListener
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.hTTPok.HTTPokResponse
+import vip.mystery0.tools.hTTPok.HTTPokResponseListener
+import vip.mystery0.tools.logs.Logs
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.HashMap

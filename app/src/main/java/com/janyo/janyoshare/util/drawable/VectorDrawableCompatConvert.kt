@@ -10,7 +10,7 @@ import android.support.graphics.drawable.VectorDrawableCompat
  */
 class VectorDrawableCompatConvert : DrawableConvert()
 {
-	override fun Convert(drawable: Drawable): Bitmap
+	override fun convert(drawable: Drawable): Bitmap
 	{
 		val vectorDrawableCompat = drawable as VectorDrawableCompat
 		val bitmap = Bitmap.createBitmap(vectorDrawableCompat.intrinsicWidth,

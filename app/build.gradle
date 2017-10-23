@@ -19,7 +19,7 @@ autoVersion {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.janyo.janyoshare"
         minSdkVersion 16
@@ -51,19 +51,19 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:26.0.2'
+    implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.0.2'
-    compile 'com.android.support:design:26.0.2'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
     testCompile 'junit:junit:4.12'
-    implementation 'com.android.support:support-vector-drawable:26.0.2'
+    implementation 'com.android.support:support-vector-drawable:26.1.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.github.Mystery00.ToolsDemo:tools:2.1.0'
+    compile 'com.github.Mystery00.ToolsDemo:tools:2.2.1'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     implementation project(':SpotsDialog')
@@ -77,6 +77,6 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.1.0'
+        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.2.1'
     }
 }

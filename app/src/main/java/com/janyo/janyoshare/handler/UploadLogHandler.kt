@@ -7,7 +7,7 @@ import android.support.design.widget.Snackbar
 import android.view.View
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.Response
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.logs.Logs
 import dmax.dialog.SpotsDialog
 
 class UploadLogHandler : Handler()

@@ -12,7 +12,7 @@ import android.os.Build
  */
 class AdaptiveIconDrawableConvert : DrawableConvert()
 {
-	override fun Convert(drawable: Drawable): Bitmap?
+	override fun convert(drawable: Drawable): Bitmap?
 	{
 		val adaptiveIconDrawable = drawable as AdaptiveIconDrawable
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)

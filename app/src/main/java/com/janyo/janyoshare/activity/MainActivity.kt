@@ -28,8 +28,8 @@ import com.janyo.janyoshare.adapter.ViewPagerAdapter
 import com.janyo.janyoshare.util.AppManager
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
-import vip.mystery0.tools.CrashHandler.CrashHandler
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.crashHandler.CrashHandler
+import vip.mystery0.tools.logs.Logs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.File
@@ -43,10 +43,10 @@ import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.util.ExceptionUtil
 import com.janyo.janyoshare.util.pay.method.PayContext
 import dmax.dialog.SpotsDialog
-import vip.mystery0.tools.CrashHandler.AutoCleanListener
-import vip.mystery0.tools.CrashHandler.CatchExceptionListener
-import vip.mystery0.tools.HTTPok.HTTPokResponse
-import vip.mystery0.tools.HTTPok.HTTPokResponseListener
+import vip.mystery0.tools.crashHandler.AutoCleanListener
+import vip.mystery0.tools.crashHandler.CatchExceptionListener
+import vip.mystery0.tools.hTTPok.HTTPokResponse
+import vip.mystery0.tools.hTTPok.HTTPokResponseListener
 import java.util.*
 import kotlin.collections.ArrayList
 

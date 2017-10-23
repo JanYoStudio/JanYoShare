@@ -30,8 +30,8 @@ import com.janyo.janyoshare.handler.SendHandler
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.JYFileUtil
 import com.janyo.janyoshare.util.Settings
-import vip.mystery0.tools.FileUtil.FileUtil
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.fileUtil.FileUtil
+import vip.mystery0.tools.logs.Logs
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.File

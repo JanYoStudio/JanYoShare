@@ -5,10 +5,10 @@ import android.widget.Toast
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.handler.UploadLogHandler
-import vip.mystery0.tools.HTTPok.HTTPok
-import vip.mystery0.tools.HTTPok.HTTPokResponse
-import vip.mystery0.tools.HTTPok.HTTPokResponseListener
-import vip.mystery0.tools.Logs.Logs
+import vip.mystery0.tools.hTTPok.HTTPok
+import vip.mystery0.tools.hTTPok.HTTPokResponse
+import vip.mystery0.tools.hTTPok.HTTPokResponseListener
+import vip.mystery0.tools.logs.Logs
 
 /**
  * Created by myste.
