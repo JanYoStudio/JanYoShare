@@ -5,11 +5,4 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkNight</item>
         <item name="colorAccent">@color/colorAccentNight</item>
     </style>
-
-    <style name="SpotsDialog" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="DialogSpotColor">@color/colorAccentNight</item>
-        <item name="DialogSpotCount">6</item>
-        <item name="android:windowBackground">@color/colorPrimaryNight</item>
-    </style>
 </resources>

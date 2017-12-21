@@ -14,11 +14,11 @@ import com.janyo.janyoshare.activity.FileTransferConfigureActivity
 import com.janyo.janyoshare.service.ReceiveFileService
 import com.janyo.janyoshare.util.FileTransferHelper
 import com.janyo.janyoshare.util.SocketUtil
-import dmax.dialog.SpotsDialog
+import com.zyao89.view.zloading.ZLoadingDialog
 
 class ReceiveHandler : Handler()
 {
-	lateinit var spotsDialog: SpotsDialog
+	lateinit var spotsDialog: ZLoadingDialog
 	lateinit var context: Context
 
 	override fun handleMessage(msg: Message)
@@ -27,7 +27,7 @@ class ReceiveHandler : Handler()
 		{
 			FileTransferConfigureActivity.CREATE_CONNECTION ->
 			{
-				spotsDialog.setMessage(context.getString(R.string.hint_socket_connecting))
+				spotsDialog.setHintText(context.getString(R.string.hint_socket_connecting))
 			}
 			FileTransferConfigureActivity.VERIFY_DEVICE ->
 			{

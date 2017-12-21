@@ -36,11 +36,11 @@ object ExceptionUtil
 				uploadLogHandler.sendEmptyMessage(-1)
 			}
 
-			override fun onResponse(response: HTTPokResponse)
+			override fun onResponse(response: HTTPokResponse?)
 			{
 				try
 				{
-					val response2 = response.getJSON(Response::class.java)
+					val response2 = response?.getJSON(Response::class.java)
 					uploadLogHandler.response = response2
 				}
 				catch (e: Exception)
@@ -62,12 +62,12 @@ object ExceptionUtil
 						.show()
 			}
 
-			override fun onResponse(response: HTTPokResponse)
+			override fun onResponse(response: HTTPokResponse?)
 			{
 				try
 				{
-					val response2 = response.getJSON(Response::class.java)
-					if (response2.code == 0)
+					val response2 = response?.getJSON(Response::class.java)
+					if (response2?.code == 0)
 						Toast.makeText(context, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
 								.show()
 					else

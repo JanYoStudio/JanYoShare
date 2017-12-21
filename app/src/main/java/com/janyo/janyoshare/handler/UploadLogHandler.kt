@@ -7,14 +7,14 @@ import android.support.design.widget.Snackbar
 import android.view.View
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.Response
+import com.zyao89.view.zloading.ZLoadingDialog
 import vip.mystery0.tools.logs.Logs
-import dmax.dialog.SpotsDialog
 
 class UploadLogHandler : Handler()
 {
 	private val TAG = "UploadLogHandler"
 	lateinit var coordinatorLayout: View
-	lateinit var spotsDialog: SpotsDialog
+	lateinit var spotsDialog: ZLoadingDialog
 	lateinit var activity: Activity
 	var response: Response? = null
 

@@ -8,10 +8,10 @@ import android.support.v7.app.AlertDialog
 import com.janyo.janyoshare.R
 import com.janyo.janyoshare.classes.InstallApp
 import com.janyo.janyoshare.util.Settings
-import dmax.dialog.SpotsDialog
+import com.zyao89.view.zloading.ZLoadingDialog
 
 class SettingHandler(private val context: Context,
-					 private val spotsDialog: SpotsDialog,
+					 private val spotsDialog: ZLoadingDialog,
 					 private val excludeList: Preference) : Handler()
 {
 	override fun handleMessage(msg: Message)
