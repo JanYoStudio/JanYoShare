@@ -19,7 +19,6 @@ autoVersion {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.janyo.janyoshare"
         minSdkVersion 16
@@ -63,9 +62,9 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:26.1.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.github.Mystery00.ToolsDemo:tools:2.2.1'
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
+    compile 'com.github.Mystery00.ToolsDemo:tools:2.2.6'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.10.0'
     implementation project(':SpotsDialog')
 }
 
@@ -77,6 +76,6 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.2.1'
+        classpath 'com.github.Mystery00.ToolsDemo:autoversion:2.2.6'
     }
 }

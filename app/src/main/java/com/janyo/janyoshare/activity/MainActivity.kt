@@ -41,7 +41,7 @@ import com.janyo.janyoshare.`interface`.InitGooglePlayListener
 import com.janyo.janyoshare.classes.Error
 import com.janyo.janyoshare.classes.Response
 import com.janyo.janyoshare.util.ExceptionUtil
-import com.janyo.janyoshare.util.pay.method.PayContext
+//import com.janyo.janyoshare.util.pay.method.PayContext
 import dmax.dialog.SpotsDialog
 import vip.mystery0.tools.crashHandler.AutoCleanListener
 import vip.mystery0.tools.crashHandler.CatchExceptionListener
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 {
 	private lateinit var currentFragment: AppFragment
 	private lateinit var img_janyo: ImageView
-	private lateinit var payContext: PayContext
+//	private lateinit var payContext: PayContext
 	private lateinit var spotsDialog: SpotsDialog
 	private val TAG = "MainActivity"
 	private val PERMISSION_CODE = 233
@@ -83,20 +83,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 		spotsDialog.setCancelable(false)
 		spotsDialog.setMessage(getString(R.string.copy_file_loading))
 
-		payContext = PayContext(this)
-		payContext.initGooglePlay(object : InitGooglePlayListener
-		{
-			override fun onSuccess()
-			{
-				isGooglePlayAvailable = true
-			}
-
-			override fun onFailed()
-			{
-				isGooglePlayAvailable = false
-			}
-
-		})
+//		payContext = PayContext(this)
+//		payContext.initGooglePlay(object : InitGooglePlayListener
+//		{
+//			override fun onSuccess()
+//			{
+//				isGooglePlayAvailable = true
+//			}
+//
+//			override fun onFailed()
+//			{
+//				isGooglePlayAvailable = false
+//			}
+//
+//		})
 
 		val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 		drawer_layout.addDrawerListener(toggle)
@@ -194,10 +194,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 											ExceptionUtil.tryOther(this@MainActivity, map)
 										}
 
-										override fun onResponse(response: HTTPokResponse)
+										override fun onResponse(response: HTTPokResponse?)
 										{
-											val response1 = response.getJSON(Response::class.java)
-											if (response1.code == 0)
+											val response1 = response?.getJSON(Response::class.java)
+											if (response1?.code == 0)
 											{
 												Toast.makeText(applicationContext, R.string.hint_upload_log_done, Toast.LENGTH_SHORT)
 														.show()
@@ -418,35 +418,35 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 				val supportList = resources.getStringArray(R.array.support_list)
 				list.addAll(resources.getStringArray(method))
 				list.addAll(supportList)
-				AlertDialog.Builder(this)
-						.setTitle(R.string.pay_method_title)
-						.setItems(Array(list.size, { i -> list[i] }), { _, choose ->
-							when (choose)
-							{
-								0 ->
-								{
-									payContext.setMethod(PayContext.PAY_ALIPAY)
-									isGooglePlayPay = false
-									payContext.showPay()
-								}
-								1 ->
-								{
-									payContext.setMethod(PayContext.PAY_WEIXIN)
-									isGooglePlayPay = false
-									payContext.showPay()
-								}
-								2 ->
-								{
-									if (isGooglePlayAvailable)
-									{
-										payContext.setMethod(PayContext.PAY_PLAY)
-										isGooglePlayPay = true
-										payContext.showPay()
-									}
-								}
-							}
-						})
-						.show()
+//				AlertDialog.Builder(this)
+//						.setTitle(R.string.pay_method_title)
+//						.setItems(Array(list.size, { i -> list[i] }), { _, choose ->
+//							when (choose)
+//							{
+//								0 ->
+//								{
+//									payContext.setMethod(PayContext.PAY_ALIPAY)
+//									isGooglePlayPay = false
+//									payContext.showPay()
+//								}
+//								1 ->
+//								{
+//									payContext.setMethod(PayContext.PAY_WEIXIN)
+//									isGooglePlayPay = false
+//									payContext.showPay()
+//								}
+//								2 ->
+//								{
+//									if (isGooglePlayAvailable)
+//									{
+//										payContext.setMethod(PayContext.PAY_PLAY)
+//										isGooglePlayPay = true
+//										payContext.showPay()
+//									}
+//								}
+//							}
+//						})
+//						.show()
 			}
 		}
 		return true
@@ -509,17 +509,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
 	{
-		if (!isGooglePlayPay && payContext.onPayResult(requestCode, resultCode, data))
-			super.onActivityResult(requestCode, resultCode, data)
-		else
-			Logs.i(TAG, "onActivityResult handled by IABUtil.")
+//		if (!isGooglePlayPay && payContext.onPayResult(requestCode, resultCode, data))
+//			super.onActivityResult(requestCode, resultCode, data)
+//		else
+//			Logs.i(TAG, "onActivityResult handled by IABUtil.")
 	}
 
 	override fun onDestroy()
 	{
 		try
 		{
-			payContext.playDestroy()
+//			payContext.playDestroy()
 		}
 		catch (e: Exception)
 		{
