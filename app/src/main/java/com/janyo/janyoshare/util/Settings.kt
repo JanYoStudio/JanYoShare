@@ -2,28 +2,13 @@ package com.janyo.janyoshare.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.janyo.janyoshare.APP
 
 import com.janyo.janyoshare.classes.CustomFormat
 
-class Settings private constructor()
+object Settings
 {
-	lateinit var sharedPreferences: SharedPreferences
-
-	companion object
-	{
-		@Volatile
-		private var settings: Settings? = null
-
-		fun getInstance(context: Context): Settings
-		{
-			if (settings == null)
-			{
-				settings = Settings()
-				settings!!.sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-			}
-			return settings!!
-		}
-	}
+	private val sharedPreferences=APP.getInstance().getSharedPreferences("settings", Context.MODE_PRIVATE)
 
 	var isAutoClean: Boolean
 		get() = sharedPreferences.getBoolean("key_auto_clean", true)
